@@ -1,0 +1,36 @@
+/* Sidebar.css */
+.drawer {
+    background-color: #1e1e1e;
+    color: white;
+    width: 250px;
+  }
+  
+  .search-bar {
+    background-color: #2e2e2e;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    color: gray;
+  }
+  
+  .icon {
+    color: #b91b20ba;
+  }
+  
+  .section-title {
+    color: gray;
+    font-size: 12px;
+    padding: 10px 16px;
+    text-transform: uppercase;
+  }
+  .sidebar-item {
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    border-radius: 16px;
+  }
+  
