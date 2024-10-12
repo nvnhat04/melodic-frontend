@@ -1,35 +1,30 @@
+import Sidebar from "../components/sidebar/sidebar";
+import MusicPlayer from "../components/common/MusicPlayer";
 
 function HomePage() {
     return (
-        <div style={
-            {
+        <div className="homepage" style={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+            height: '100vh' // Ensure the height of the container is set
+        }}>
+            <div className="content" style={{
                 display: 'flex',
-                justifyContent: 'left',
-                height: '80vh'
-            }
-        }>
-            <div    className="navBar" 
-                    style = {
-                        {
-                            margin: '10px',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            height: '10vh',
-                            width: '20hv',
-                        }
-            }>
-                <a>HomePage</a>
-                <a>Click on the links above to navigate</a>
-                <a>Top 50</a>
-                <a>Search</a>
+                justifyContent: 'space-between',
+                flex: 1 // Ensure the content takes up available space
+            }}>
+                {/* <Sidebar /> */}
+                <div>Hello</div>
+                <div className="mainContent">
+                    <h1>Welcome to the HomePage</h1>
+                    <p>This is a simple example of a HomePage</p>
+                </div>
+                <div>Hello</div>
             </div>
-            <div className="mainContent">
-                <h1>Welcome to the HomePage</h1>
-                <p>This is a simple example of a HomePage</p>
-            </div>
+            <MusicPlayer />
         </div>
     );
 }
+
 export default HomePage;
