@@ -17,7 +17,9 @@ import AlbumIcon from "@mui/icons-material/Album";
 import MusicNoteIcon from "@mui/icons-material/MusicNote";
 import QueueMusicIcon from "@mui/icons-material/QueueMusic";
 import SearchIcon from "@mui/icons-material/Search";
+import { Link } from "react-router-dom";
 import "./sidebar.css";
+import { NoEncryption } from "@mui/icons-material";
 
 const Sidebar = () => {
   const items = [
@@ -54,7 +56,7 @@ const Sidebar = () => {
 
   const Divider = ({ label }) => <div className="section-title">{label}</div>;
   return (
-    <Drawer variant="permanent" anchor="left" classes={{ paper: "drawer" }}>
+    <Drawer variant="permanent" classes={{ paper: "drawer" }}>
       <Box sx={{ padding: "10px" }}>
         <Box className="logo">Melodic</Box>
 
@@ -72,11 +74,12 @@ const Sidebar = () => {
             {index === 0 || items[index - 1].section !== item.section ? (
               item.section && <Divider label={item.section} />
             ) : null}
-
-            <ListItem button key={item.text}>
+            <Link to={item.text === "Home" ? "/" : `/${item.text.toLowerCase()}`} style={{ textDecoration: 'none', color: 'black' }}>
+            <ListItem button key={item.text} className="sidebar-item">
               <ListItemIcon className="icon">{item.icon}</ListItemIcon>
               <ListItemText primary={item.text} />
             </ListItem>
+            </Link>
           </React.Fragment>
           ))}
         </List>

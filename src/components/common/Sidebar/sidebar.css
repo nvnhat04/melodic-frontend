@@ -1,8 +1,7 @@
 /* Sidebar.css */
 .drawer {
     background-color: #1e1e1e;
-    color: white;
-    width: 250px;
+    width: 18%;
   }
   
   .search-bar {
@@ -31,6 +30,10 @@
     display: flex;
     align-items: center;
     cursor: pointer;
-    border-radius: 16px;
+    border-radius: 50px;
   }
-  
+  .sidebar-item:hover {
+    background-color: #2e2e2e;
+    border-radius: 20px;
+    width: 100%;
+  }
