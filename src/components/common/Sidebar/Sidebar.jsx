@@ -26,7 +26,11 @@ const Sidebar = () => {
     { text: "Home", icon: <HomeIcon className="icon" />, section: null },
     { text: "New", icon: <NewIcon className="icon" />, section: null },
     { text: "Radio", icon: <RadioIcon className="icon" />, section: null },
-    { text: "Recently Added", icon: <AccessTimeIcon className="icon" />, section: "Library" },
+    {
+      text: "Recently Added",
+      icon: <AccessTimeIcon className="icon" />,
+      section: "Library",
+    },
     {
       text: "Artists",
       icon: <PersonIcon className="icon" />,
@@ -56,7 +60,15 @@ const Sidebar = () => {
 
   const Divider = ({ label }) => <div className="section-title">{label}</div>;
   return (
-    <Drawer variant="permanent" classes={{ paper: "drawer" }}>
+    <Drawer
+      variant="permanent"
+      classes={{ paper: "drawer" }}
+      sx={{
+        "& .MuiDrawer-paper": {
+          backgroundColor: "#252526",
+        },
+      }}
+    >
       <Box sx={{ padding: "10px" }}>
         <Box className="logo">Melodic</Box>
 
@@ -70,17 +82,29 @@ const Sidebar = () => {
         <List>
           {items.map((item, index) => (
             <React.Fragment key={index}>
-            {/* Render the section divider if it is the first item of the section */}
-            {index === 0 || items[index - 1].section !== item.section ? (
-              item.section && <Divider label={item.section} />
-            ) : null}
-            <Link to={item.text === "Home" ? "/" : `/${item.text.toLowerCase()}`} style={{ textDecoration: 'none', color: 'black' }}>
-            <ListItem button key={item.text} className="sidebar-item">
-              <ListItemIcon className="icon">{item.icon}</ListItemIcon>
-              <ListItemText primary={item.text} />
-            </ListItem>
-            </Link>
-          </React.Fragment>
+              {/* Render the section divider if it is the first item of the section */}
+              {index === 0 || items[index - 1].section !== item.section
+                ? item.section && <Divider label={item.section} />
+                : null}
+              <Link
+                to={item.text === "Home" ? "/" : `/${item.text.toLowerCase()}`}
+                style={{ textDecoration: "none", color: "white" }}
+              >
+                <ListItem className="sidebar-item">
+                  <ListItemIcon className="icon">{item.icon}</ListItemIcon>
+                  <ListItemText
+                    primary={item.text}
+                    sx={{
+                      "& .MuiTypography-root": {
+                        fontFamily: "Open Sans, sans-serif",
+                        fontWeight: "bold",
+                        fontSize: 15,
+                      },
+                    }}
+                  />
+                </ListItem>
+              </Link>
+            </React.Fragment>
           ))}
         </List>
       </Box>

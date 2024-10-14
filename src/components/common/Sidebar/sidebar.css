@@ -1,8 +1,11 @@
 /* Sidebar.css */
 .drawer {
-    background-color: #1e1e1e;
-    width: 18%;
+    width: 16%;
   }
+
+.sidebar {
+  background-color: #2e2e2e;
+}
   
   .search-bar {
     background-color: #2e2e2e;
@@ -16,14 +19,14 @@
   }
   
   .icon {
-    color: #b91b20ba;
+    color: #e75565;
   }
   
   .section-title {
     color: gray;
-    font-size: 12px;
+    font-size: 14px;
     padding: 10px 16px;
-    text-transform: uppercase;
+    text-transform: lowercase;
   }
   .sidebar-item {
     padding: 10px 16px;
@@ -33,7 +36,7 @@
     border-radius: 50px;
   }
   .sidebar-item:hover {
-    background-color: #2e2e2e;
-    border-radius: 20px;
+    background-color: #39393b;
+    border-radius: 16px;
     width: 100%;
   }
