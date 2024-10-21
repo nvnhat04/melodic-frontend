@@ -10,7 +10,7 @@ function App() {
     <BrowserRouter>
       <Routes className="App">
           <Route path="/" element ={<HomePage/>}></Route>
-          <Route path="/artist-dashboard" element ={<ArtistDashboard/>}></Route>
+          <Route path="/artist-profile" element ={<ArtistDashboard/>}></Route>
           <Route path="/play-screen" element ={<PlayScreen/>}></Route>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} /> {/* Consistent component name */}
