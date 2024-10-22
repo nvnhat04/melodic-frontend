@@ -30,6 +30,13 @@ const queueSong= [
         duration: "240",
     }
 ]
+function debounce(func, wait) {
+    let timeout;
+    return function(...args) {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => func.apply(this, args), wait);
+    };
+}
 
 function MusicPlayer() {
     const [isPause, setIsPause] = useState(true);
@@ -86,7 +93,9 @@ function MusicPlayer() {
     const handleSeekChange = (event) => {
         const newValue = event.target.value;
         setSeekValue(newValue);
-        audioRef.current.currentTime = (newValue / 100) * audioRef.current.duration;
+        requestAnimationFrame(() => {
+          audioRef.current.currentTime = (newValue / 100) * audioRef.current.duration;
+        });
     };
 
     const handleTimeUpdate = () => {
@@ -129,6 +138,8 @@ function MusicPlayer() {
         const seconds = Math.floor(duration % 60);
         return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
     };
+    const debouncedHandleSeekChange = debounce(handleSeekChange, 100);
+
 
     return (
         
