@@ -1,16 +1,23 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom'; // Import Link from react-router-dom
-
+import Account from '../api/modules/account.api';
 function Login() {
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isHovered, setIsHovered] = useState(false); // Thêm trạng thái hover
 
   const handleLogin = (e) => {
     e.preventDefault();
     // Handle login logic
-    console.log('Email:', email);
+    console.log('Username:', username);
     console.log('Password:', password);
+    const data ={
+      username: username,
+      password: password
+    }
+    Account.login(data).then((response) => {
+      console.log(response);
+    });
   };
 
   return (
@@ -20,9 +27,9 @@ function Login() {
         <form onSubmit={handleLogin}>
           <input
             type="text"
-            placeholder="Username or Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
             style={styles.input}
           />
           <input

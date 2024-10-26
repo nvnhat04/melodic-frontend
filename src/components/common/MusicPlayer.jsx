@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { MdPlayArrow, MdPause, MdSkipNext, MdSkipPrevious, MdVolumeDown, MdVolumeUp, MdZoomOut, MdZoomOutMap, MdLibraryMusic, MdLibraryAdd, MdLoop, MdShuffle, MdVolumeMute, MdQueueMusic } from 'react-icons/md';
-import { Box } from '@mui/material';
-const Song1Data = [
+import { MdPlayArrow, MdPause, MdSkipNext, MdSkipPrevious, MdVolumeDown, MdVolumeUp, MdZoomOut, MdZoomOutMap, MdLibraryMusic, MdLibraryAdd, MdLoop, MdShuffle, MdVolumeMute, MdQueueMusic, MdReplay } from 'react-icons/md';
+import { Box, duration } from '@mui/material';
+const queueSong= [
     {
         id: 1,
         title: "Song 1",
@@ -11,7 +11,32 @@ const Song1Data = [
         desc: "Description 1",
         duration: "372",
     },
+    {
+        id: 2,
+        title: "Song 2",
+        artist: "Artist 2",
+        img: "https://hips.hearstapps.com/hmg-prod/images/eminem-a-k-a-marshall-bruce-mathers-iii-attends-a-ceremony-news-photo-1698936282.jpg?crop=1.00xw:0.667xh;0,0.0380xh&resize=640:*",
+        file: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3",
+        desc: "Description 2",
+        duration: "279",
+    },
+    {
+        id: 3,
+        title: "Song 3",
+        artist: "Artist 3",
+        img: "",
+        file: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3",
+        desc: "Description 3",
+        duration: "240",
+    }
 ]
+function debounce(func, wait) {
+    let timeout;
+    return function(...args) {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => func.apply(this, args), wait);
+    };
+}
 
 function MusicPlayer() {
     const [isPause, setIsPause] = useState(true);
@@ -19,9 +44,10 @@ function MusicPlayer() {
     const [currentTime, setCurrentTime] = useState(0);
     const [currentVolume, setCurrentVolume] = useState(100);
     const audioRef = useRef(null);
-    const firstSong = Song1Data[0];
 
+    const [currentSongIndex, setCurrentSongIndex] = useState(0);
 
+   
     const togglePlayPause = () => {
         if (isPause) {
             audioRef.current.play().catch((error) => {
@@ -32,12 +58,44 @@ function MusicPlayer() {
         }
         setIsPause(!isPause);
     };
+      const handleNext = () => {
+        const nextSongIndex = (currentSongIndex + 1) % queueSong.length; // Loop back to the first song if at the end
+        console.log("seekvalue", seekValue);
+        console.log(currentSongIndex);
+        setCurrentSongIndex(nextSongIndex);
+        
+        const nextSong = queueSong[nextSongIndex];
+        audioRef.current.src = nextSong.file;
     
+        // Add an event listener for loadedmetadata to ensure the duration is loaded
+        audioRef.current.addEventListener('loadedmetadata', () => {
+            //audioRef.current.play();
+            setIsPause(true); // Ensure the play/pause state is updated
+            setCurrentTime(0); // Reset the current time
+            setSeekValue(0); // Reset the seek value
+        }, { once: true }); // Use { once: true } to ensure the event listener is removed after it fires
+    };
+    const handlePrevious = () => {
+        const previousSongIndex = (currentSongIndex - 1 + queueSong.length) % queueSong.length; // Loop back to the last song if at the beginning
+        setCurrentSongIndex(previousSongIndex);
+        const previousSong = queueSong[previousSongIndex];
+        audioRef.current.src = previousSong.file;
+
+         // Add an event listener for loadedmetadata to ensure the duration is loaded
+        audioRef.current.addEventListener('loadedmetadata', () => {
+            //audioRef.current.play();
+            setIsPause(true); // Ensure the play/pause state is updated
+            setCurrentTime(0); // Reset the current time
+            setSeekValue(0); // Reset the seek value
+        }, { once: true }); // Use { once: true } to ensure the event listener is removed after it fires
+    };
 
     const handleSeekChange = (event) => {
         const newValue = event.target.value;
         setSeekValue(newValue);
-        audioRef.current.currentTime = (newValue / 100) * audioRef.current.duration;
+        requestAnimationFrame(() => {
+          audioRef.current.currentTime = (newValue / 100) * audioRef.current.duration;
+        });
     };
 
     const handleTimeUpdate = () => {
@@ -50,6 +108,18 @@ function MusicPlayer() {
         const newValue = event.target.value;
         setCurrentVolume(newValue);
         audioRef.current.volume = newValue / 100;
+    }
+    const handleReplay = () => {
+        console.log(currentTime);
+        if(currentTime >= queueSong[currentSongIndex].duration){
+            audioRef.current.currentTime = 0;
+            setIsPause(true);
+        audioRef.current.pause();
+        } else{
+            audioRef.current.currentTime = currentTime;
+        }
+
+        
     }
     useEffect(() => {
         const audio = audioRef.current;
@@ -68,6 +138,8 @@ function MusicPlayer() {
         const seconds = Math.floor(duration % 60);
         return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
     };
+    const debouncedHandleSeekChange = debounce(handleSeekChange, 100);
+
 
     return (
         
@@ -85,20 +157,20 @@ function MusicPlayer() {
                 zIndex:'1000'
             }}
         >
-            <audio ref={audioRef} src={firstSong.file} />
+            <audio ref={audioRef} src={queueSong[currentSongIndex].file} />
 
             
             {/* Song details */}
             <Box sx={{ display: 'flex', alignItems: 'center', gap: '30px'}}>
-                <img src={firstSong.img} alt="img" style={{
+                <img src={queueSong[currentSongIndex].img} alt="img" style={{
                     width: '50px',
                     height: '50px',
                     objectFit: 'cover',
                     borderRadius: '50%'
                 }} />
                 <Box>
-                    <p style={{ margin: 0, fontSize: '20px' }}>{firstSong.title}</p>
-                    <p style={{ margin: 0, fontSize: '10px' }}>{firstSong.artist}</p>
+                    <p style={{ margin: 0, fontSize: '20px' }}>{queueSong[currentSongIndex].title}</p>
+                    <p style={{ margin: 0, fontSize: '10px' }}>{queueSong[currentSongIndex].artist}</p>
                 </Box>
                 <MdLibraryAdd size={20} />
             </Box>
@@ -107,12 +179,15 @@ function MusicPlayer() {
             <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column', padding:'25px 0px 5px 0px' }}>
                 <Box sx={{ display: 'flex', gap: '20px' }}>
                     <MdShuffle size={20} />
-                    <MdSkipPrevious size={24} />
+                    <MdSkipPrevious size={24} onClick={handlePrevious}/>
                     <div onClick={togglePlayPause}>
                     {isPause ? <MdPlayArrow size={24} /> : <MdPause size={24} />}
                     </div>
-                    <MdSkipNext size={24} />
-                    <MdLoop size={20}/>
+                    <MdSkipNext size={24} onClick={handleNext}/>
+                    <div>
+                    <MdReplay size={20} onClick={handleReplay}/>
+                    </div>
+                    
                 </Box>
                 
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px', width:'500px' }}>
@@ -125,7 +200,7 @@ function MusicPlayer() {
                     onChange={handleSeekChange}
                     style={{ width: '80%' }}
                     />
-                    <p>{Math.floor(firstSong.duration/60) } : {firstSong.duration%60}</p>
+                    <p>{Math.floor(queueSong[currentSongIndex].duration/60) } : {queueSong[currentSongIndex].duration%60}</p>
                 </Box>
 
             </Box>
@@ -133,7 +208,7 @@ function MusicPlayer() {
                 
             {/* Volume control */}
             <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                {currentVolume}
+                
                 {currentVolume === 0 ? <MdVolumeMute size={20}/> : <MdVolumeUp size={20} />  }
                 <input
                     type="range"
