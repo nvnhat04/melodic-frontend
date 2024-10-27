@@ -266,10 +266,9 @@ export default function ArtistDashboard() {
         }}
       >
         <Typography variant="h3">Overview</Typography>
-        <Box>
+        <Box sx={{display: "flex"}}>
           <Card
             sx={{
-              display: "inline-block",
               margin: "1em",
               border: "0.2em solid lightgray",
               borderRadius: "1em",
@@ -297,7 +296,6 @@ export default function ArtistDashboard() {
           </Card>
           <Card
             sx={{
-              display: "inline-block",
               margin: "1em",
               border: "0.2em solid lightgray",
               borderRadius: "1em",
