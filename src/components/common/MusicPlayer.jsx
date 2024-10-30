@@ -1,7 +1,28 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { MdPlayArrow, MdPause, MdSkipNext, MdSkipPrevious, MdVolumeDown, MdVolumeUp, MdZoomOut, MdZoomOutMap, MdLibraryMusic, MdLibraryAdd, MdLoop, MdShuffle, MdVolumeMute, MdQueueMusic, MdReplay } from 'react-icons/md';
-import { Box, duration } from '@mui/material';
-const queueSong= [
+import React, { useState, useRef, useEffect } from "react";
+import {
+  MdPlayArrow,
+  MdPause,
+  MdSkipNext,
+  MdSkipPrevious,
+  MdVolumeDown,
+  MdVolumeUp,
+  MdZoomOut,
+  MdZoomOutMap,
+  MdLibraryMusic,
+  MdLibraryAdd,
+  MdLoop,
+  MdShuffle,
+  MdVolumeMute,
+  MdQueueMusic,
+  MdReplay,
+} from "react-icons/md";
+import { Box, duration } from "@mui/material";
+import { Link } from "react-router-dom";
+import { Modal } from "@mui/material";
+import PlayScreen from "../../pages/PlayScreen";
+import useAudioPlayer from "../../hooks/useAudioPlayer";
+
+const queueSong = [
     {
         id: 1,
         title: "Song 1",
