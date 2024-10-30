@@ -62,7 +62,7 @@ const listAlbums = [
     },
 ]
 
-function ArtistDashboard() {
+function ArtistProfile() {
     const firstArtist = artistData[0];
     return (
         <div>
@@ -168,4 +168,4 @@ function ArtistDashboard() {
 
     
 }
-export default ArtistDashboard;
+export default ArtistProfile;
