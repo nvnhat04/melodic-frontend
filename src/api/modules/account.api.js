@@ -11,7 +11,7 @@ const Account = {
             }
         }
     },
-    async register(data) {
+    async signUp(data) {
         try {
             const response = await Client.post("/account/register", data);
             return response;
