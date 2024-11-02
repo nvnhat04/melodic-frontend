@@ -5,6 +5,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import ArtistProfile from './pages/ArtistProfile';
 import ArtistDashboard from './pages/ArtistDashboard';
+import AdminDashboard from './pages/AdminDashboard';
 import PlayScreen from './pages/PlayScreen';
 
 function App() {
@@ -15,8 +16,9 @@ function App() {
           <Route path="/artist-profile" element ={<ArtistProfile/>}></Route>
           <Route path="/play-screen" element ={<PlayScreen/>}></Route>
           <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} /> {/* Consistent component name */}
+          <Route path="/register" element={<Register />} /> 
           <Route path="/artist" element={<ArtistDashboard />} /> 
+          <Route path="/admin" element={<AdminDashboard />} />
       </Routes>
     </BrowserRouter>
   );
