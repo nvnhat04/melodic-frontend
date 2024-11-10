@@ -195,7 +195,7 @@ function MusicPlayer() {
         justifyContent: "space-around",
         alignItems: "center",
         backgroundColor: "lightgray",
-        height: "80px",
+        height: "13%",
         position: "fixed",
         bottom: 0,
         width: "100%",
