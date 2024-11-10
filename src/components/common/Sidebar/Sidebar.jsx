@@ -17,9 +17,9 @@ import AlbumIcon from "@mui/icons-material/Album";
 import MusicNoteIcon from "@mui/icons-material/MusicNote";
 import QueueMusicIcon from "@mui/icons-material/QueueMusic";
 import SearchIcon from "@mui/icons-material/Search";
+import StorefrontIcon from '@mui/icons-material/Storefront';
 import { Link } from "react-router-dom";
 import "./sidebar.css";
-import { NoEncryption } from "@mui/icons-material";
 
 const Sidebar = () => {
   const items = [
@@ -56,9 +56,15 @@ const Sidebar = () => {
       icon: <QueueMusicIcon className="icon" />,
       section: "Playlists",
     },
+    {
+      text: "Shop",  // Added Shop item
+      icon: <StorefrontIcon className="icon" />,
+      section: null,
+    },
   ];
 
   const Divider = ({ label }) => <div className="section-title">{label}</div>;
+
   return (
     <Drawer
       variant="permanent"
@@ -111,4 +117,5 @@ const Sidebar = () => {
     </Drawer>
   );
 };
+
 export default Sidebar;
