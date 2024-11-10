@@ -6,6 +6,8 @@ import Register from './pages/Register';
 import ArtistProfile from './pages/ArtistProfile';
 import ArtistDashboard from './pages/ArtistDashboard';
 import PlayScreen from './pages/PlayScreen';
+import ShopPage from './pages/ShopPage';
+import MerchandiseDetail from './pages/MerchandiseDetail';
 
 function App() {
   return (
@@ -17,6 +19,8 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} /> {/* Consistent component name */}
           <Route path="/artist" element={<ArtistDashboard />} /> 
+          <Route path="/shop" element={<ShopPage/>} />
+          <Route path = "/merchandise/:id"  element={<MerchandiseDetail/>} />
       </Routes>
     </BrowserRouter>
   );
