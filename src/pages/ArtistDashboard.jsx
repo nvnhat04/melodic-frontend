@@ -4,6 +4,8 @@ import MonthlyListeners from "../components/ArtistDashboard/MonthlyListeners";
 import Revenue from "../components/ArtistDashboard/Revenue";
 import Sidebar from "../components/ArtistDashboard/Sidebar";
 import TopMusicSection from "../components/ArtistDashboard/TopMusicSection";
+import { BrowserRouter } from "react-router-dom";
+import ArtistManageMerchandise from "./ArtistManageMerchandise";
 
 const mockTracksData = [
   {
@@ -73,37 +75,37 @@ const mockAlbumsData = [
 
 export default function ArtistDashboard() {
   return (
-    <Box sx={{ display: "flex", flexFlow: "row" }}>
-      <Sidebar />
-      <Box sx={{ display: "flex", flexFlow: "row wrap" }}>
-        <Box
-          component="main"
-          sx={{
-            flexGrow: 1,
-            p: 3,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "flex-start",
-            gap: "1em",
-          }}
-        >
-          <Typography variant="h6">Welcome back, John Coltraine!</Typography>
-          <Box sx={{ display: "flex", flexWrap:"wrap", gap: "1em" }}>
-            <MonthlyListeners />
-            <Revenue />
-          </Box>
-          <Box sx={{ display: "flex", flexFlow:"row wrap" }}>
-            <TopMusicSection
-              title="Top Monthly Tracks"
-              items={mockTracksData}
-            />
-            <TopMusicSection
-              title="Top Monthly Albums"
-              items={mockAlbumsData}
-            />
+      <Box sx={{ display: "flex", flexFlow: "row" }}>
+        <Sidebar />
+        <Box sx={{ display: "flex", flexFlow: "row wrap" }}>
+          <Box
+            component="main"
+            sx={{
+              flexGrow: 1,
+              p: 3,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "flex-start",
+              gap: "1em",
+            }}
+          >
+            <Typography variant="h6">Welcome back, John Coltraine!</Typography>
+            <Box sx={{ display: "flex", flexWrap: "wrap", gap: "1em" }}>
+              <MonthlyListeners />
+              <Revenue />
+            </Box>
+            <Box sx={{ display: "flex", flexFlow: "row wrap" }}>
+              <TopMusicSection
+                title="Top Monthly Tracks"
+                items={mockTracksData}
+              />
+              <TopMusicSection
+                title="Top Monthly Albums"
+                items={mockAlbumsData}
+              />
+            </Box>
           </Box>
         </Box>
       </Box>
-    </Box>
   );
 }
