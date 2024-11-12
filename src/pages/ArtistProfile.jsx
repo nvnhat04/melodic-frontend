@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Box, Stack, Typography } from "@mui/material";
 import uiConfigs from "../configs/ui.configs";
 import ImageHeader from "../components/common/ImageHeader";
-import AlbumSlider from "../components/common/AlbumSlider";
+import AlbumSlider from "../components/common/Slider";
 import Container from "../components/common/Container";
 import { MdPlayCircle } from "react-icons/md";
 const artistData = [
