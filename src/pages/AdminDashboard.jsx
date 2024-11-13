@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
@@ -28,8 +28,11 @@ const mockTracksData = [
 ];
 
 function AdminDashboard() {
-    const [selectedItem, setSelectedItem] = React.useState("Dashboard");
-  
+    const [selectedItem, setSelectedItem] = useState("Dashboard");
+    // const [manaUsers, setManaUsers] = useState([]);
+    // const [manaTracks, setManaTracks] = useState([]);
+    // const [manaPlaylists, setManaPlaylists] = useState([]);
+
     const handleItemClick = (item) => {
       setSelectedItem(item);
     };
@@ -164,6 +167,7 @@ function AdminDashboard() {
               </Box>
             </>
           )}
+         {/* Add other pages here */}
         </Box>
       </Box>
     );

@@ -12,38 +12,60 @@ const CreateAccountForm = () => {
 
   // State to handle hover effect
   const [isHovered, setIsHovered] = useState(false);
+  const [message, setMessage] = useState('');
+  const [showMessage, setShowMessage] = useState(false);
+
   const navigate = useNavigate();
   const handleChange = (e) => {
+    setShowMessage(false);
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
-  const [message, setMessage] = useState("");
-  const [showMessage, setShowMessage] = useState(false);
+
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    
-    // Handle form submission logic
-    const data = {
-      username: formData.username,
-      email: formData.email,
-      password: formData.password,
-      displayname: formData.name,
-    };
-      accountApi.signUp(data).then((res) => {
-      console.log(res);
-      if (res === 'User created') {
-        console.log('Account created successfully');
-        navigate('/login');
-      } else {
-        console.log('An error occurred. Please try again.');
-      }
-    });
-    if (data.username === "nguyetbinh") {
-      setMessage("Username is required");
+    if(formData.password.length < 6) {
       setShowMessage(true);
+      setMessage("Password and Confirm Password do not match");
+    }else if(formData.password !== formData.confirmPassword) {
+      setShowMessage(true);
+      setMessage("Password must be at least 6 characters");
+    }else if(formData.username.length < 6) {
+      setShowMessage(true);
+      setMessage("Username must be at least 6 characters");
     }
-  };
+    else {
+          // Handle form submission logic
+      const data = {
+        username: formData.username,
+        email: formData.email,
+        password: formData.password,
+        displayname: formData.name,
+      };
+        accountApi.signUp(data).then((res) => {
+        console.log(res);
+        if (res === 'User created') {
+          //console.log('Account created successfully');
+          navigate('/login');
+        } else {
+          console.log('An error occurred. Please try again.');
+        }
+      });
+      if (data.username === "nguyetbinh") {
+        setMessage("Username is required");
+        setShowMessage(true);
+      }
+      };
+    }
 
+// const handleChange = (event) => {
+//     setShowMessage(false);
+//     setFormData({
+//       ...formData,
+//       [event.target.name]: event.target.value,
+//     });
+//   };
   return (
     <div style={styles.container}>
   <form onSubmit={handleSubmit} style={styles.form}>
@@ -60,7 +82,7 @@ const CreateAccountForm = () => {
         style={styles.input}
         required
       />
-      {showMessage && <p style={styles.message}>{message}</p>}
+     
     </div>
 
     <div style={styles.formGroup}>
@@ -88,7 +110,7 @@ const CreateAccountForm = () => {
         required
       />
     </div>
-
+    
     <div style={styles.formGroup}>
       <label htmlFor="password" style={styles.label}>Password</label>
       <input
@@ -114,7 +136,7 @@ const CreateAccountForm = () => {
         required
       />
     </div>
-
+    {showMessage && <div style={{ color: 'red' }}>{message}</div>}
     <button
       type="submit"
       style={isHovered ? styles.buttonHover : styles.button}
