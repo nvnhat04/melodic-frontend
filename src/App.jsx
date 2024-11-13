@@ -7,6 +7,8 @@ import ArtistProfile from './pages/ArtistProfile';
 import ArtistDashboard from './pages/ArtistDashboard';
 import AdminDashboard from './pages/AdminDashboard';
 import PlayScreen from './pages/PlayScreen';
+import ShopPage from './pages/ShopPage';
+import MerchandiseDetail from './pages/MerchandiseDetail';
 
 function App() {
   return (
@@ -19,6 +21,8 @@ function App() {
           <Route path="/register" element={<Register />} /> 
           <Route path="/artist" element={<ArtistDashboard />} /> 
           <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/shop" element={<ShopPage/>} />
+          <Route path = "/merchandise/:id"  element={<MerchandiseDetail/>} />
       </Routes>
     </BrowserRouter>
   );

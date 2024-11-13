@@ -10,6 +10,7 @@ const Container = ({ header, children }) => {
             fontFamily: '"Roboto", sans-serif',
             fontSize: "1rem",
             fontWeight: "700",
+            color: "white",
             textTransform: "uppercase",
             position: "relative",
             "&::after": { 
@@ -21,7 +22,7 @@ const Container = ({ header, children }) => {
               right: 0,
               bottom: "1px",
               height: ".25em",
-              background: "rgba(7, 151, 144, 0.5)",
+              background: "#e75565",
             }, 
           }}
         >
