@@ -20,6 +20,26 @@ const Account = {
                 return error.response;
             }
         }
-    }
+    },
+    async getAllUsers() {
+        try {
+            const response = await Client.get("/account/all");
+            return response;
+        } catch (error) {
+            if (error.response) {
+                return error.response;
+            }
+        }
+    },
+    async deleteUser(id) {
+        try {
+            const response = await Client.delete(`/account/delete/${id}`);
+            return response;
+        } catch (error) {
+            if (error.response) {
+                return error.response;
+            }
+        }
+    },
 }
 export default Account;
