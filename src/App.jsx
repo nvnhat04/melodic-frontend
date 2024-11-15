@@ -8,6 +8,8 @@ import ArtistDashboard from './pages/ArtistDashboard';
 import PlayScreen from './pages/PlayScreen';
 import ShopPage from './pages/ShopPage';
 import MerchandiseDetail from './pages/MerchandiseDetail';
+import CartPage from './pages/CartPage';
+import MerchSearch from './pages/MerchSearch';
 
 function App() {
   return (
@@ -21,6 +23,8 @@ function App() {
           <Route path="/artist" element={<ArtistDashboard />} /> 
           <Route path="/shop" element={<ShopPage/>} />
           <Route path = "/merchandise/:id"  element={<MerchandiseDetail/>} />
+          <Route path = "/shop/cart" element={<CartPage/>} />
+          <Route path="/merch-search" element={<MerchSearch />} />
       </Routes>
     </BrowserRouter>
   );
