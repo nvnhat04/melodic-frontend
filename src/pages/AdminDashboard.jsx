@@ -17,11 +17,13 @@ import PlaylistPlayIcon from "@mui/icons-material/PlaylistPlay";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-
 const drawerWidth = 240;
-
 import ManageRequest from "../components/Admin/ManageRequest";
 import Management from "../components/Admin/Management";
+
+import accountApi from "../api/modules/account.api";
+import trackApi from "../api/modules/track.api";
+import playlistApi from "../api/modules/playlist.api";
 
 const mockTracksData = [
   { id: 1, title: "Wildflower", image: "https://upload.wikimedia.org/wikipedia/en/6/68/John_Coltrane_-_Blue_Train.jpg", artist: "Billie Eilish" },
@@ -29,37 +31,9 @@ const mockTracksData = [
   { id: 3, title: "Fein", image: "https://upload.wikimedia.org/wikipedia/en/c/c2/Travis_Scott_and_Chase_B_-_Fe%21n_%28Chase_B_remix%29.png", artist: "Travis Scott" },
   { id: 4, title: "Trí trá", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT5fw24xh7c-YIPKPch7zXsG9kSPgkcfJFqJQ&s", artist: "Wrxdie" },
 ];
-const userdata = [
-  {
-    id: "6vWDO969PvNqNYHIOW5v0m",
-    username: "beyonce",
-    date_of_birth: "20-11-1995",
-    display_name: "Beyoncé",
-    avatar: "https://i.scdn.co/image/ab6761610000e5eb247f44069c0bd1781df2f785",
-    bio: null,
-    password: "123456789",
-    email: "beyonce@gmail.com",
-    gender: null,
-    user_role: "artist",
-    backdrop: null,
-  },
-  {
-    id: "06HL4z0CvFAxyc27GXpf02",
-    username: "taylorswift",
-    date_of_birth: "20-11-1995",
-    display_name: "Taylor Swift",
-    avatar: "https://i.scdn.co/image/ab6761610000e5ebe672b5f553298dcdccb0e676",
-    bio: null,
-    password: "123456789",
-    email: "taylorswift@gmail.com",
-    gender: null,
-    user_role: "artist",
-    backdrop: null,
-  },
-  // Add more items as needed
-];
 
-const columns = [
+
+const users = [
     { id: "id", label: "ID" },
     { id: "username", label: "Username" },
     { id: "date_of_birth", label: "Date of Birth" },
@@ -68,15 +42,46 @@ const columns = [
     { id: "gender", label: "Gender" },
     { id: "user_role", label: "User Role" },
   ];
+const tracks = [
+    { id: "id", label: "ID" },
+    { id: "title", label: "Title" },
+    { id: "artist", label: "Artist" },
+    { id: "image", label: "Image" },
+  ];
+const playlists = [
+    { id: "id", label: "ID" },
+    { id: "name", label: "Name" },
+    { id: "description", label: "Description" },
+    { id: "cover", label: "Image" },
+    { id: "date_created", label: "Date Created" },
+    {id: "date_modified", label: "Date Modified"},
+    {id:"is_public", label: "Is Public"},
+    {id: "creator_id", label: "Creator ID"},
+];
 
 function AdminDashboard() {
     const [selectedItem, setSelectedItem] = useState("Dashboard");
-
+    const [usersData, setUsersData] = useState([]);
+    const [tracksData, setTracksData] = useState([]);
+    const [playlistsData, setPlaylistsData] = useState([]);
 
     const handleItemClick = (item) => {
       setSelectedItem(item);
     };
-  
+    useEffect(() => {
+      // fetch users data
+      accountApi.getAllUsers().then((res) => {
+        setUsersData(res);
+      });
+      // fetch tracks data
+      trackApi.getAllTracks().then((res) => {
+        setTracksData(res);
+      });
+      // fetch playlists data
+      playlistApi.getAllPlaylists().then((res) => {
+        setPlaylistsData(res);
+      });
+    }, []);
     return (
       <Box sx={{ display: "flex", backgroundColor: "#f9f9f9", height: "100vh" }}>
         <Drawer
@@ -137,7 +142,13 @@ function AdminDashboard() {
             <ManageRequest mockTracksData={mockTracksData}/>
           )}
           {selectedItem === "Users" && (
-            <Management data={userdata} columns={columns}/>
+            <Management delete={accountApi.deleteUser} getAllData={accountApi.getAllUsers} items={usersData} columns={users}/>
+          )}
+          {selectedItem === "Tracks" && (
+            <Management delete={trackApi.deleteTrackById} getAllData={trackApi.getAllTracks} items={tracksData} columns={tracks}/>
+          )}
+          {selectedItem === "Playlists" && (
+            <Management delete={playlistApi.deletePlaylist} getAllData={playlistApi.getAllPlaylists} items={playlistsData} columns={playlists}/>
           )}
 
          {/* Add other pages here */}

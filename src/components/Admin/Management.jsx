@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState , useMemo} from "react";
 
 import Container from "../common/Container.jsx";
 import {
@@ -24,31 +24,34 @@ const columns =[
 
 ]
 
-function Management({accountApi, data = [], columns =[]}) {
-    // const [data, setData] = useState([]);
+function Management({delete: handleDelete ,getAllData: getAllData, items = [], columns =[]}) {
+    const [data, setData] = useState(items || []);
     const [selectedItems, setSelectedItems] = useState([]);
     const [searchText, setSearchText] = useState("");
     const [open, setOpen] =useState(false);
     const [selectedItemName, setSelectedItemName] = useState("");
+    const [currentPage, setCurrentPage] = useState(1);
+    const [highlightedItemId, setHighlightedItemId] = useState(null); // State to track highlighted item
+    const itemsPerPage = 10;
+
+  // Calculate the total number of pages
+    const totalPages = Math.ceil(items.length / itemsPerPage);
+
+    // Calculate the data to be displayed on the current page
+    //const paginatedData = data.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+    const paginatedData = useMemo(() => {
+        return data.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+    }, [data, currentPage, itemsPerPage]);
+    // Handle page change
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+    };
     const handleOpen = (itemName) => {
         setOpen(true);
         setSelectedItemName(itemName);
     };
     const handleClose = () => setOpen(false);
 
-    // useEffect(() => {
-    //     // const fetchUsers = async () => {
-    //     // try {
-    //     //     // const response = await accountApi.getAllUsers();
-    //     //     setUsers(userdata);
-    //     // } catch (error) {
-    //     //     console.error("Failed to fetch users:", error);
-    //     // }
-    //     // };
-
-    //     // fetchUsers();
-    //     setData(Array.isArray(listData) ? listData : []);
-    // }, []);
 
     const handleSelectItem = (itemName) => {
         const selectedIndex = selectedItems.indexOf(itemName);
@@ -76,64 +79,74 @@ function Management({accountApi, data = [], columns =[]}) {
 
     const scrollToCharacter = (character) => {
         if (character != "") {
-        let index = data.findIndex((user) =>
-            user.username.toLowerCase().startsWith(character)
-        );
+        let index = data.findIndex(item => String(item.id).toLowerCase().startsWith(character.toLowerCase()));
         if (index === -1) {
-            index = data.findIndex((user) =>
-            user.name.toLowerCase().startsWith(character)
-            );
-        }
-        if (index === -1) {
-            index = data.findIndex((user) =>
-            user.email.toLowerCase().startsWith(character)
-            );
+            index = data.findIndex((item) => {
+                const value = Object.values(item);
+                return value[1].toLowerCase().startsWith(character);
+            });
         }
         if (index !== -1) {
-            const tableRow = document.getElementById(
-            `row-${data[index].username}`
-            );
-            if (tableRow) {
-            tableRow.scrollIntoView({ behavior: "smooth", block: "start" });
-            }
+            const pageNumber = Math.floor(index / itemsPerPage) + 1;
+            setCurrentPage(pageNumber);
+        
+            // Wait for the page to update before scrolling into view
+            setTimeout(() => {
+                const tableRow = document.getElementById(`row-${data[index].id}`);
+                if (tableRow) {
+                    tableRow.scrollIntoView({ behavior: "smooth", block: "start" });
+                }
+            }, 0);
+            setHighlightedItemId(data[index].id);
         }
+        console.log(index);
         }
     };
 
-    const HandleDeleteAccounts = async (itemToDelete) => {
+    const HandleDeleteItem = async (itemToDelete) => {
         try {
         if (Array.isArray(itemToDelete)) {
-            for (const user of itemToDelete) {
-            console.log("th1: " + user);
+            for (const item of itemToDelete) {
+            console.log("th1: " + item);
             const data = {
-                username: user,
+                id: item,
             };
-            console.log('Delete successfully');
-            // await accountApi.adminDeleteAccount(JSON.stringify(data));
+            
+            await handleDelete(data.id).then((res) => {
+                console.log(res);
+                if (res.success) {
+                console.log("Delete success");
+                } else {
+                console.log("Delete failed");
+                }
+            });
             }
         } else {
             console.log("th2: " + itemToDelete);
             const data = {
-            username: itemToDelete,
+            id: itemToDelete,
             };
-            console.log('Delete successfully');
-            // await accountApi.adminDeleteAccount(data).then((res) => {
-            // if (res.success) {
-            //     console.log("Delete success");
-            // } else {
-            //     console.log("Delete failed");
-            // }
-            // });
+            // console.log(data);
+            await handleDelete(data.id).then((res) => {
+                console.log(res);
+            if (res.success) {
+                console.log("Delete success");
+            } else {
+                console.log("Delete failed");
+            }
+            });
         }
-        // const response = await accountApi.getAlldata();
-        // setdata(response.data);
+        const response = await getAllData().then((res) => {
+            // console.log(res);
+            return res;
+        });
+        setData(response);
         // console.log(response.data);
         } catch (error) {
         console.error("Failed to delete accounts:", error);
         }
         setOpen(false);
     };
-
     return (
         <Box sx={{ margin: "2em" }}>
         <Stack
@@ -141,8 +154,8 @@ function Management({accountApi, data = [], columns =[]}) {
             sx={{ marginBottom: "2em" }}
             justifyContent="center"
         >
-            <Box width="50%">
-            <Container header={"Admin"}></Container>
+            <Box width="60%" sx={{ color: 'red' }}>
+            {/* <Container header={"Admin"} ></Container> */}
             </Box>
             <Stack direction="row" spacing={1} alignItems="center" width="50%">
             <TextField
@@ -180,7 +193,7 @@ function Management({accountApi, data = [], columns =[]}) {
                     if (selectedItems.length === data.length) {
                         setSelectedItems([]);
                     } else {
-                        setSelectedItems(data.map((user) => user.username));
+                        setSelectedItems(data.map((item) => item.id));
                     }
                     }}
                 />
@@ -208,8 +221,8 @@ function Management({accountApi, data = [], columns =[]}) {
             </TableHead>
             <TableBody>
                
-            {data.map((item) => (
-                <TableRow key={item.id} id={`row-${item.id}`}>
+            {paginatedData.map((item) => (
+                <TableRow key={item.id} id={`row-${item.id}`} style={{ backgroundColor: item.id === highlightedItemId ? 'yellow' : 'transparent' }}>
                 <TableCell padding="checkbox">
                     <Checkbox
                     checked={selectedItems.indexOf(item.id) !== -1}
@@ -220,16 +233,9 @@ function Management({accountApi, data = [], columns =[]}) {
                 {columns.map((column) => (
                     <TableCell key={column.id}>{item[column.id]}</TableCell>
                 ))}
-
-                {/* <TableCell>{item.id}</TableCell>
-                <TableCell>{item.itemname}</TableCell>
-                <TableCell>{item.display_name}</TableCell>
-                <TableCell>{item.date_of_birth}</TableCell>
-                <TableCell>{item.email}</TableCell>
-                <TableCell>{item.item_role}</TableCell> */}
                 <TableCell>
                     <IconButton
-                    onClick={() => handleOpen(item.itemname)}
+                    onClick={() => handleOpen(item.id)}
                     aria-label="delete"
                     >
                     <DeleteIcon />
@@ -239,6 +245,21 @@ function Management({accountApi, data = [], columns =[]}) {
             ))}
             </TableBody>
         </Table>
+        <Box display="flex" justifyContent="center" alignItems="center" mt={2}>
+            <Button
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+            >
+            Previous
+            </Button>
+            <Box mx={2}>Page {currentPage} of {totalPages}</Box>
+            <Button
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
+            >
+            Next
+            </Button>
+        </Box>
         <Modal
             open={open}
             onClose={handleClose}
@@ -274,7 +295,7 @@ function Management({accountApi, data = [], columns =[]}) {
             </Typography>
             <Stack marginTop="2em" direction="row" justifyContent="space-evenly">
                 <Button
-                onClick={() => HandleDeleteAccounts(selectedItemName)}
+                onClick={() => HandleDeleteItem(selectedItemName)}
                 variant="outlined"
                 size="medium"
                 >
