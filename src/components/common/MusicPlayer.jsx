@@ -16,6 +16,7 @@ import {
   MdQueueMusic,
   MdReplay,
 } from "react-icons/md";
+
 import { Box, duration } from "@mui/material";
 import { Link } from "react-router-dom";
 import { Modal } from "@mui/material";
@@ -192,10 +193,13 @@ function MusicPlayer() {
       className="playBar"
       sx={{
         display: "flex",
-        justifyContent: "space-around",
+        justifyContent: "space-center",
         alignItems: "center",
-        backgroundColor: "lightgray",
-        height: "13%",
+        backgroundColor: "#aaaaab",
+        color: "white",
+        opacity: 0.9,
+        height: "10%",
+        minHeight: "65px",
         position: "fixed",
         bottom: 0,
         width: "100%",
@@ -205,22 +209,27 @@ function MusicPlayer() {
       <audio ref={audioPlayerProps.audioRef} src={queueSong[audioPlayerProps.currentSongIndex].file} />
 
       {/* Song details */}
-      <Box sx={{ display: "flex", alignItems: "center", gap: "30px" }}>
+      <Box sx={{ display: "flex",
+          alignItems: "center",
+          gap: "10px" ,
+          width: "20%",
+          position: "relative",
+          paddingLeft: "20px"}}>
         <img
           src={queueSong[audioPlayerProps.currentSongIndex].img ? queueSong[audioPlayerProps.currentSongIndex].img : "https://www.scdn.co/i/_global/open-graph-default.png"}
           alt="img"
           style={{
-            width: "50px",
-            height: "50px",
+            width: "20%",
+            height: "20%",
             objectFit: "cover",
             borderRadius: "50%",
           }}
         />
         <Box>
-          <p style={{ margin: 0, fontSize: "20px" }}>
+          <p style={{ margin: 0, fontSize: "1.2em" }}>
             {queueSong[audioPlayerProps.currentSongIndex].title}
           </p>
-          <p style={{ margin: 0, fontSize: "10px" }}>
+          <p style={{ margin: 0, fontSize: "0.7em" }}>
             {queueSong[audioPlayerProps.currentSongIndex].artist}
           </p>
         </Box>
@@ -233,16 +242,20 @@ function MusicPlayer() {
           display: "flex",
           alignItems: "center",
           flexDirection: "column",
-          padding: "25px 0px 5px 0px",
+          // justifyContent: "space-center",
+          width: "40%",
+          // position: "relative",
         }}
       >
-        <Box sx={{ display: "flex", gap: "20px" }}>
+        <Box sx={{ display: "flex",
+            gap: "20px",
+            paddingTop: "30px"}}>
           <MdShuffle size={20} />
           <MdSkipPrevious size={24} onClick={audioPlayerProps.handlePrevious} />
           <div onClick={audioPlayerProps.togglePlayPause}>
             {audioPlayerProps.isPause ? <MdPlayArrow size={24} /> : <MdPause size={24} />}
           </div>
-          <MdSkipNext size={24} onClick={audioPlayerProps.handleNext} />
+          <MdSkipNext size={24}  onClick={audioPlayerProps.handleNext} />
           <div>
             <MdReplay size={20} onClick={audioPlayerProps.handleReplay} />
           </div>
@@ -253,7 +266,9 @@ function MusicPlayer() {
             display: "flex",
             alignItems: "center",
             gap: "10px",
-            width: "500px",
+            width: "100%",
+            paddingBottom: "20px",
+            height: "20px",
           }}
         >
           <p>{audioPlayerProps.formatDuration(audioPlayerProps.currentTime)}</p>
@@ -263,7 +278,7 @@ function MusicPlayer() {
             max="100"
             value={isNaN(audioPlayerProps.seekValue) ? 0 : audioPlayerProps.seekValue}
             onChange={audioPlayerProps.handleSeekChange}
-            style={{ width: "80%" }}
+            style={{ width: "80%", padding: 0}}
           />
           <p>
             {Math.floor(queueSong[audioPlayerProps.currentSongIndex].duration / 60)} :{" "}
@@ -273,7 +288,11 @@ function MusicPlayer() {
       </Box>
 
       {/* Volume control */}
-      <Box sx={{ display: "flex", alignItems: "center", gap: "10px" }}>
+      <Box sx={{ display: "flex", 
+        alignItems: "center", 
+        gap: "10px" ,
+        width: "15%",
+        position: "relative"}}>
         {audioPlayerProps.currentVolume === 0 ? (
           <MdVolumeMute size={20} />
         ) : (
@@ -285,10 +304,11 @@ function MusicPlayer() {
           max="100"
           value={audioPlayerProps.currentVolume}
           onChange={audioPlayerProps.handleVolumeChange}
-          style={{ width: "100px" }}
+          style={{ width: "70%" }}
         />
       </Box>
-      <Box sx={{ display: "flex", alignItems: "center", gap: "10px" }}>
+
+      <Box sx={{ display: "flex", alignItems: "center", gap: "10px" , width: "10%", position: "relative"}}>
         <MdQueueMusic size={20} />
         {/* <Link to={`/play/${firstSong.id}`} style={{textDecoration: 'none', color: 'black'}}> */}
         <MdZoomOutMap size={20} onClick={openPlayScreen} />
