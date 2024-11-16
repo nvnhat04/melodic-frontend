@@ -4,6 +4,7 @@ import SideBar from "../components/common/Sidebar/Sidebar";
 import { Box, Stack, Typography } from "@mui/material";
 import Container from "../components/common/Container";
 import MusicPlayer from "../components/common/MusicPlayer";
+import Sidebar from "../components/common/Sidebar/Sidebar";
 
 const mockAlbums = [
   {
@@ -63,41 +64,7 @@ function HomePage() {
   }, []);
 
   return (
-    <Box sx={{ display: "flex", backgroundColor: "#1f1f1f" }}>
-      <Box
-        sx={{
-          width: "15%",
-          backgroundColor: "#111", // Dark sidebar background
-        }}
-      >
-        <SideBar />
-      </Box>
-      <Box
-        sx={{
-          flex: 1,
-          display: "flex",
-          flexDirection: "column",
-          backgroundColor: "#1f1f1f",
-        }}
-      >
-        <Box
-          sx={{
-            paddingTop: "1em",
-            paddingBottom: "1em",
-            height: "20%",
-            width: "100%",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            borderBottom: "1px solid #333",
-            backgroundColor: "#000", // Dark top section background
-          }}
-        >
-          <Typography variant="h6" align="center" sx={{ color: "#fff" }}>
-            Top Section
-          </Typography>
-        </Box>
-        <Stack
+    <Stack
           spacing={7}
           sx={{ width: "75vw", margin: "2rem auto", color: "#fff" }}
         >
@@ -118,10 +85,6 @@ function HomePage() {
           )}
           <Box sx={{ height: "13%", width: "100%" }}></Box>
         </Stack>
-
-        <MusicPlayer />
-      </Box>
-    </Box>
   );
 }
 
