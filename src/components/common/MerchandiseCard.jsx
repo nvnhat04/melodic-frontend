@@ -1,6 +1,7 @@
 import { createTheme, ThemeProvider } from "@mui/material";
-import Paper from "@mui/material/Box";
+import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
 
 const merchandise = {
   name: `‘I LOVE YOU.’ 10th ANNIVERSARY EDITION 2xLP + ‘THE LOVE COLLECTION’ 7”`,
@@ -21,21 +22,32 @@ const MerchandiseCard = () => {
     <ThemeProvider theme={theme}>
       <Paper
         sx={{
-          width: "20%",
-          minWidth: "10em",
+          width: "80%",
           textAlign: "center",
-          fontSize: "14px",
+          fontSize: "1em",
+          padding: 2,
+          overflow: "hidden",
+          cursor: "pointer",
+          "&:hover img": {
+            opacity: 0.7,
+          },
+          border: "none",
+          boxShadow: "none",
         }}
       >
-        <img
+        <Box
+          component="img"
           src={merchandise.image}
           alt={merchandise.name}
-          width="100%"
-          style={{ objectFit: "cover", aspectRatio: "1/1" }}
+          sx={{
+            width: "100%",
+            objectFit: "cover",
+            aspectRatio: "1/1",
+          }}
         />
         <Typography
           sx={{
-            fontSize: "1rem",
+            fontSize: "1em",
             fontWeight: "600",
             lineHeight: "1.4",
           }}
@@ -43,7 +55,8 @@ const MerchandiseCard = () => {
           {merchandise.name}
         </Typography>
         <Typography
-          sx={{ fontSize: ".9rem", fontWeight: "600", color: "#1a1a1a" }}
+          mt={1}
+          sx={{ fontSize: "0.8em", fontWeight: "600", color: "#1a1a1a" }}
         >
           ${merchandise.price}
         </Typography>
