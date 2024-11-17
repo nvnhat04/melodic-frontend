@@ -25,7 +25,7 @@ const ArtistDrawer = ({
   container,
 }) => {
   const location = useLocation();
-  
+
   const artist = {
     name: "The Neighbourhood",
     img: "https://media.pitchfork.com/photos/5a9f0c13b848c0268b2016bb/1:1/w_800,h_800,c_limit/The%20Neighbourhood.jpg",
@@ -125,9 +125,8 @@ const ArtistDrawer = ({
   );
 
   return (
-    <>
+    <Box>
       <Drawer
-        p={2}
         container={container}
         variant="temporary"
         open={mobileOpen}
@@ -159,7 +158,7 @@ const ArtistDrawer = ({
       >
         {drawer}
       </Drawer>
-    </>
+    </Box>
   );
 };
 
