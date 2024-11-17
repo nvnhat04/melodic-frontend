@@ -17,7 +17,8 @@ import {
   MdReplay,
 } from "react-icons/md";
 
-import { Box, duration } from "@mui/material";
+
+import { Box, Slider} from "@mui/material";
 import { Link } from "react-router-dom";
 import { Modal } from "@mui/material";
 import PlayScreen from "../../pages/PlayScreen";
@@ -95,7 +96,7 @@ function MusicPlayer() {
   const closePlayScreen = () => {
     setIsPlayScreenOpen(false);
   };
-  console.log("seekValue in MusicPlayer", audioPlayerProps.seekValue);
+ // console.log("seekValue in MusicPlayer", audioPlayerProps.seekValue);
 
   //     const togglePlayPause = () => {
   //         if (isPause) {
@@ -195,7 +196,7 @@ function MusicPlayer() {
         display: "flex",
         justifyContent: "space-center",
         alignItems: "center",
-        backgroundColor: "#aaaaab",
+        backgroundColor: "#323232",
         color: "white",
         opacity: 0.9,
         height: "10%",
@@ -269,17 +270,23 @@ function MusicPlayer() {
             width: "100%",
             paddingBottom: "20px",
             height: "20px",
+            // color: "#FD8989",
           }}
         >
           <p>{audioPlayerProps.formatDuration(audioPlayerProps.currentTime)}</p>
-          <input
-            type="range"
-            min="0"
-            max="100"
+          <Slider
+            aria-label="time-indicator"
+            size="15px"
             value={isNaN(audioPlayerProps.seekValue) ? 0 : audioPlayerProps.seekValue}
             onChange={audioPlayerProps.handleSeekChange}
-            style={{ width: "80%", padding: 0}}
+            sx={{
+              color: "#e75565",
+              height: 5,
+              "& .MuiSlider-thumb": { display: "none" },
+              width: "80%",
+            }}
           />
+    
           <p>
             {Math.floor(queueSong[audioPlayerProps.currentSongIndex].duration / 60)} :{" "}
             {queueSong[audioPlayerProps.currentSongIndex].duration % 60}
@@ -298,14 +305,18 @@ function MusicPlayer() {
         ) : (
           <MdVolumeUp size={20} />
         )}
-        <input
-          type="range"
-          min="0"
-          max="100"
-          value={audioPlayerProps.currentVolume}
-          onChange={audioPlayerProps.handleVolumeChange}
-          style={{ width: "70%" }}
-        />
+        <Slider
+            aria-label="time-indicator"
+            size="15px"
+            value={audioPlayerProps.currentVolume}
+            onChange={audioPlayerProps.handleVolumeChange}
+            sx={{
+              color: "#e75565",
+              height: 5,
+              "& .MuiSlider-thumb": { display: "none" },
+              width: "70%",
+            }}
+          />
       </Box>
 
       <Box sx={{ display: "flex", alignItems: "center", gap: "10px" , width: "10%", position: "relative"}}>
