@@ -32,6 +32,8 @@ function Management({delete: handleDelete ,getAllData: getAllData, items = [], c
     const [selectedItemName, setSelectedItemName] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
     const [highlightedItemId, setHighlightedItemId] = useState(null); // State to track highlighted item
+    const [message, setMessage] = useState("");
+    const [showMessage, setShowMessage] = useState(false);
     const itemsPerPage = 10;
 
   // Calculate the total number of pages
@@ -87,6 +89,7 @@ function Management({delete: handleDelete ,getAllData: getAllData, items = [], c
             });
         }
         if (index !== -1) {
+            setShowMessage(false);
             const pageNumber = Math.floor(index / itemsPerPage) + 1;
             setCurrentPage(pageNumber);
         
@@ -98,6 +101,12 @@ function Management({delete: handleDelete ,getAllData: getAllData, items = [], c
                 }
             }, 0);
             setHighlightedItemId(data[index].id);
+        }
+        if(index === -1) {
+            // alert("No data found");
+            setHighlightedItemId(null);
+            setMessage("Data not found");
+            setShowMessage(true);
         }
         console.log(index);
         }
@@ -157,19 +166,22 @@ function Management({delete: handleDelete ,getAllData: getAllData, items = [], c
             <Box width="60%" sx={{ color: 'red' }}>
             {/* <Container header={"Admin"} ></Container> */}
             </Box>
-            <Stack direction="row" spacing={1} alignItems="center" width="50%">
-            <TextField
-                label="Search"
-                value={searchText}
-                onChange={handleSearchChange}
-                sx={{ marginBottom: "1em", width: "78%" }}
-                onKeyPress={(event) => {
-                if (event.key === "Enter" && !event.shiftKey && !event.ctrlKey) {
-                    event.preventDefault();
-                    scrollToCharacter(searchText);
-                }
-                }}
-            />
+            <Stack direction="row" spacing={1}  width="50%">
+                <Stack direction="column" spacing={1} alignItems={'center'} width={'80%'}>
+                    <TextField
+                        label="Search"
+                        value={searchText}
+                        onChange={handleSearchChange}
+                        sx={{ marginBottom: "1em", width: "78%" }}
+                        onKeyPress={(event) => {
+                        if (event.key === "Enter" && !event.shiftKey && !event.ctrlKey) {
+                            event.preventDefault();
+                            scrollToCharacter(searchText);
+                        }
+                        }}
+                    />
+                    {showMessage && <Typography variant="h10" color="error">{message}</Typography>}
+                </Stack>
             <IconButton
                 onClick={() => scrollToCharacter(searchText)}
                 size="large"
@@ -179,6 +191,7 @@ function Management({delete: handleDelete ,getAllData: getAllData, items = [], c
             </IconButton>
             </Stack>
         </Stack>
+        
         <Table>
             <TableHead>
             <TableRow>
