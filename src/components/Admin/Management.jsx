@@ -24,8 +24,8 @@ const columns =[
 
 ]
 
-function Management({delete: handleDelete ,getAllData: getAllData, items = [], columns =[]}) {
-    const [data, setData] = useState(items || []);
+function Management({delete: handleDelete ,getAllData: getAllData,columns =[]}) {
+    const [data, setData] = useState([]);
     const [selectedItems, setSelectedItems] = useState([]);
     const [searchText, setSearchText] = useState("");
     const [open, setOpen] =useState(false);
@@ -37,7 +37,7 @@ function Management({delete: handleDelete ,getAllData: getAllData, items = [], c
     const itemsPerPage = 10;
 
   // Calculate the total number of pages
-    const totalPages = Math.ceil(items.length / itemsPerPage);
+    const totalPages = Math.ceil(data.length / itemsPerPage);
 
     // Calculate the data to be displayed on the current page
     //const paginatedData = data.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
@@ -54,7 +54,11 @@ function Management({delete: handleDelete ,getAllData: getAllData, items = [], c
     };
     const handleClose = () => setOpen(false);
 
-
+    useEffect(() => {
+        getAllData().then((res) => {
+            setData(res);
+        });
+    });
     const handleSelectItem = (itemName) => {
         const selectedIndex = selectedItems.indexOf(itemName);
         let newSelected = [];

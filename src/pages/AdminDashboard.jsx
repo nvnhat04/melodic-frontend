@@ -18,69 +18,38 @@ import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 const drawerWidth = 240;
-import ManageRequest from "../components/Admin/ManageRequest";
-import Management from "../components/Admin/Management";
 
-import accountApi from "../api/modules/account.api";
-import trackApi from "../api/modules/track.api";
-import playlistApi from "../api/modules/playlist.api";
+import { Outlet } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-const mockTracksData = [
-  { id: 1, title: "Wildflower", image: "https://upload.wikimedia.org/wikipedia/en/6/68/John_Coltrane_-_Blue_Train.jpg", artist: "Billie Eilish" },
-  { id: 2, title: "APT", image: "https://upload.wikimedia.org/wikipedia/en/5/52/Ros%C3%A9_and_Bruno_Mars_-_Apt..png", artist: "ROSÉ & Bruno Mars" },
-  { id: 3, title: "Fein", image: "https://upload.wikimedia.org/wikipedia/en/c/c2/Travis_Scott_and_Chase_B_-_Fe%21n_%28Chase_B_remix%29.png", artist: "Travis Scott" },
-  { id: 4, title: "Trí trá", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT5fw24xh7c-YIPKPch7zXsG9kSPgkcfJFqJQ&s", artist: "Wrxdie" },
-];
-
-
-const users = [
-    { id: "id", label: "ID" },
-    { id: "username", label: "Username" },
-    { id: "date_of_birth", label: "Date of Birth" },
-    { id: "display_name", label: "Display Name" },
-    { id: "email", label: "Email" },
-    { id: "gender", label: "Gender" },
-    { id: "user_role", label: "User Role" },
-  ];
-const tracks = [
-    { id: "id", label: "ID" },
-    { id: "title", label: "Title" },
-    { id: "artist", label: "Artist" },
-    { id: "image", label: "Image" },
-  ];
-const playlists = [
-    { id: "id", label: "ID" },
-    { id: "name", label: "Name" },
-    { id: "description", label: "Description" },
-    { id: "cover", label: "Image" },
-    { id: "date_created", label: "Date Created" },
-    {id: "date_modified", label: "Date Modified"},
-    {id:"is_public", label: "Is Public"},
-    {id: "creator_id", label: "Creator ID"},
-];
 
 function AdminDashboard() {
     const [selectedItem, setSelectedItem] = useState("Dashboard");
-    const [usersData, setUsersData] = useState([]);
-    const [tracksData, setTracksData] = useState([]);
-    const [playlistsData, setPlaylistsData] = useState([]);
+    // const [usersData, setUsersData] = useState([]);
+    // const [tracksData, setTracksData] = useState([]);
+    // const [playlistsData, setPlaylistsData] = useState([]);
+    const navigate = useNavigate();
 
-    const handleItemClick = (item) => {
+    const handleNavigate = (path, item) => {
+      navigate(path);
       setSelectedItem(item);
-    };
+    }
+    
     useEffect(() => {
       // fetch users data
-      accountApi.getAllUsers().then((res) => {
-        setUsersData(res);
-      });
-      // fetch tracks data
-      trackApi.getAllTracks().then((res) => {
-        setTracksData(res);
-      });
-      // fetch playlists data
-      playlistApi.getAllPlaylists().then((res) => {
-        setPlaylistsData(res);
-      });
+      // accountApi.getAllUsers().then((res) => {
+      //   setUsersData(res);
+      // });
+      // // fetch tracks data
+      // trackApi.getAllTracks().then((res) => {
+      //   setTracksData(res);
+      // });
+      // // fetch playlists data
+      // playlistApi.getAllPlaylists().then((res) => {
+      //   setPlaylistsData(res);
+      // });
+      setSelectedItem("Dashboard");
+      navigate("/admin");
     }, []);
     return (
       <Box sx={{ display: "flex", backgroundColor: "#f9f9f9", height: "100vh" }}>
@@ -110,14 +79,16 @@ function AdminDashboard() {
           {/*Sidebar */}
           <List>
             {[
-              { text: "Dashboard", icon: <HomeIcon /> },
-              { text: "Users", icon: <PeopleIcon /> },
-              { text: "Tracks", icon: <LibraryMusicIcon /> },
-              { text: "Playlists", icon: <PlaylistPlayIcon /> },
+              { text: "Dashboard", icon: <HomeIcon />, path: "/admin" },
+              { text: "Users", icon: <PeopleIcon />, path: "/admin/users" },
+              { text: "Tracks", icon: <LibraryMusicIcon />, path: "/admin/tracks" },
+              { text: "Playlists", icon: <PlaylistPlayIcon />, path: "/admin/playlists" },
             ].map((item) => (
               <ListItem key={item.text} disablePadding>
                 <ListItemButton
-                  onClick={() => handleItemClick(item.text)}
+                  onClick={() => handleNavigate(item.path, item.text)}
+                  // handleNavigate(item.path)
+                  //handleItemClick(item.text)
                   sx={{
                     backgroundColor: selectedItem === item.text ? "#f5f5f5" : "transparent",
                     borderRadius: "4px",
@@ -137,11 +108,11 @@ function AdminDashboard() {
           </List>
         </Drawer>
   
-        <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-          {selectedItem === "Dashboard" && (
+        <Box component="main" sx={{ flexGrow: 1, p: 3 }} >
+          {/* {selectedItem === "Dashboard" && (
             <ManageRequest mockTracksData={mockTracksData}/>
-          )}
-          {selectedItem === "Users" && (
+          )} */}
+          {/* {selectedItem === "Users" && (
             <Management delete={accountApi.deleteUser} getAllData={accountApi.getAllUsers} items={usersData} columns={users}/>
           )}
           {selectedItem === "Tracks" && (
@@ -149,8 +120,8 @@ function AdminDashboard() {
           )}
           {selectedItem === "Playlists" && (
             <Management delete={playlistApi.deletePlaylist} getAllData={playlistApi.getAllPlaylists} items={playlistsData} columns={playlists}/>
-          )}
-
+          )} */}
+          <Outlet />
          {/* Add other pages here */}
         </Box>
       </Box>
