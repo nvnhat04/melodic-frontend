@@ -11,6 +11,14 @@ import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 
 const ArtistManageMerchandise = () => {
+  const merchandise = {
+    name: `‘I LOVE YOU.’ 10th ANNIVERSARY EDITION 2xLP + ‘THE LOVE COLLECTION’ 7”`,
+    category: "Physical Album",
+    price: "25",
+    image:
+      "https://shop.thenbhd.com/cdn/shop/products/TheNBHD_ILoveYouD2C_1024x1024@2x.png?v=1681914792",
+  };
+
   const [sort, setSort] = React.useState("newest");
   const handleSortChange = (event) => {
     setSort(event.target.value);
@@ -63,19 +71,19 @@ const ArtistManageMerchandise = () => {
         p={2}
       >
         <Grid size={1}>
-          <MerchandiseCard />
+          <MerchandiseCard merchandise={merchandise} />
         </Grid>
         <Grid size={1}>
-          <MerchandiseCard />
+          <MerchandiseCard merchandise={merchandise} />
         </Grid>
         <Grid size={1}>
-          <MerchandiseCard />
+          <MerchandiseCard merchandise={merchandise} />
         </Grid>
         <Grid size={1}>
-          <MerchandiseCard />
+          <MerchandiseCard merchandise={merchandise} />
         </Grid>
         <Grid size={1}>
-          <MerchandiseCard />
+          <MerchandiseCard merchandise={merchandise} />
         </Grid>
       </Grid>
       <Stack spacing={2} alignSelf="center">

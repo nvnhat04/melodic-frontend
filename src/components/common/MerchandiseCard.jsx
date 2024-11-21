@@ -3,21 +3,13 @@ import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 
-const merchandise = {
-  name: `‘I LOVE YOU.’ 10th ANNIVERSARY EDITION 2xLP + ‘THE LOVE COLLECTION’ 7”`,
-  category: "Physical Album",
-  price: "25",
-  image:
-    "https://shop.thenbhd.com/cdn/shop/products/TheNBHD_ILoveYouD2C_1024x1024@2x.png?v=1681914792",
-};
-
 const theme = createTheme({
   typography: {
     fontFamily: ["Neue Helvetica Condensed BQ", "san-serif"].join(","),
   },
 });
 
-const MerchandiseCard = () => {
+const MerchandiseCard = ({merchandise}) => {
   return (
     <ThemeProvider theme={theme}>
       <Paper
