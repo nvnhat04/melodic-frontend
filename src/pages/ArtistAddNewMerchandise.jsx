@@ -9,12 +9,14 @@ import MerchandiseCard from "../components/common/MerchandiseCard";
 import Select from "@mui/material/Select";
 import Typography from "@mui/material/Typography";
 import { Button } from "@mui/material";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
 const ArtistAddNewMerchandise = () => {
   const [category, setCategory] = useState("");
 
   const merchandise = {
-    name: `‘I LOVE YOU.’ 10th ANNIVERSARY EDITION 2xLP + ‘THE LOVE COLLECTION’ 7”`,
+    name: `‘I LOVE YOU.’ 10th ANNIVERSARY EDITION 2xLP + ‘THE LOVE COLLECTION’ 7” Lorem, ipsum dolor sit amet consectetur adipisicing elit. Assumenda fuga porro nobis neque perferendis, fugiat quas quasi explicabo esse minus exercitationem. Architecto optio modi atque sed quaerat debitis dolorem veniam.
+`,
     category: "Physical Album",
     price: "25",
     image:
@@ -110,24 +112,32 @@ const ArtistAddNewMerchandise = () => {
               />
             </FormControl>
           </Grid>
+          <Grid size={2}>
+            <FormControl variant="composed" fullWidth>
+              <Button
+                component="label"
+                variant="contained"
+                startIcon={<CloudUploadIcon />}
+                sx={{ backgroundColor: "#564c4d" }}
+              >
+                Upload image
+              </Button>
+            </FormControl>
+          </Grid>
           <Grid size={2} variant="composed">
             <Box
+              mt={2}
               display="flex"
               flexDirection="row"
               justifyContent="center"
               gap={2}
-              sx={{
-                "& .MuiButton-root": {
-                  
-                },
-              }}
             >
-              <FormControl>
+              <FormControl fullWidth>
                 <Button type="submit" variant="contained">
                   Publish
                 </Button>
               </FormControl>
-              <FormControl>
+              <FormControl fullWidth>
                 <Button type="reset" variant="outlined">
                   Cancel
                 </Button>
