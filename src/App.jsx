@@ -12,6 +12,10 @@ import Playlist from './pages/Playlist';
 import MainLayout from './components/layout/MainLayout';
 import ShopPage from './pages/ShopPage';
 import MerchandiseDetail from './pages/MerchandiseDetail';
+import ManageRequest from './components/Admin/ManageRequest';
+import ManageUsers from './components/Admin/ManageUsers';
+import ManageTracks from './components/Admin/ManageTracks';
+import ManagePlaylists from './components/Admin/ManagePlaylists';
 import CartPage from './pages/CartPage';
 import MerchSearch from './pages/MerchSearch';
 
@@ -42,8 +46,14 @@ function App() {
           <Route path="/artist" element={<ArtistDashboard />} />
           <Route path="/test" element={<Playlist />}></Route>
           <Route path="/register" element={<Register />} /> 
-          <Route path="/artist" element={<ArtistDashboard />} /> 
-          <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/artist" element={<ArtistDashboard/>} >
+          </Route>
+          <Route path="/admin" element={<AdminDashboard />} >
+            <Route path="users" element={<ManageUsers/>} />
+            <Route index element={<ManageRequest/>} />
+            <Route path="tracks" element={<ManageTracks/>} />
+            <Route path="playlists" element={<ManagePlaylists/>} />
+          </Route>
           <Route path="/shop" element={<ShopPage/>} />
           <Route path = "/merchandise/:id"  element={<MerchandiseDetail/>} />
           <Route path = "/shop/cart" element={<CartPage/>} />
