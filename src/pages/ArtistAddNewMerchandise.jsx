@@ -15,7 +15,7 @@ const ArtistAddNewMerchandise = () => {
   const [category, setCategory] = useState("");
 
   const merchandise = {
-    name: `‘I LOVE YOU.’ 10th ANNIVERSARY EDITION 2xLP + ‘THE LOVE COLLECTION’ 7” Lorem, ipsum dolor sit amet consectetur adipisicing elit. Assumenda fuga porro nobis neque perferendis, fugiat quas quasi explicabo esse minus exercitationem. Architecto optio modi atque sed quaerat debitis dolorem veniam.
+    name: `‘I LOVE YOU.’ 10th ANNIVERSARY EDITION 2xLP + ‘THE LOVE COLLECTION’ 7”
 `,
     category: "Physical Album",
     price: "25",
