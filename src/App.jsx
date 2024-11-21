@@ -7,6 +7,7 @@ import ArtistProfile from "./pages/ArtistProfile";
 import ArtistDashboard from "./pages/ArtistDashboard";
 import PlayScreen from "./pages/PlayScreen";
 import ArtistManageMerchandise from "./pages/ArtistManageMerchandise";
+import ArtistAddNewMerchandise from "./pages/ArtistAddNewMerchandise";
 import { createTheme, ThemeProvider } from "@mui/material";
 
 const theme = createTheme({
@@ -29,6 +30,10 @@ function App() {
             <Route
               path="merchandise"
               element={<ArtistManageMerchandise />}
+            ></Route>
+            <Route
+            path="upload-merchandise"
+            element={<ArtistAddNewMerchandise/>}
             ></Route>
           </Route>
         </Routes>
