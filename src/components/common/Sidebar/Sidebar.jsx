@@ -17,20 +17,15 @@ import AlbumIcon from "@mui/icons-material/Album";
 import MusicNoteIcon from "@mui/icons-material/MusicNote";
 import QueueMusicIcon from "@mui/icons-material/QueueMusic";
 import SearchIcon from "@mui/icons-material/Search";
+import StorefrontIcon from '@mui/icons-material/Storefront';
 import { Link } from "react-router-dom";
 import "./sidebar.css";
-import { NoEncryption } from "@mui/icons-material";
 
 const Sidebar = () => {
   const items = [
     { text: "Home", icon: <HomeIcon className="icon" />, section: null },
     { text: "New", icon: <NewIcon className="icon" />, section: null },
-    { text: "Radio", icon: <RadioIcon className="icon" />, section: null },
-    {
-      text: "Recently Added",
-      icon: <AccessTimeIcon className="icon" />,
-      section: "Library",
-    },
+  
     {
       text: "Artists",
       icon: <PersonIcon className="icon" />,
@@ -42,23 +37,25 @@ const Sidebar = () => {
       section: "Library",
     },
     {
-      text: "Songs",
+      text: "Tracks",
       icon: <MusicNoteIcon className="icon" />,
       section: "Library",
     },
+  
     {
-      text: "Made for You",
-      icon: <QueueMusicIcon className="icon" />,
-      section: "Library",
-    },
-    {
-      text: "All Playlists",
+      text: "Playlists",
       icon: <QueueMusicIcon className="icon" />,
       section: "Playlists",
+    },
+    {
+      text: "Shop",  // Added Shop item
+      icon: <StorefrontIcon className="icon" />,
+      section: "Shop",
     },
   ];
 
   const Divider = ({ label }) => <div className="section-title">{label}</div>;
+
   return (
     <Drawer
       variant="permanent"
@@ -98,7 +95,7 @@ const Sidebar = () => {
                       "& .MuiTypography-root": {
                         fontFamily: "Open Sans, sans-serif",
                         fontWeight: "bold",
-                        fontSize: 15,
+                        fontSize: 14,
                       },
                     }}
                   />
@@ -111,4 +108,5 @@ const Sidebar = () => {
     </Drawer>
   );
 };
+
 export default Sidebar;

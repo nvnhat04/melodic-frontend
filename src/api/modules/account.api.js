@@ -11,7 +11,7 @@ const Account = {
             }
         }
     },
-    async register(data) {
+    async signUp(data) {
         try {
             const response = await Client.post("/account/register", data);
             return response;
@@ -20,6 +20,26 @@ const Account = {
                 return error.response;
             }
         }
-    }
+    },
+    async getAllUsers() {
+        try {
+            const response = await Client.get("/account/all");
+            return response;
+        } catch (error) {
+            if (error.response) {
+                return error.response;
+            }
+        }
+    },
+    async deleteUser(id) {
+        try {
+            const response = await Client.delete(`/account/delete/${id}`);
+            return response;
+        } catch (error) {
+            if (error.response) {
+                return error.response;
+            }
+        }
+    },
 }
 export default Account;
