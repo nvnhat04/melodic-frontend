@@ -24,6 +24,7 @@ import MerchSearch from './pages/MerchSearch';
 import Album from './pages/Album';
 import Libraries from './pages/Libraries';
 import TrackDetail from './pages/TrackDetail';
+import AllGenre from './pages/AllGenre';
 
 function App() {
   return (
@@ -39,11 +40,11 @@ function App() {
           <Route path='playlist/:id' element={<Playlist />} />
           <Route path='artist/:id' element={<ArtistProfile />} />
           <Route path='album/:id' element={<Album />} />
+          <Route path='genre' element={<AllGenre />} />
         </Route>
         <Route path="/artist" element={<ArtistDashboard />} >
              {/* <Route index element={<Dashboard/>} />  */}
             {/* <Route path="dashboard" element={<Dashboard/>} /> */}
-            <Route path="upload-track" element={<UploadTrack/>} />
         </Route>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} /> {/* Consistent component name */}
