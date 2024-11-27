@@ -12,8 +12,13 @@ import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import trackApi from '../../api/modules/track.api';
+import detectDuration from '../../hooks/DetectDuration';
+import { Album } from '@mui/icons-material';
+import decodeToken from '../../hooks/decodeToken';
+import { useSelector } from 'react-redux';
 
 const UploadTrack = () => {
+  const user_id = useSelector((state) => state.auth.user_id);
   const [parsedDuration, setParsedDuration] = useState('');
   const [durationError, setDurationError] = useState('');
   const [fileError, setFileError] = useState('');
@@ -31,16 +36,18 @@ const UploadTrack = () => {
       setDurationError('Invalid duration format. Please use the format "Xm Ys".');
     }
   };
- 
-  const [formData, setFormData] = useState({
-    title: '',
+  const initialFormData = {   
+     title: '',
     lyrics: '',
     release_date: null,
     duration: '',
     language: '',
     artist_role: '',
+    genre: '',
+    album: '',
     file: null,
-  });
+  }
+  const [formData, setFormData] = useState(initialFormData);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -69,28 +76,33 @@ const UploadTrack = () => {
   };
   const handleSubmit = (e) => {
     e.preventDefault();
+    const duration = detectDuration(formData.file);
     const data = new FormData();
+    // const user_id = decodeToken(token).id;
+  
     data.append('title', formData.title);
     data.append('lyrics', formData.lyrics);
     data.append('release_date', formData.release_date);
     data.append('duration', parsedDuration);
     data.append('language', formData.language);
-    data.append('user_id', 8);
-    data.append('artist_role', 'original artist');
+    data.append('user_id', user_id);
+    data.append('artist_role', formData.artist_role);
+    data.append('genre', formData.genre);
+    data.append('album', formData.album);
     if (formData.file) {
       
       data.append('file', formData.file);
     }
 
     // console.log('FormData content:');
-    // for (let pair of data.entries()) {
-    //   console.log(pair[0], pair[1]);
-    // }
+    for (let pair of data.entries()) {
+      console.log(pair[0], pair[1]);
+    }
 
     trackApi.addTrack(data).then((response) => {  
       console.log(response.result);
       if(response.success){
-
+        setFormData(initialFormData);
         alert('Track added successfully');
       }
       else {
@@ -106,7 +118,7 @@ const UploadTrack = () => {
         justifyContent: 'center',
         alignItems: 'center',
         height: '100vh',
-        width: 'auto',
+        width: '100%',
       }}>
 
       
@@ -142,6 +154,15 @@ const UploadTrack = () => {
           rows={4}
           value={formData.lyrics}
           onChange={handleChange}
+          sx={{ mb: 2 }}
+        />
+        <TextField
+          label="Album"
+          name="album"
+          fullWidth
+          value={formData.album_id}
+          onChange={handleChange}
+          required
           sx={{ mb: 2 }}
         />
         <DatePicker
@@ -193,6 +214,23 @@ const UploadTrack = () => {
             </MenuItem>
           ))}
         </TextField>
+        <TextField
+          label="Genre"
+          name="genre"
+          fullWidth
+          select
+          value={formData.genre}
+          onChange={handleChange}
+          required
+          sx={{ mb: 2 }}
+        >
+          {['Pop', 'Hip Hop', 'Ballad', 'Rock', 'Jazz', 'K-pop', 'R&B', 'Country','Sad', 'Indie', 'Chill','Other'].map((role) => (
+            <MenuItem key={role} value={role}>
+              {role}
+            </MenuItem>
+          ))}
+        </TextField>
+        
         <Button variant="contained" component="label"  sx={{ mb: 2, backgroundColor: '#e75565' }}>
           Upload File
           <input
@@ -222,9 +260,9 @@ const UploadTrack = () => {
         </Button>
       </Box>
       {/*  Preview */}
-      <Box sx={{ ml: 20 }}>
+      {/* <Box sx={{ ml: 20 }}>
         preview
-      </Box>
+      </Box> */}
 
       </Box>
     </LocalizationProvider>

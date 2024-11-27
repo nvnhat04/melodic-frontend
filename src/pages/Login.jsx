@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom'; // Import Link from react-router-dom
 import Account from '../api/modules/account.api';
-import { setToken, setRole } from '../redux/store';
+import { setToken, setRole, setUserID } from '../redux/store';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-
+ 
 function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -21,12 +21,14 @@ function Login() {
       password: password
     }
     Account.login(data).then((response) => {
+      console.log(response);
       if(!response.auth){
         alert('Login failed');
       }
       else {
         dispatch(setToken(response.token));
         dispatch(setRole(response.role));
+        dispatch(setUserID(response.user_id));
         if(response.role === 'admin') {navigate('/admin');}
         else if(response.role === 'artist'){ navigate('/artist');}
         else {
