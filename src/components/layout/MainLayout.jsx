@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 // import Sidebar from "../components/sidebar/Sidebar";
 import { Box, Stack, Typography } from "@mui/material";
 import MusicPlayer from "../common/MusicPlayer";
-import Sidebar from "../common/Sidebar/Sidebar";
+import Sidebar from "../common/Sidebar";
+import MainTopbar from "../common/MainTopbar";
 import { Outlet } from "react-router-dom";
 
 // Removed unused import: AlbumCard
@@ -14,7 +15,11 @@ const MainLayout = () => {
     <Box sx={{ display: "flex", backgroundColor: "black" }}>
     <Box
       sx={{
-        width: "15%",
+        width: {
+          xs: 0,
+          sm: 0,
+          md: 240,
+        },
         backgroundColor: "#111", // Dark sidebar background
       }}
     >
@@ -28,25 +33,14 @@ const MainLayout = () => {
         backgroundColor: "#1f1f1f",
       }}
     >
-      <Box
-        sx={{
-          paddingTop: "1em",
-          paddingBottom: "1em",
-          height: "10px",
-          width: "100%",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          borderBottom: "1px solid #333",
-          backgroundColor: "#000", // Dark top section background
-        }}
-      >
-          <Typography variant="h6" align="center">
-            Top Section
-          </Typography>
+      <Box pt={5}>
+         <MainTopbar /> 
       </Box>
-      <Box pl={3}>
+      <Box>
       <Outlet />
+      </Box>
+      <Box>
+        <MusicPlayer />
       </Box>
       </Stack>
 
