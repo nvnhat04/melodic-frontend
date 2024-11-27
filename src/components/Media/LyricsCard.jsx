@@ -1,20 +1,16 @@
 import React, { useState } from "react";
-import {
-  Card,
-  CardContent,
-  Typography,
-  Button,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Grid2,
-} from "@mui/material";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
+import Stack from "@mui/material/Stack";
 
 const LyricsCard = ({ lyrics }) => {
   const [open, setOpen] = useState(false);
-
-  const textColor = "gray";
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -29,21 +25,26 @@ const LyricsCard = ({ lyrics }) => {
       <Card
         sx={{
           maxWidth: 1200,
-          width: "100%",
-          bgcolor: "black",
-          color: textColor,
-          borderTop: "1px solid #333",
+          bgcolor: 'rgba(40, 35, 36, 0.5)',
+          width: "97%",
+          color: "#fff",
+          padding: "20px",
         }}
       >
         <CardContent>
-          <Grid2 container spacing={2}>
+          <Stack direction={{
+            xs: "column",
+            sm: "column",
+            md: "row"
+          }}
+           spacing={2}>
             {/* Left Column for "Lyrics" Label */}
-            <Grid2 item xs={3}>
+            <Stack sx={{ width: "25%" }}>
               <Typography
                 variant="body1"
                 fontWeight="bold"
                 sx={{
-                  color: textColor,
+                  color: "gray",
                   position: "relative",
                   top: "1vh",
                   left: "1vw",
@@ -51,93 +52,56 @@ const LyricsCard = ({ lyrics }) => {
               >
                 Lyrics
               </Typography>
-            </Grid2>
-            {/* Right Column for Preview Lyrics */}
-            {lyrics?.length === 0 ? (
-              <Typography
-                variant="body2"
+            </Stack>
+            {/* Right Column for Preview Lyrics and View Button */}
+            <Stack sx={{ width: "75%" }}>
+              {lyrics.slice(0, 2).map((line, index) => (
+                <Typography variant="body1" key={index}>
+                  {line}
+                </Typography>
+              ))}
+              <Button
+                variant="text"
+                onClick={handleClickOpen}
                 sx={{
-                  position: "relative",
-                  top: "1vh",
-                  left: "16vw",
+                  color: "red",
+                  fontSize: "0.7rem",
+                  textAlign: "left",
+                  padding: "0",
+                  display: "block",
+                  width: "150px",
                 }}
               >
-                No Lyrics to display
-              </Typography>
-            ) : (
-              <Grid2
-                item
-                xs={9}
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  color: "#fff",
-                  position: "relative",
-                  top: "1vh",
-                  left: "15vw",
-                }}
-              >
-                {lyrics.slice(0, 2).map((line, index) => (
-                  <Typography
-                    variant="h7"
-                    key={index}
-                    color="white"
-                    fontWeight="bold"
-                  >
-                    {line}
-                  </Typography>
-                ))}
-                <Button
-                  onClick={handleClickOpen}
-                  sx={{
-                    color: "red",
-                    fontSize: "0.75rem",
-                    justifyContent: "left",
-                    padding: 0, // Removes extra padding
-                    minWidth: 0, // Removes minimum width
-                    textTransform: "none", // Keeps the text case as is (no uppercase transform)
-                  }}
-                >
-                  View Full Lyrics
-                </Button>
-              </Grid2>
-            )}
-          </Grid2>
+                View Full Lyrics
+              </Button>
+            </Stack>
+          </Stack>
         </CardContent>
       </Card>
 
       {/* Dialog Popup for Full Lyrics */}
       <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
-        <DialogTitle
-          sx={{
-            bgcolor: "#121212",
-            color: "#fff",
-          }}
-        >
-          Full Lyrics
-        </DialogTitle>
-        <DialogContent
-          sx={{
-            bgcolor: "#121212",
-          }}
-        >
-          <Grid2 container spacing={2}>
+        <DialogTitle>Full Lyrics</DialogTitle>
+        <DialogContent>
+          <Stack direction="row" spacing={2}>
+            {/* Left Column for "Lyrics" Label in Popup */}
+            <Stack sx={{ width: "25%" }}>
+              <Typography variant="body2" sx={{ color: "gray" }}>
+                Lyrics
+              </Typography>
+            </Stack>
             {/* Right Column for Full Lyrics */}
-            <Grid2 item xs={9}>
+            <Stack sx={{ width: "75%" }}>
               {lyrics.map((line, index) => (
-                <Typography variant="body1" key={index} color={textColor}>
+                <Typography variant="body1" key={index}>
                   {line}
                 </Typography>
               ))}
-            </Grid2>
-          </Grid2>
+            </Stack>
+          </Stack>
         </DialogContent>
-        <DialogActions
-          sx={{
-            bgcolor: "#121212",
-          }}
-        >
-          <Button onClick={handleClose} color="error">
+        <DialogActions>
+          <Button onClick={handleClose} color="primary">
             Close
           </Button>
         </DialogActions>

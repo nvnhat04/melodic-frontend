@@ -36,7 +36,7 @@ const MainLayout = () => {
       <Box pt={5}>
          <MainTopbar /> 
       </Box>
-      <Box>
+      <Box minHeight={'calc(100vh + 200px)'} bgcolor={'black'}>
       <Outlet />
       </Box>
       <Box>
