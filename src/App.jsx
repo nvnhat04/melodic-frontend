@@ -40,13 +40,13 @@ function App() {
           <Route path='artist/:id' element={<ArtistProfile />} />
           <Route path='album/:id' element={<Album />} />
         </Route>
-          <Route path="/home" element ={<HomePage/>}></Route>
-          <Route path="/artist-profile" element ={<ArtistProfile/>}></Route>
-          <Route path="/play-screen" element ={<PlayScreen/>}></Route>
+        <Route path="/artist" element={<ArtistDashboard />} >
+             {/* <Route index element={<Dashboard/>} />  */}
+            {/* <Route path="dashboard" element={<Dashboard/>} /> */}
+            <Route path="upload-track" element={<UploadTrack/>} />
+        </Route>
           <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} /> 
-          <Route path="/artist" element={<ArtistDashboard />} />
-          <Route path="/test" element={<Playlist />}></Route>
+          <Route path="/register" element={<Register />} /> {/* Consistent component name */}
           <Route path="/register" element={<Register />} /> 
           
            <Route path="/artist" element={<ArtistDashboard />}>
