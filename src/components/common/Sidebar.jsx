@@ -157,7 +157,7 @@ const Sidebar = ({open = false, toggleSidebar}) => {
           keepMounted: true, // Better performance on mobile
         }}
         sx={{
-          display: { xs: "block", sm: "none" },
+          display: { xs: "block", sm: "block", md: "none" },
           "& .MuiDrawer-paper": {
             width: drawerWidth,
             backgroundColor: "#1f1f1f",
@@ -173,7 +173,7 @@ const Sidebar = ({open = false, toggleSidebar}) => {
       <Drawer
         variant="permanent"
         sx={{
-          display: { xs: "none", sm: "block" },
+          display: { xs: "none", sm: "none", md: "block" },
           "& .MuiDrawer-paper": { width: drawerWidth, backgroundColor: "#1f1f1f" },
         }}
         open
