@@ -1,75 +1,59 @@
-import React from "react";
-import { Card, CardMedia, CardContent, Typography, Box } from "@mui/material";
-import { Link } from "react-router-dom";
+import { createTheme, ThemeProvider } from "@mui/material";
+import Paper from "@mui/material/Paper";
+import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
 
-const MerchandiseCard = ({ merchandise, hoverEffect }) => {
+const theme = createTheme({
+  typography: {
+    fontFamily: ["Neue Helvetica Condensed BQ", "san-serif"].join(","),
+  },
+});
+
+const MerchandiseCard = ({merchandise}) => {
   return (
-    <Link
-      to={`/merchandise/${merchandise.id}`}
-      style={{ textDecoration: "none" }}
-    >
-      <Card
+    <ThemeProvider theme={theme}>
+      <Paper
         sx={{
+          width: "80%",
+          textAlign: "center",
+          fontSize: "1em",
+          padding: 2,
           overflow: "hidden",
+          cursor: "pointer",
+          "&:hover img": {
+            opacity: 0.7,
+          },
           border: "none",
           boxShadow: "none",
-          padding: "10px",
-          backgroundColor: "white",
-          color: "black",
-          position: "relative",
-          transition: "transform 0.3s, box-shadow 0.3s",
-          "&:hover": {
-            transform: hoverEffect === "scale" ? "scale(1.05)" : "none",
-            boxShadow: hoverEffect === "scale" ? "0px 10px 15px rgba(0, 0, 0, 0.2)" : "none",
-          },
-          "&:before": hoverEffect === "blur" && {
-            content: '""',
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            backgroundColor: "gray", // Lớp phủ làm mờ
-            opacity: 0,
-            transition: "opacity 0.3s",
-            zIndex: 1,
-          },
-          "&:hover:before": hoverEffect === "blur" && {
-            opacity: 0.1,
-          },
         }}
       >
-        <CardMedia
+        <Box
           component="img"
-          image={merchandise.cover}
+          src={merchandise.image}
           alt={merchandise.name}
           sx={{
-            height: {
-              xs: "30vw",
-              sm: "20vw",
-              md: "15vw",
-              lg: "10vw",
-              xl: "8vw",
-            },
+            width: "100%",
             objectFit: "cover",
-            borderRadius: "6px",
-            position: hoverEffect === "blur" ? "relative" : "static",
-            zIndex: hoverEffect === "blur" ? 0 : "auto",
+            aspectRatio: "1/1",
           }}
         />
-        <CardContent sx={{ padding: "0" }}>
-          <Typography
-            variant="h10"
-            component="div"
-            textAlign="center"
-            marginTop="1vw"
-            noWrap
-          >
-            {merchandise.name}
-          </Typography>
-        </CardContent>
-      </Card>
-    </Link>
+        <Typography
+          sx={{
+            fontSize: "1em",
+            fontWeight: "600",
+            lineHeight: "1.4",
+          }}
+        >
+          {merchandise.name}
+        </Typography>
+        <Typography
+          mt={1}
+          sx={{ fontSize: "0.8em", fontWeight: "600", color: "#1a1a1a" }}
+        >
+          ${merchandise.price}
+        </Typography>
+      </Paper>
+    </ThemeProvider>
   );
 };
 

@@ -1,4 +1,4 @@
-import './App.css';
+import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import {useSelector, useDispatch} from 'react-redux';
 import { Navigate } from 'react-router-dom';
@@ -9,6 +9,8 @@ import ArtistProfile from './pages/ArtistProfile';
 import ArtistDashboard from './pages/ArtistDashboard';
 import AdminDashboard from './pages/AdminDashboard';
 import PlayScreen from './pages/PlayScreen';
+import ArtistManageMerchandise from "./pages/ArtistManageMerchandise";
+import ArtistAddNewMerchandise from "./pages/ArtistAddNewMerchandise";
 
 import Playlist from './pages/Playlist';
 import MainLayout from './components/layout/MainLayout';
@@ -56,9 +58,18 @@ function App() {
             {/* <Route index element={<Dashboard/>} /> */}
             {/* <Route path="dashboard" element={<Dashboard/>} /> */}
             <Route path="upload-track" element={<UploadTrack/>} />
+              <Route
+                path="merchandise"
+                element={<ArtistManageMerchandise />}
+              ></Route>
+              <Route
+              path="upload-merchandise"
+              element={<ArtistAddNewMerchandise/>}
+              ></Route>
         </Route>
           <Route path="/play-screen" element ={<PlayScreen/>}></Route>
           <Route path="/login" element={<Login />} />
+
           <Route path="/register" element={<Register />} /> {/* Consistent component name */}
           <Route path="/test" element={<Playlist />}></Route>
           <Route path="/register" element={<Register />} /> 
