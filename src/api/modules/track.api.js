@@ -32,6 +32,20 @@ const Track = {
             }
         }
     },
+    async addTrack(track) {
+        try {
+            const response = await Client.post('/track/add', track, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+            return response;
+        } catch (error) {
+            if (error.response) {
+                return error.response;
+            }
+        }
+    }
 
 };
 export default Track;
