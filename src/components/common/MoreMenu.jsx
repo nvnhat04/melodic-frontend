@@ -98,6 +98,8 @@ const MoreMenu = ({ isVertical = true, MoreColor = 'white', bgColor = 'rgba(40, 
           vertical: 'bottom',
           horizontal: 'left',
         }}
+        keepMounted
+        disableScrollLock
         
       >
         {menuItems.map((item, index) => (
