@@ -26,6 +26,8 @@ import UploadTrack from './components/Artist/UploadTrack';
 import Album from './pages/Album';
 import Libraries from './pages/Libraries';
 import TrackDetail from './pages/TrackDetail';
+import AllGenre from './pages/AllGenre';
+
 // import Dashboard from './components/Artist/DashBoard';
 
 import { useEffect } from 'react';
@@ -53,7 +55,18 @@ function App() {
           <Route path='playlist/:id' element={<Playlist />} />
           <Route path='artist/:id/profile' element={<ArtistProfile />} />
           <Route path='album/:id' element={<Album />} />
+          <Route path='genre' element={<AllGenre />} />
         </Route>
+        <Route path="/artist" element={<ArtistDashboard />} >
+             {/* <Route index element={<Dashboard/>} />  */}
+            {/* <Route path="dashboard" element={<Dashboard/>} /> */}
+        </Route>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} /> {/* Consistent component name */}
+          <Route path="/register" element={<Register />} /> 
+          
+           <Route path="/artist" element={<ArtistDashboard />}>
+
         <Route path="/artist" element={<ArtistDashboard />} >
             {/* <Route index element={<Dashboard/>} /> */}
             {/* <Route path="dashboard" element={<Dashboard/>} /> */}

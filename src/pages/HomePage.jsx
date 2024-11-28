@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from "react";
 import AlbumSlider from "../components/common/Slider";
-import SideBar from "../components/common/Sidebar/Sidebar";
 import { Box, Stack, Typography } from "@mui/material";
 import Container from "../components/common/Container";
 import MusicPlayer from "../components/common/MusicPlayer";
-import Sidebar from "../components/common/Sidebar/Sidebar";
 
 const mockAlbums = [
   {

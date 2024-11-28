@@ -2,7 +2,10 @@ import React, { useEffect, useState } from "react";
 // import Sidebar from "../components/sidebar/Sidebar";
 import { Box, Stack, Typography, Button } from "@mui/material";
 import MusicPlayer from "../common/MusicPlayer";
-import Sidebar from "../common/Sidebar/Sidebar";
+import Sidebar from "../common/Sidebar";
+import MainTopbar from "../common/MainTopbar";
+
+
 import { Link, Outlet } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { clearToken } from "../../redux/store";
@@ -17,38 +20,36 @@ const MainLayout = () => {
   };
   return (
     <Box sx={{ display: "flex", backgroundColor: "black" }}>
-      <Box
-        sx={{
-          width: "15%",
-          backgroundColor: "#111", // Dark sidebar background
-        }}
-      >
-        <Sidebar />
+    <Box
+      sx={{
+        width: {
+          xs: 0,
+          sm: 0,
+          md: 240,
+        },
+        backgroundColor: "#111", // Dark sidebar background
+      }}
+    >
+      <Sidebar />
+    </Box>
+    <Stack
+      sx={{
+        flex: 1,
+        display: "flex",
+        flexDirection: "column",
+        backgroundColor: "#1f1f1f",
+      }}
+    >
+      <Box pt={5}>
+         <MainTopbar /> 
       </Box>
-      <Stack
-        sx={{
-          flex: 1,
-          display: "flex",
-          flexDirection: "column",
-          backgroundColor: "#1f1f1f",
-        }}
-      >
-        <Box
-          sx={{
-            paddingTop: "1em",
-            paddingBottom: "1em",
-            height: "10px",
-            width: "100%",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            borderBottom: "1px solid #333",
-            backgroundColor: "#fff", // Dark top section background
-          }}
-        >
-          <Typography variant="h6" align="center">
-            Top Section
-          </Typography>
+      <Box>
+      <Outlet />
+      </Box>
+      <Box>
+        <MusicPlayer />
+      </Box>
+      </Stack>
 
           {!token && ( // If there is no token (user is not logged in)
             <>
