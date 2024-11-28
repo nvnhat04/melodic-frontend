@@ -16,7 +16,7 @@ function TopBar() {
 
   const handleSearch = () => {
     if (searchTerm.trim()) {
-      navigate(`/merch-search?q=${encodeURIComponent(searchTerm)}`);
+      navigate(`/shop/merch-search?q=${encodeURIComponent(searchTerm)}`);
     }
   };
 
