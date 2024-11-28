@@ -23,69 +23,59 @@ import { Link } from "react-router-dom";
 import { Modal } from "@mui/material";
 import PlayScreen from "../../pages/PlayScreen";
 import useAudioPlayer from "../../hooks/useAudioPlayer";
-
-const queueSong = [
-    {
-        id: 1,
-        title: "Song 1",
-        artist: "Artist 1",
-        img: "https://photo-resize-zmp3.zadn.vn/w600_r1x1_jpeg/cover/8/3/6/c/836cf31f036fb8f89b78cfd07cd77477.jpg",
-        file: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
-        desc: "Description 1",
-        duration: "372",
-    },
-    {
-        id: 2,
-        title: "Song 2",
-        artist: "Artist 2",
-        img: "https://hips.hearstapps.com/hmg-prod/images/eminem-a-k-a-marshall-bruce-mathers-iii-attends-a-ceremony-news-photo-1698936282.jpg?crop=1.00xw:0.667xh;0,0.0380xh&resize=640:*",
-        file: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3",
-        desc: "Description 2",
-        duration: "279",
-    },
-    {
-        id: 3,
-        title: "Song 3",
-        artist: "Artist 3",
-        img: "",
-        file: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3",
-        desc: "Description 3",
-        duration: "240",
+import trackApi from "../../api/modules/track.api";
+import createUrl from "../../hooks/createUrl";
+const queueSong01= [
+      {
+        "id": "MTVkYThlMmEtZDA5NC00NTkyLWFlMmItNDcxNDBmYTY3Yjhm",
+        "title": "Tim Anh Ghen",
+        "lyrics": "Bởi vì nguyên team anh geng geng\r\nBởi vì nguyên team anh geng geng\r\nBọn anh on the same lane, xuyên qua màn đêm đen, follow game plan\r\nIce chain leng keng, đồng hồ trên tay anh trông như ben10",
+        "release_date": "2024-10-30T17:00:00.000Z",
+        "duration": 279,
+        "language": "Vietnamese",
+        "track_url": "1UnYyuloL-3UT-6zs5jAGqMG0dxDY5DtI",
+        "genres": null,
+        "artists": [
+            "nhat nguyen"
+        ]
     }
 ]
-function debounce(func, wait) {
-  let timeout;
-  return function (...args) {
-    clearTimeout(timeout);
-    timeout = setTimeout(() => func.apply(this, args), wait);
-  };
-}
 
+const queueId = [
+  "MTVkYThlMmEtZDA5NC00NTkyLWFlMmItNDcxNDBmYTY3Yjhm",
+  "MzY3M2IxOTAtYTYzNS00ZmE2LTgxZjYtNjM2NmRmZjgzNTFh",
+  "M2Q1YWJjNTctYmVmZC00MGJiLTk1NGMtNWQ5YjBkNTZiMDM3",
+  "YTliMjM4OTItOThjZi00Y2Q0LTkxYjMtZTViZTRkZjEwYTY1"
+];
 function MusicPlayer() {
-//       const
-//       {isPause,
-//       seekValue,
-//       currentTime,
-//       currentVolume,
-//       audioRef,
-//       togglePlayPause,
-//       handleSeekChange,
-//       handleVolumeChange,
-//       formatDuration,
-//       currentSongIndex,
-//       handleNext,
-//       handlePrevious,
-//       handleReplay,
-//   } = useAudioPlayer(queueSong);
-  //     const [isPause, setIsPause] = useState(true);
-  //     const [seekValue, setSeekValue] = useState(0);
-  //     const [currentTime, setCurrentTime] = useState(0);
-  //     const [currentVolume, setCurrentVolume] = useState(100);
-  //     const audioRef = useRef(null);
-
-  //     const [currentSongIndex, setCurrentSongIndex] = useState(0);
 
   const [isPlayScreenOpen, setIsPlayScreenOpen] = useState(false);
+  const [queueSong, setQueueSong] = useState(queueSong01);
+  const url = createUrl(queueSong01[0].track_url);
+  const [srcTrack, setSrcTrack] = useState(url);
+  // useEffect(() => {
+  //   //console.log('current', createUrl(queueSong[audioPlayerProps.currentSongIndex].track_url));
+  //     console.log('Updated queueSong:', queueSong);
+  // }, [queueSong]); 
+  useEffect(() => {
+    let queueSongPlays = [];
+    let promises = [];
+  
+    for (let trackId = 0; trackId < queueId.length; trackId++) {
+      promises.push(trackApi.getTrackById(queueId[trackId]));
+    }
+  
+    Promise.all(promises)
+      .then((results) => {
+        queueSongPlays = results; // All results are available here
+        setQueueSong(queueSongPlays); // Trigger state update
+      })
+      .catch((error) => {
+        console.error('Error fetching tracks:', error);
+      });
+  }, []); // Re-run when `queueId` changes
+  
+
 
   const audioPlayerProps = useAudioPlayer(queueSong);
 
@@ -93,101 +83,12 @@ function MusicPlayer() {
   const openPlayScreen = () => {
     setIsPlayScreenOpen(true);
   };
+
   const closePlayScreen = () => {
     setIsPlayScreenOpen(false);
   };
- // console.log("seekValue in MusicPlayer", audioPlayerProps.seekValue);
 
-  //     const togglePlayPause = () => {
-  //         if (isPause) {
-  //             audioRef.current.play().catch((error) => {
-  //                 console.log('Playback error:', error);
-  //             }); // Play the audio
-  //         } else {
-  //             audioRef.current.pause(); // Pause the audio
-  //         }
-  //         setIsPause(!isPause);
-  //     };
-  //       const handleNext = () => {
-  //         const nextSongIndex = (currentSongIndex + 1) % queueSong.length; // Loop back to the first song if at the end
-  //         console.log("seekvalue", seekValue);
-  //         console.log(currentSongIndex);
-  //         setCurrentSongIndex(nextSongIndex);
 
-  //         const nextSong = queueSong[nextSongIndex];
-  //         audioRef.current.src = nextSong.file;
-
-  //         // Add an event listener for loadedmetadata to ensure the duration is loaded
-  //         audioRef.current.addEventListener('loadedmetadata', () => {
-  //             //audioRef.current.play();
-  //             setIsPause(true); // Ensure the play/pause state is updated
-  //             setCurrentTime(0); // Reset the current time
-  //             setSeekValue(0); // Reset the seek value
-  //         }, { once: true }); // Use { once: true } to ensure the event listener is removed after it fires
-  //     };
-  //     const handlePrevious = () => {
-  //         const previousSongIndex = (currentSongIndex - 1 + queueSong.length) % queueSong.length; // Loop back to the last song if at the beginning
-  //         setCurrentSongIndex(previousSongIndex);
-  //         const previousSong = queueSong[previousSongIndex];
-  //         audioRef.current.src = previousSong.file;
-
-  //          // Add an event listener for loadedmetadata to ensure the duration is loaded
-  //         audioRef.current.addEventListener('loadedmetadata', () => {
-  //             //audioRef.current.play();
-  //             setIsPause(true); // Ensure the play/pause state is updated
-  //             setCurrentTime(0); // Reset the current time
-  //             setSeekValue(0); // Reset the seek value
-  //         }, { once: true }); // Use { once: true } to ensure the event listener is removed after it fires
-  //     };
-
-  //     const handleSeekChange = (event) => {
-  //         const newValue = event.target.value;
-  //         setSeekValue(newValue);
-  //         requestAnimationFrame(() => {
-  //           audioRef.current.currentTime = (newValue / 100) * audioRef.current.duration;
-  //         });
-  //     };
-
-  //     const handleTimeUpdate = () => {
-  //         const currentTimeTrack = audioRef.current.currentTime;
-  //         const duration = audioRef.current.duration;
-  //         setSeekValue((currentTimeTrack / duration) * 100);
-  //         setCurrentTime(currentTimeTrack);
-  //     };
-  //     const handleVolumeChange = (event) => {
-  //         const newValue = event.target.value;
-  //         setCurrentVolume(newValue);
-  //         audioRef.current.volume = newValue / 100;
-  //     }
-  //     const handleReplay = () => {
-  //         console.log(currentTime);
-  //         if(currentTime >= queueSong[currentSongIndex].duration){
-  //             audioRef.current.currentTime = 0;
-  //             setIsPause(true);
-  //         audioRef.current.pause();
-  //         } else{
-  //             audioRef.current.currentTime = currentTime;
-  //         }
-
-  //     }
-  //     useEffect(() => {
-  //         const audio = audioRef.current;
-  //         audio.addEventListener('timeupdate', handleTimeUpdate);
-  //         audio.addEventListener('loadedmetadata', () => {
-  //             console.log('Audio duration:', audio.duration);
-  //         });
-
-  //         return () => {
-  //             audio.removeEventListener('timeupdate', handleTimeUpdate);
-  //         };
-  //     }, []);
-
-  //     const formatDuration = (duration) => {
-  //         const minutes = Math.floor(duration / 60);
-  //         const seconds = Math.floor(duration % 60);
-  //         return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-  //     };
-  //     const debouncedHandleSeekChange = debounce(handleSeekChange, 100);
 
   return (
     <Box
@@ -207,7 +108,14 @@ function MusicPlayer() {
         zIndex: "1000",
       }}
     >
-      <audio ref={audioPlayerProps.audioRef} src={queueSong[audioPlayerProps.currentSongIndex].file} />
+       <audio controls ref={audioPlayerProps.audioRef} style={{ display: 'none'}}>
+        {queueSong.length > 0 && (
+          <source
+            src={srcTrack}
+            type="audio/mpeg"
+          />
+        )}
+      </audio>
 
       {/* Song details */}
       <Box sx={{ display: "flex",
@@ -217,7 +125,7 @@ function MusicPlayer() {
           position: "relative",
           paddingLeft: "20px"}}>
         <img
-          src={queueSong[audioPlayerProps.currentSongIndex].img ? queueSong[audioPlayerProps.currentSongIndex].img : "https://www.scdn.co/i/_global/open-graph-default.png"}
+          src={ "https://www.scdn.co/i/_global/open-graph-default.png"}
           alt="img"
           style={{
             width: "20%",
@@ -231,7 +139,7 @@ function MusicPlayer() {
             {queueSong[audioPlayerProps.currentSongIndex].title}
           </p>
           <p style={{ margin: 0, fontSize: "0.7em" }}>
-            {queueSong[audioPlayerProps.currentSongIndex].artist}
+            {queueSong[audioPlayerProps.currentSongIndex].artists[0]}
           </p>
         </Box>
         <MdLibraryAdd size={20} />
