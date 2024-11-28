@@ -1,4 +1,5 @@
 import React from "react";
+import { useState } from "react";
 import {
   Drawer,
   List,
@@ -17,15 +18,16 @@ import AlbumIcon from "@mui/icons-material/Album";
 import MusicNoteIcon from "@mui/icons-material/MusicNote";
 import QueueMusicIcon from "@mui/icons-material/QueueMusic";
 import SearchIcon from "@mui/icons-material/Search";
-import StorefrontIcon from '@mui/icons-material/Storefront';
+import StorefrontIcon from "@mui/icons-material/Storefront";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "./sidebar.css";
 
 const Sidebar = () => {
   const items = [
     { text: "Home", icon: <HomeIcon className="icon" />, section: null },
     { text: "New", icon: <NewIcon className="icon" />, section: null },
-  
+
     {
       text: "Artists",
       icon: <PersonIcon className="icon" />,
@@ -41,19 +43,25 @@ const Sidebar = () => {
       icon: <MusicNoteIcon className="icon" />,
       section: "Library",
     },
-  
+
     {
       text: "Playlists",
       icon: <QueueMusicIcon className="icon" />,
       section: "Playlists",
     },
     {
-      text: "Shop",  // Added Shop item
+      text: "Shop", // Added Shop item
       icon: <StorefrontIcon className="icon" />,
       section: "Shop",
     },
   ];
-
+  const [searchQuery, setSearchQuery] = useState("");
+  const navigate = useNavigate();
+  const handleSearch = () => {
+    if (searchQuery.trim()) {
+      navigate(`/multi-search?q=${encodeURIComponent(searchQuery)}`);
+    }
+  };
   const Divider = ({ label }) => <div className="section-title">{label}</div>;
 
   return (
@@ -63,6 +71,12 @@ const Sidebar = () => {
       sx={{
         "& .MuiDrawer-paper": {
           backgroundColor: "#252526",
+          overflowY: "scroll",
+          scrollbarWidth: "none",
+          borderRight: "0.2vw gray solid",
+        },
+        "& .MuiDrawer-paper::-webkit-scrollbar": {
+          display: "none",
         },
       }}
     >
@@ -70,9 +84,23 @@ const Sidebar = () => {
         <Box className="logo">Melodic</Box>
 
         {/* Search Bar */}
-        <Box className="search-bar">
-          <SearchIcon style={{ marginRight: "8px" }} />
-          <InputBase placeholder="Search" fullWidth />
+        <Box
+          className="search-bar"
+          style={{ display: "flex", alignItems: "center" }}
+        >
+          <SearchIcon
+            style={{ marginRight: "8px", cursor: "pointer" }}
+            onClick={handleSearch}
+          />
+          <InputBase
+            placeholder="Search"
+            fullWidth
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") handleSearch();
+            }}
+          />
         </Box>
 
         {/* Sidebar Items */}
