@@ -190,6 +190,7 @@ const UploadTrack = () => {
     formData.genre.forEach((genre, index) => {
         data.append(`genre[${index}]`, genre);
     });
+    console.log('Album data:', albumData.id);
     data.append('album', albumData.id);
     data.append('collaborator', JSON.stringify(formData.collaborators)); // Convert to JSON string
     if (formData.file) {
@@ -344,7 +345,6 @@ const UploadTrack = () => {
                 fullWidth
                 value={collaborator.name}
                 onChange={(event) => handleChangeCollab(index, event)}
-                required
                 sx={{ mb: 2, width: '70%' }}
               />
               <TextField
@@ -353,7 +353,7 @@ const UploadTrack = () => {
                 // type="number"
                 value={collaborator.profitShare}
                 onChange={(event) => handleChangeCollab(index, event)}
-                required
+                // required
                 sx={{ mb: 2, width: '30%' }}
               />
               <Button onClick={() => removeCollaborator(index)}><DeleteIcon /></Button>

@@ -53,7 +53,7 @@ function ManageRequest() {
         const res = await trackApi.getAllTracksDisabled();
         if (res && res.length > 0) {
             setTracksData(res);
-            // console.log("Tracks found:", res);
+            console.log("Tracks found:", res);
         } else {
             console.error("No tracks found");
         }
@@ -65,11 +65,13 @@ function ManageRequest() {
     trackApi
       .enableTrack(id)
       .then((res) => {
-        if (res) {
-        //   console.log("Track enabled:", res);
+        if (res.status === 200) {
+          // console.log("Track enabled:", res);
+          // alert(res.data.message + " 01");
             fetchTracks();
         } else {
           console.error("Failed to enable track");
+          alert(res.data.message);
         }
       })
       .catch((error) => {
@@ -81,7 +83,7 @@ function ManageRequest() {
       .disableTrack(id)
       .then((res) => {
         if (res) {
-        //   console.log("Track disabled:", res);
+          console.log("Track disabled:", res);
             fetchTracks();
         } else {
           console.error("Failed to disable track");
@@ -94,6 +96,7 @@ function ManageRequest() {
 
 useEffect(() => {
     fetchTracks();
+    console.log("Tracks data:", tracksData);
 }, []);
   return (
     <>
