@@ -18,7 +18,34 @@ const useAudioPlayer = (queueSong) => {
 
     const [currentSongIndex, setCurrentSongIndex] = useState(0);
 
-   
+    const playTrack = (track) => {
+        if (!track || !track.track_url) {
+            console.error("Invalid track data");
+            return;
+        }
+    
+        const trackUrl = createUrl(track.track_url); // Create URL for the track
+        audioRef.current.src = trackUrl;
+    
+        // Define the event handler first
+        const handleLoadedMetadata = () => {
+            audioRef.current.play().then(() => {
+                setIsPause(false); // Update state to "playing"
+                setCurrentTime(0); // Reset current time
+                setSeekValue(0);   // Reset seek bar
+            }).catch((error) => {
+                console.error("Playback error:", error);
+            });
+        };
+    
+        // Remove any previous loadedmetadata listener to prevent duplication
+        audioRef.current.removeEventListener("loadedmetadata", handleLoadedMetadata);
+    
+        // Add a new listener for loadedmetadata
+        audioRef.current.addEventListener("loadedmetadata", handleLoadedMetadata, { once: true });
+    };
+    
+    
     const togglePlayPause = () => {
         if (isPause) {
             audioRef.current.play().catch((error) => {
@@ -29,23 +56,19 @@ const useAudioPlayer = (queueSong) => {
         }
         setIsPause(!isPause);
     };
-      const handleNext = () => {
-        const nextSongIndex = (currentSongIndex + 1) % queueSong.length; // Loop back to the first song if at the end
-        // console.log("seekvalue", seekValue);
-        // console.log(currentSongIndex);
-        setCurrentSongIndex(nextSongIndex);
-        
-        const nextSong = queueSong[nextSongIndex];
-        audioRef.current.src = createUrl(nextSong.track_url);
+    const handleNext = () => {
+        if (queueSong.length === 0) {
+            console.warn("Queue is empty");
+            return;
+        }
     
-        // Add an event listener for loadedmetadata to ensure the duration is loaded
-        audioRef.current.addEventListener('loadedmetadata', () => {
-            audioRef.current.play();
-            setIsPause(false); // Ensure the play/pause state is updated
-            setCurrentTime(0); // Reset the current time
-            setSeekValue(0); // Reset the seek value
-        }, { once: true }); // Use { once: true } to ensure the event listener is removed after it fires
+        const nextSongIndex = (currentSongIndex + 1) % queueSong.length; // Loop back to the first song if at the end
+        setCurrentSongIndex(nextSongIndex);
+    
+        const nextSong = queueSong[nextSongIndex];
+        playTrack(nextSong); // Use the improved playTrack function
     };
+    
     const handlePrevious = () => {
         const previousSongIndex = (currentSongIndex - 1 + queueSong.length) % queueSong.length; // Loop back to the last song if at the beginning
         setCurrentSongIndex(previousSongIndex);
@@ -88,7 +111,7 @@ const useAudioPlayer = (queueSong) => {
     }
     useEffect(() => {
         if(currentTime >= queueSong[currentSongIndex].duration){
-            console.log("next song");
+            // console.log("next song");
             handleNext();
         }
     }, [currentTime]);
@@ -122,6 +145,7 @@ const useAudioPlayer = (queueSong) => {
         currentVolume,
         audioRef,
         togglePlayPause,
+        playTrack,
         handleSeekChange,
         handleVolumeChange,
         formatDuration,
@@ -129,6 +153,7 @@ const useAudioPlayer = (queueSong) => {
         handleNext,
         handlePrevious,
         currentSongIndex,
+        setCurrentSongIndex,
         queueSong,
     };
 

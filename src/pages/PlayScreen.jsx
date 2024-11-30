@@ -198,7 +198,7 @@ const PlayScreen = ({
   const toggleLyrics = () => {
     setShowLyrics((prev) => !prev);
   };
-  console.log("Seek Value in Play Screen:", seekValue);
+  // console.log("Seek Value in Play Screen:", seekValue);
   return (
     <ThemeProvider theme={theme}>
       <Box
