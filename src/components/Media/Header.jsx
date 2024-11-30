@@ -1,300 +1,185 @@
 import React, { useState } from "react";
-import {
-  Card,
-  CardMedia,
-  CardContent,
-  Typography,
-  Button,
-  Dialog,
-  DialogContent,
-  DialogActions,
-  IconButton,
-  Box,
-  useMediaQuery,
-} from "@mui/material";
+import Card from "@mui/material/Card";
+import CardMedia from "@mui/material/CardMedia";
+import CardContent from "@mui/material/CardContent";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
+import Box from "@mui/material/Box";
 import { red, grey } from "@mui/material/colors";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import MainMenu from "./PlaylistMenu";
 import SongCardMenu from "../common/SongCardMenu";
+import useTheme from "@mui/material/styles/useTheme";
 
-const MediaHeader = ({
-  media,
-  mediaType,
-}) => {
+const MediaHeader = ({ media, mediaType }) => {
   const [open, setOpen] = useState(false);
   const textColor = red[500];
   const titleColor = grey[400];
 
-  // Media query to check if the screen width is less than 50%
-  const isSmallScreen = useMediaQuery("(max-width: 50%)");
+  const theme = useTheme();
 
   const handleClickOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  return (
+  const renderMediaContent = () => (
     <>
-    {mediaType === "playlist" && (
-      <Card
-      sx={{
-        display: "flex",
-        flexDirection: isSmallScreen ? "column" : "row",
-        alignItems: isSmallScreen ? "center" : "left",
-        bgcolor: "#121212",
-        color: "#fff",
-        position: "relative",
-      }}
-    >
-      {/* More Options Icon */}
-      <Box sx={{ position: "absolute", bottom: 8, right: 8 }}>
-        <MainMenu />
-      </Box>
+      <Typography
+        variant="h4"
+        component="h1"
+        fontWeight="bold"
+        gutterBottom
+        color={titleColor}
+      >
+        {media.title}
+      </Typography>
 
-      <CardMedia
-        component="img"
-        image={media.imageSrc}
-        alt="Playlist Cover"
-        sx={{
-          width: "100%",
-          maxWidth: 300,
-          borderRadius: 1,
-          mb: isSmallScreen ? 2 : 0,
-        }}
-      />
-      <CardContent sx={{ textAlign: isSmallScreen ? "center" : "left" }}>
-        <Typography variant="h4" component="h1" fontWeight="bold" gutterBottom color={titleColor}>
-          {media.title}
-        </Typography>
-        
-        <Typography variant="subtitle1" color="white">
-          {media.year}
-        </Typography>
-        {media.description && (
-          <Typography variant="body2" color={titleColor} sx={{ mt: 1, mb: 1 }}>
-            {media.description.length > 200
-              ? `${media.description.substring(0, 200)}...`
-              : media.description}
-            {media.description.length > 200 && (
-              <Button
-                onClick={handleClickOpen}
-                sx={{ textTransform: "none", color: textColor }}
-              >
-                MORE
-              </Button>
-            )}
-          </Typography>
-        )}
-
-        {/* Play Button */}
-        <Button
-          variant="contained"
-          startIcon={<PlayArrowIcon />}
-          sx={{
-            mt: 3,
-            bgcolor: textColor,
-            "&:hover": { bgcolor: red[700] },
-          }}
-        >
-          Play
-        </Button>
-      </CardContent>
-
-      {/* Dialog Popup */}
-      <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
-        <DialogContent sx={{
-          bgcolor: "#121212",
-        }}>
-          <Typography variant="body1" color={titleColor}>{media.description}</Typography>
-        </DialogContent>
-        <DialogActions sx={{
-          bgcolor: "#121212",
-        }}>
-          <Button
-            onClick={handleClose}
-            sx={{ color: textColor, borderColor: textColor }}
-          >
-            Close
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </Card>
-    )}
-
-    {mediaType === "album" && (
-      <Card
-      sx={{
-        display: "flex",
-        flexDirection: isSmallScreen ? "column" : "row",
-        alignItems: isSmallScreen ? "center" : "left",
-        bgcolor: "#121212",
-        color: "#fff",
-        position: "relative",
-      }}
-    >
-      {/* More Options Icon */}
-      <Box sx={{ position: "absolute", bottom: 8, right: 8 }}>
-        <MainMenu />
-      </Box>
-
-      <CardMedia
-        component="img"
-        image={media.imageSrc}
-        alt="Playlist Cover"
-        sx={{
-          width: "100%",
-          maxWidth: 300,
-          borderRadius: 1,
-          mb: isSmallScreen ? 2 : 0,
-        }}
-      />
-      <CardContent sx={{ textAlign: isSmallScreen ? "center" : "left" }}>
-        <Typography variant="h4" component="h1" fontWeight="bold" gutterBottom color={titleColor}>
-          {media.title}
-        </Typography>
-        <Typography variant="h6" sx={{ color: textColor }}>
+      {media.artist && (
+        <Typography variant="h6" sx={{ color: 'gray' }}>
           {media.artist}
         </Typography>
-        <Typography variant="subtitle1" color="white">
-          {media.genre} • {media.year}
-        </Typography>
-        {media.description && (
-          <Typography variant="body2" color={titleColor} sx={{ mt: 1, mb: 1 }}>
-            {media.description.length > 200
-              ? `${media.description.substring(0, 200)}...`
-              : media.description}
-            {media.description.length > 200 && (
-              <Button
-                onClick={handleClickOpen}
-                sx={{ textTransform: "none", color: textColor }}
-              >
-                MORE
-              </Button>
-            )}
-          </Typography>
-        )}
-
-        {/* Play Button */}
-        <Button
-          variant="contained"
-          startIcon={<PlayArrowIcon />}
-          sx={{
-            mt: 3,
-            bgcolor: textColor,
-            "&:hover": { bgcolor: red[700] },
-          }}
-        >
-          Play
-        </Button>
-      </CardContent>
-
-      {/* Dialog Popup */}
-      <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
-        <DialogContent sx={{
-          bgcolor: "#121212",
-        }}>
-          <Typography variant="body1" color={titleColor}>{media.description}</Typography>
-        </DialogContent>
-        <DialogActions sx={{
-          bgcolor: "#121212",
-        }}>
-          <Button
-            onClick={handleClose}
-            sx={{ color: textColor, borderColor: textColor }}
-          >
-            Close
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </Card>
       )}
 
-    {mediaType === "track" && (
-      <Card
-      sx={{
-        display: "flex",
-        flexDirection: isSmallScreen ? "column" : "row",
-        alignItems: isSmallScreen ? "center" : "left",
-        bgcolor: "black",
-        color: "#fff",
-        position: "relative",
-      }}
-    >
-      {/* More Options Icon */}
-      <Box sx={{ position: "absolute", bottom: 8, right: 8 }}>
-        <SongCardMenu />
-      </Box>
-
-      <CardMedia
-        component="img"
-        image={media.cover}
-        alt="Track Cover"
-        sx={{
-          width: "100%",
-          maxWidth: 300,
-          borderRadius: 2,
-          mb: isSmallScreen ? 2 : 0,
-        }}
-      />
-      <CardContent sx={{ textAlign: isSmallScreen ? "center" : "left", mt: '1.5rem' }}>
-        <Typography variant="h4" component="h1" fontWeight="bold" gutterBottom color={titleColor}>
-          {media.title}
-        </Typography>
+      {media.album && (
         <Typography variant="h5" sx={{ color: textColor }}>
           {media.artist} • {media.album}
         </Typography>
-        <Typography variant="subtitle1" color="white">
-          {media.genre} • {media.year}
-        </Typography>
-        {media.description && (
-          <Typography variant="body2" color={titleColor} sx={{ mt: 1, mb: 1 }}>
-            {media.description.length > 200
-              ? `${media.description.substring(0, 200)}...`
-              : media.description}
-            {media.description.length > 200 && (
-              <Button
-                onClick={handleClickOpen}
-                sx={{ textTransform: "none", color: textColor }}
-              >
-                MORE
-              </Button>
-            )}
-          </Typography>
-        )}
+      )}
 
-        {/* Play Button */}
+      <Typography variant="subtitle1" color="white">
+        {media.genre && `${media.genre} • `}
+        {media.year}
+      </Typography>
+      {media.description && (
+  <Typography
+    variant="body2"
+    color={titleColor}
+    sx={{
+      mt: 1,
+      [theme.breakpoints.down('sm')]: {
+        textAlign: "center",
+      },
+      textAlign: { 
+        sm: "center",
+        md: "left",    // Căn trái cho màn hình lớn hơn
+      },
+      wordWrap: "break-word", // Tự động xuống dòng nếu quá dài
+    }}
+  >
+    {media.description.length > 200
+      ? `${media.description.substring(0, 200)}...`
+      : media.description}
+    {media.description.length > 200 && (
+      <Button
+        onClick={handleClickOpen}
+        sx={{
+          textTransform: "none",
+          color: textColor,
+        }}
+      >
+        MORE
+      </Button>
+    )}
+  </Typography>
+)}
+
+
+      <Button
+        variant="contained"
+        startIcon={<PlayArrowIcon />}
+        sx={{
+          
+          bgcolor: textColor,
+          "&:hover": { bgcolor: red[700] },
+        }}
+      >
+        Play
+      </Button>
+    </>
+  );
+
+  const renderDialog = () => (
+    <Dialog open={open} onClose={handleClose} fullWidth  keepMounted
+    disableScrollLock>
+      <DialogContent sx={{ bgcolor: "#121212" }}>
+        <Typography variant="body1" color={titleColor}>
+          {media.description}
+        </Typography>
+      </DialogContent>
+      <DialogActions sx={{ bgcolor: "#121212" }}>
         <Button
-          variant="contained"
-          startIcon={<PlayArrowIcon />}
-          sx={{
-            mt: '4rem',
-            bgcolor: textColor,
-            "&:hover": { bgcolor: red[700] },
-          }}
+          onClick={handleClose}
+          sx={{ color: textColor, borderColor: textColor }}
         >
-          Play
+          Close
         </Button>
+      </DialogActions>
+    </Dialog>
+  );
+
+  return (
+    <Card
+      sx={{
+        display: "flex",
+        flexDirection: {
+          xs: "column",
+          sm: "column",
+          md: "row",
+        },
+        alignItems: {
+          xs: "center",
+          sm: "center",
+          md: "flex-start",
+        },
+        bgcolor: "#121212",
+        color: "#fff",
+        position: "relative",
+      }}
+    >
+      {/* More Options Icon */}
+      <Box sx={{ position: "absolute", bottom: 8, right: 8 }}>
+        {mediaType === "track" ? <SongCardMenu /> : <MainMenu />}
+      </Box>
+
+      <CardMedia
+  component="img"
+  image={mediaType === "track" ? media.cover : media.imageSrc}
+  alt="Media Cover"
+  sx={{
+    width: {
+      xs: "70%", // Slightly reduced width for extra small screens
+      sm: "80%", // Slightly narrower on small screens
+      md: "300px", // Fixed width on medium screens and up
+    },
+    maxWidth: "300px", // Ensures the image doesn’t exceed this width
+    height: "auto", // Maintains aspect ratio
+    objectFit: "cover", // Keeps the image proportional
+    borderRadius: mediaType === "track" ? 2 : 1,
+    mb: mediaType === "track" ? "1.5rem" : 0,
+    boxShadow: 3, // Adds a subtle shadow for aesthetics
+    alignSelf: "center", // Centers the image
+  }}
+/>
+
+
+
+      <CardContent
+        sx={{
+          textAlign: {
+            xs: "center",
+            sm: "center",
+            md: "left",
+          },
+          mt: mediaType === "track" ? "1.5rem" : 0,
+        }}
+      >
+        {renderMediaContent()}
       </CardContent>
 
-      {/* Dialog Popup */}
-      <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
-        <DialogContent sx={{
-          bgcolor: "#121212",
-        }}>
-          <Typography variant="body1" color={titleColor}>{media.description}</Typography>
-        </DialogContent>
-        <DialogActions sx={{
-          bgcolor: "#121212",
-        }}>
-          <Button
-            onClick={handleClose}
-            sx={{ color: textColor, borderColor: textColor }}
-          >
-            Close
-          </Button>
-        </DialogActions>
-      </Dialog>
+      {renderDialog()}
     </Card>
-      )}
-    </>
   );
 };
 

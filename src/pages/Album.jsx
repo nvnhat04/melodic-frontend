@@ -57,7 +57,7 @@ const Album = () => {
                 minHeight: 'calc(100vh + 200px)',
             }}
         >
-            <Stack spacing={4} sx={{ maxWidth: 1200, width: '100%' }}>
+            <Stack spacing={5} sx={{ maxWidth: 1200, width: '100%' }}>
                 <PlaylistHeader media={playlist} mediaType="album" />
 
                 <TrackList songs={songs} type="album" />
