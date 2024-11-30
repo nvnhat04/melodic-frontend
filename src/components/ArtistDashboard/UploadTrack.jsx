@@ -48,23 +48,23 @@ const UploadTrack = () => {
       setDurationError('Invalid duration format. Please use the format "Xm Ys".');
     }
   };
-
-  useEffect(() => {
-    const fetchAlbums = async () => {
-        try {
-            const response = await artistApi.getAllAlbums(user_id);
-            // console.log(response);
-            if (response && response.length > 0) {
-                setAlbumList(response);
-                // console.log('Albums:', albumList);
-            } else {
-                alert('Failed to fetch albums');
-            }
-        } catch (error) {
-            console.error('Error fetching albums:', error);
+  const fetchAlbums = async () => {
+    try {
+        const response = await artistApi.getAllAlbums(user_id);
+        console.log(response);
+        if (response && response.length > 0) {
+            setAlbumList(response);
+            // console.log('Albums:', albumList);
+        } else {
             alert('Failed to fetch albums');
         }
-    };
+    } catch (error) {
+        console.error('Error fetching albums:', error);
+        alert('Failed to fetch albums');
+    }
+};
+  useEffect(() => {
+    console.log(user_id);
     fetchAlbums();
 }, []);
 

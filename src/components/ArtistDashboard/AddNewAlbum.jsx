@@ -163,7 +163,7 @@ const AddNewAlbum = () => {
           required
           sx={{ mb: 2 }}
         >
-          {['Album','Single'].map((type) => (
+          {['album','single'].map((type) => (
             <MenuItem key={type} value={type}>
               {type}
             </MenuItem>
