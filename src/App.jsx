@@ -9,7 +9,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import PlayScreen from "./pages/PlayScreen";
 import ArtistManageMerchandise from "./pages/ArtistManageMerchandise";
 import ArtistAddNewMerchandise from "./pages/ArtistAddNewMerchandise";
-
+import ArtistInbox from "./pages/ArtistInbox";
 import Playlist from "./pages/Playlist";
 import MainLayout from "./components/layout/MainLayout";
 import ShopPage from "./pages/ShopPage";
@@ -28,7 +28,7 @@ import { createTheme, ThemeProvider } from "@mui/material";
 
 const theme = createTheme({
   typography: {
-    fontFamily: [ "Neue Helvetica Condensed BQ", "Inter", "san-serif"].join(","),
+    fontFamily: ["Neue Helvetica Condensed BQ", "Inter", "san-serif"].join(","),
   },
 });
 
@@ -66,6 +66,7 @@ function App() {
               path="upload-merchandise"
               element={<ArtistAddNewMerchandise />}
             ></Route>
+            <Route path="inbox" element={<ArtistInbox />} />
           </Route>
 
           <Route path="/admin" element={<AdminDashboard />}>
