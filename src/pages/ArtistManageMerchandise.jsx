@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import MerchandiseCard from "../components/common/MerchandiseCard";
 import Grid from "@mui/material/Grid2";
 import Box from "@mui/material/Box";
@@ -9,20 +9,32 @@ import Select from "@mui/material/Select";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
+import MerchandiseApi from "../api/modules/merchandise.api";
+import { useSelector } from "react-redux";
 
 const ArtistManageMerchandise = () => {
-  const merchandise = {
-    name: `‘I LOVE YOU.’ 10th ANNIVERSARY EDITION 2xLP + ‘THE LOVE COLLECTION’ 7”`,
-    category: "Physical Album",
-    price: "25",
-    image:
-      "https://shop.thenbhd.com/cdn/shop/products/TheNBHD_ILoveYouD2C_1024x1024@2x.png?v=1681914792",
-  };
+  const user_id = useSelector((state) => state.auth.user_id);
+
+  const [merchandiseList, setMerchandiseList] = useState([]);
 
   const [sort, setSort] = React.useState("newest");
   const handleSortChange = (event) => {
     setSort(event.target.value);
   };
+
+  useEffect(() => {
+    const fetchMerchandiseList = async () => {
+      try {
+        const response = await MerchandiseApi.getAllMerchandiseByArtistId(
+          user_id
+        );
+        setMerchandiseList(response);
+      } catch (error) {
+        console.error("Error fetching merchandise:", error);
+      }
+    };
+    fetchMerchandiseList();
+  }, [user_id]);
 
   return (
     <Box display="flex" flexDirection="column">
@@ -70,21 +82,11 @@ const ArtistManageMerchandise = () => {
         columns={{ sm: 1, md: 2, lg: 4 }}
         p={2}
       >
-        <Grid size={1}>
-          <MerchandiseCard merchandise={merchandise} />
-        </Grid>
-        <Grid size={1}>
-          <MerchandiseCard merchandise={merchandise} />
-        </Grid>
-        <Grid size={1}>
-          <MerchandiseCard merchandise={merchandise} />
-        </Grid>
-        <Grid size={1}>
-          <MerchandiseCard merchandise={merchandise} />
-        </Grid>
-        <Grid size={1}>
-          <MerchandiseCard merchandise={merchandise} />
-        </Grid>
+        {merchandiseList.map((item, index) => (
+          <Grid key={index} size={1}>
+            <MerchandiseCard merchandise={item} />
+          </Grid>
+        ))}
       </Grid>
       <Stack spacing={2} alignSelf="center">
         <Pagination count={10} />
