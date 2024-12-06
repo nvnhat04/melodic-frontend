@@ -41,7 +41,7 @@ const CreateAccountForm = () => {
         username: formData.username,
         email: formData.email,
         password: formData.password,
-        displayname: formData.name,
+        display_name: formData.name,
       };
         accountApi.signUp(data).then((res) => {
         console.log(res);
