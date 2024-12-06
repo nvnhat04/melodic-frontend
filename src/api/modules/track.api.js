@@ -32,6 +32,51 @@ const Track = {
             }
         }
     },
+    async getAllTracksDisabled() {
+        try {
+            const response = await Client.get('/track/disabled');
+            return response;
+        } catch (error) {
+            if (error.response) {
+                return error.response;
+            }
+        }
+    },
+    async enableTrack(id) {
+        try {
+            const response = await Client.put(`/track/enable/${id}`);
+            return response;
+        } catch (error) {
+            if (error.response) {
+                return error.response;
+            }
+        }
+    },
+
+    async disableTrack(id) {
+        try {
+            const response = await Client.put(`/track/disable/${id}`);
+            return response;
+        } catch (error) {
+            if (error.response) {
+                return error.response;
+            }
+        }
+    },
+    async addTrack(track) {
+        try {
+            const response = await Client.post('/track/add', track, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+            return response;
+        } catch (error) {
+            if (error.response) {
+                return error.response;
+            }
+        }
+    }
 
 };
 export default Track;

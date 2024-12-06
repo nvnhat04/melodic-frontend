@@ -6,6 +6,7 @@ const tracks = [
     { id: "title", label: "Title" },
     { id: "artist", label: "Artist" },
     { id: "image", label: "Image" },
+    {id: "track_url", label: "Track URL"},
   ];
 function ManageTracks() {
 

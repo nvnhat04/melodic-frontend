@@ -1,22 +1,40 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom'; // Import Link from react-router-dom
 import Account from '../api/modules/account.api';
+import { setToken, setRole, setUserID } from '../redux/store';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+ 
 function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isHovered, setIsHovered] = useState(false); // Thêm trạng thái hover
-
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const handleLogin = (e) => {
     e.preventDefault();
     // Handle login logic
-    console.log('Username:', username);
-    console.log('Password:', password);
+    // console.log('Username:', username);
+    // console.log('Password:', password);
     const data ={
       username: username,
       password: password
     }
     Account.login(data).then((response) => {
       console.log(response);
+      if(!response.auth){
+        alert('Login failed');
+      }
+      else {
+        dispatch(setToken(response.token));
+        dispatch(setRole(response.role));
+        dispatch(setUserID(response.user_id));
+        if(response.role === 'admin') {navigate('/admin');}
+        else if(response.role === 'artist'){ navigate('/artist');}
+        else {
+          navigate('/');
+        }
+      }
     });
   };
 
