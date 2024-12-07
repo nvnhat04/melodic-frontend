@@ -26,7 +26,8 @@ const ArtistManageMerchandise = () => {
     const fetchMerchandiseList = async () => {
       try {
         const response = await MerchandiseApi.getAllMerchandiseByArtistId(
-          user_id
+          user_id,
+          sort
         );
         setMerchandiseList(response);
       } catch (error) {
