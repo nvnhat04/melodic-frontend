@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Typography } from "@mui/material";
 
-const Container = ({ header, children, color = "white" }) => {
+const Container = ({ header, children, color = "white",background ="#e75565" }) => {
   return (
     <Box sx={{ display: "flex", flexFlow: "column nowrap", gap: "10px" }}>
       {header && (
@@ -10,7 +10,7 @@ const Container = ({ header, children, color = "white" }) => {
             fontFamily: '"Roboto", sans-serif',
             fontSize: "1rem",
             fontWeight: "700",
-            color: {color},
+            color: color,
             textTransform: "uppercase",
             position: "relative",
             "&::after": { 
@@ -22,7 +22,7 @@ const Container = ({ header, children, color = "white" }) => {
               right: 0,
               bottom: "1px",
               height: ".25em",
-              background: "#e75565",
+              background: background,
             }, 
           }}
         >

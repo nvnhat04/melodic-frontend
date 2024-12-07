@@ -1,22 +1,23 @@
-import { Grid2 } from "@mui/material";
+import Grid from "@mui/material/Grid2";
 import MerchandiseCard from "./MerchandiseCard";
 
 const CardGrid = ({ List, Type = "album" }) => {
   return (
-    <Grid2
+    <Grid
       container
       spacing={2}
       sx={{
         justifyContent: "center",
         alignItems: "flex-start",
       }}
+      columns={{ md: 4, xs: 2 }}
     >
       {List.map((child, index) => (
-        <Grid2 xs={4} sm={3} md={2} key={index}>
+        <Grid key={index} size={1}>
           <MerchandiseCard merchandise={child} hoverEffect={"scale"} />
-        </Grid2>
+        </Grid>
       ))}
-    </Grid2>
+    </Grid>
   );
 };
 
