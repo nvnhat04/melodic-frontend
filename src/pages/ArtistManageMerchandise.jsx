@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
-import MerchandiseCard from "../components/common/MerchandiseCard";
 import MerchandiseItem from "../components/common/MerchandiseItem";
 import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid2";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import MenuItem from "@mui/material/MenuItem";
@@ -30,9 +28,15 @@ const StackHeader = () => {
         Product
       </Typography>
       <Box display="flex" flexGrow={1} textAlign="center">
-        <Typography fontWeight="bold" width="5rem">Price</Typography>
-        <Typography fontWeight="bold" width="5rem">Stock</Typography>
-        <Typography fontWeight="bold" width="5rem">Total Sold</Typography>
+        <Typography fontWeight="bold" width="5rem">
+          Price
+        </Typography>
+        <Typography fontWeight="bold" width="5rem">
+          Stock
+        </Typography>
+        <Typography fontWeight="bold" width="5rem">
+          Total Sold
+        </Typography>
       </Box>
     </Paper>
   );
@@ -86,8 +90,12 @@ const ArtistManageMerchandise = () => {
           >
             <MenuItem value="newest">Newest</MenuItem>
             <MenuItem value="oldest">Oldest</MenuItem>
-            <MenuItem value="popular">Sales Ascending</MenuItem>
-            <MenuItem value="unpopular">Sales Descending</MenuItem>
+            <MenuItem value="popularityAscending">Sales Ascending</MenuItem>
+            <MenuItem value="popularityDescending">Sales Descending</MenuItem>
+            <MenuItem value="priceAscending">Price Ascending</MenuItem>
+            <MenuItem value="priceDescending">Price Descending</MenuItem>
+            <MenuItem value="stockAscending">Stock Ascending</MenuItem>
+            <MenuItem value="stockDescending">Stock Descending</MenuItem>
           </Select>
         </Box>
       </Box>
