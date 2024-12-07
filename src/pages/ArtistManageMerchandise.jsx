@@ -82,8 +82,8 @@ const ArtistManageMerchandise = () => {
         columns={{ sm: 1, md: 2, lg: 4 }}
         p={2}
       >
-        {merchandiseList.map((item, index) => (
-          <Grid key={index} size={1}>
+        {merchandiseList.map((item) => (
+          <Grid key={item.id} size={1}>
             <MerchandiseCard merchandise={item} />
           </Grid>
         ))}
