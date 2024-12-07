@@ -132,7 +132,7 @@ const useAudioPlayer = (queueSong) => {
     const formatDuration = (duration) => {
         const minutes = Math.floor(duration / 60);
         const seconds = Math.floor(duration % 60);
-        return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        return `${minutes< 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
     };
     const debouncedHandleSeekChange = debounce(handleSeekChange, 100);
 
