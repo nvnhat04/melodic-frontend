@@ -51,6 +51,9 @@ const ArtistManageMerchandise = () => {
   const handleSortChange = (event) => {
     setSort(event.target.value);
   };
+  const handleDeleteMerchandise = (deletedId) => {
+    setMerchandiseList((prev) => prev.filter((item) => item.id !== deletedId));
+  };
 
   useEffect(() => {
     const fetchMerchandiseList = async () => {
@@ -103,7 +106,11 @@ const ArtistManageMerchandise = () => {
       <Stack>
         <StackHeader />
         {merchandiseList.map((merchandise) => (
-          <MerchandiseItem key={merchandise.id} merchandise={merchandise} />
+          <MerchandiseItem
+            key={merchandise.id}
+            merchandise={merchandise}
+            onDelete={handleDeleteMerchandise}
+          />
         ))}
       </Stack>
       <Stack spacing={2} alignSelf="center">
