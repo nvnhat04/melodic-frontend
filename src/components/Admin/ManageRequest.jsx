@@ -7,6 +7,7 @@ import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import trackApi from "../../api/modules/track.api";
+import createUrl from "../../hooks/createUrl";
 const mockTracksData = [
   {
     id: 1,
@@ -39,9 +40,10 @@ const mockTracksData = [
 ];
 
 function ManageRequest() {
-  const [tracksData, setTracksData] = useState(mockTracksData);
+  const [tracksData, setTracksData] = useState([]);
   const [showFullId, setShowFullId] = useState(false);
   const [open, setOpen] = useState(false);
+  const [trackCover, setTrackCover] = useState("");
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -53,7 +55,7 @@ function ManageRequest() {
         const res = await trackApi.getAllTracksDisabled();
         if (res && res.length > 0) {
             setTracksData(res);
-            console.log("Tracks found:", res);
+            //console.log("Tracks found:", res);
         } else {
             console.error("No tracks found");
         }
@@ -97,7 +99,15 @@ function ManageRequest() {
 useEffect(() => {
     fetchTracks();
     console.log("Tracks data:", tracksData);
+    // console.log(tracksData[0]);
 }, []);
+useEffect(() => {
+  if (tracksData.length > 0) {
+      // console.log(createUrl(tracksData[0].cover));
+      setTrackCover(createUrl(tracksData[0].cover));
+  }
+}, [tracksData]);
+
   return (
     <>
       <Typography variant="h5" sx={{ fontSize: 36, fontWeight: "bold", mb: 2 }}>
@@ -143,7 +153,7 @@ useEffect(() => {
             >
               <Box
                 component="img"
-                src={track.image}
+                src={trackCover}
                 alt={`${track.title} cover`}
                 sx={{
                   width: 40,

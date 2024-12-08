@@ -54,7 +54,6 @@ const UploadTrack = () => {
         console.log(response);
         if (response && response.length > 0) {
             setAlbumList(response);
-            // console.log('Albums:', albumList);
         } else {
             alert('Failed to fetch albums');
         }
@@ -64,11 +63,12 @@ const UploadTrack = () => {
     }
 };
   useEffect(() => {
-    console.log(user_id);
     fetchAlbums();
-}, []);
+}, [albumList]);
 
-
+useEffect(() => {
+  console.log('Updated Albums:', albumList);
+}, [albumList]); 
   const initialFormData = {   
      title: '',
     lyrics: '',
@@ -161,7 +161,8 @@ const UploadTrack = () => {
       return false;
     });
     
-    if (!albumExists) {
+
+    if (!albumExists ) {
       // If album doesn't exist, ask user if they want to create a new album
       const createNewAlbum = window.confirm('This album does not exist. Would you like to create a new album?');
       if (createNewAlbum) {
