@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import AlbumCard from "./AlbumCard.jsx";
+import TrackCard from "./TrackCard.jsx";
 import MerchandiseCard from "./MerchandiseCard.jsx";
+import ArtistCard from "./ArtistCard.jsx";
 import { Box } from "@mui/material";
 import "swiper/swiper-bundle.css";
 
@@ -13,12 +15,24 @@ const AlbumSlider = ({ list, type }) => {
 
   // Update slides configuration based on screen width
   const updateSlidesConfig = () => {
-    if (window.innerWidth >= 960) {
-      setSlidesConfig({ slidesPerView: 7, slidesPerGroup: 7 });
-    } else if (window.innerWidth >= 600) {
-      setSlidesConfig({ slidesPerView: 5, slidesPerGroup: 5 });
+    if (type === "Artist") {
+      if (window.innerWidth >= 1320) {
+        setSlidesConfig({ slidesPerView: 8, slidesPerGroup: 8 });
+      } else if (window.innerWidth >= 960) {
+        setSlidesConfig({ slidesPerView: 7, slidesPerGroup: 7 });
+      } else if (window.innerWidth >= 600) {
+        setSlidesConfig({ slidesPerView: 5, slidesPerGroup: 5 });
+      } else {
+        setSlidesConfig({ slidesPerView: 3, slidesPerGroup: 3 });
+      }
     } else {
-      setSlidesConfig({ slidesPerView: 3, slidesPerGroup: 3 });
+      if (window.innerWidth >= 960) {
+        setSlidesConfig({ slidesPerView: 6, slidesPerGroup: 6 });
+      } else if (window.innerWidth >= 600) {
+        setSlidesConfig({ slidesPerView: 4, slidesPerGroup: 4 });
+      } else {
+        setSlidesConfig({ slidesPerView: 2, slidesPerGroup: 2 });
+      }
     }
   };
 
@@ -38,15 +52,34 @@ const AlbumSlider = ({ list, type }) => {
         direction="horizontal"
         observer={true}
       >
-        {list.map((item) => (
-          <SwiperSlide key={item.id}>
-            {type === "Album" ? (
-              <AlbumCard album={item} />
-            ) : (
-              <MerchandiseCard merchandise={item} hoverEffect={"blur"}/>
-            )}
-          </SwiperSlide>
-        ))}
+
+//         {list.map((item) => (
+//           <SwiperSlide key={item.id}>
+//             {type === "Album" && (
+//               <AlbumCard album={item} />
+//             ) }
+//             {type === "Merch" && (
+//               <MerchandiseCard merchandise={item} hoverEffect={"blur"}/>
+//             )}
+//             {
+//               type === "track" && (
+//                 <TrackCard track={item} />
+//               )
+//             }
+//           </SwiperSlide>
+
+        {list != null &&
+          list.map((item) => (
+            <SwiperSlide key={item.id}>
+              {type === "Album" ? (
+                <AlbumCard album={item} />
+              ) : type === "Artist" ? (
+                <ArtistCard artist={item} />
+              ) : (
+                <MerchandiseCard merchandise={item} hoverEffect={"blur"} />
+              )}
+            </SwiperSlide>
+          ))}
       </Swiper>
     </Box>
   );

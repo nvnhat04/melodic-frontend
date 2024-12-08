@@ -1,20 +1,20 @@
-import React from "react";
-import { Link, useLocation } from "react-router-dom";
-import Drawer from "@mui/material/Drawer";
-import Toolbar from "@mui/material/Toolbar";
-import Box from "@mui/material/Box";
-import Divider from "@mui/material/Divider";
-import List from "@mui/material/List";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemText from "@mui/material/ListItemText";
-import ListItemIcon from "@mui/material/ListItemIcon";
+import AddBoxIcon from "@mui/icons-material/AddBox";
 import HomeIcon from "@mui/icons-material/Home";
 import InboxIcon from "@mui/icons-material/Inbox";
 import InventoryIcon from "@mui/icons-material/Inventory";
-import AddBoxIcon from "@mui/icons-material/AddBox";
-import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
 import LibraryMusicIcon from "@mui/icons-material/LibraryMusic";
+import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
 import { ListItem, Typography } from "@mui/material";
+import Box from "@mui/material/Box";
+import Divider from "@mui/material/Divider";
+import Drawer from "@mui/material/Drawer";
+import List from "@mui/material/List";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
+import Toolbar from "@mui/material/Toolbar";
+import React from "react";
+import { Link, useLocation } from "react-router-dom";
 
 const drawerWidth = 240;
 
@@ -23,13 +23,11 @@ const ArtistDrawer = ({
   handleDrawerClose,
   handleDrawerTransitionEnd,
   container,
+  artist
 }) => {
   const location = useLocation();
+  
 
-  const artist = {
-    name: "The Neighbourhood",
-    img: "https://media.pitchfork.com/photos/5a9f0c13b848c0268b2016bb/1:1/w_800,h_800,c_limit/The%20Neighbourhood.jpg",
-  };
 
   const navItems = [
     {
@@ -67,6 +65,11 @@ const ArtistDrawer = ({
       ref: "/artist/upload-track",
       icon: <AddBoxIcon />,
     },
+    {
+      text: "Add New Album",
+      ref: "/artist/add-album",
+      icon: <AddBoxIcon />,
+    }
   ];
 
   const drawer = (
@@ -82,8 +85,8 @@ const ArtistDrawer = ({
       >
         <Box
           component="img"
-          src={artist.img}
-          alt={artist.name}
+          src={artist.avatar}
+          alt={artist.display_name}
           sx={{
             width: "70%",
             objectFit: "cover",
@@ -91,7 +94,7 @@ const ArtistDrawer = ({
             borderRadius: "50%",
           }}
         />
-        <Typography fontSize="1.3em">{artist.name}</Typography>
+        <Typography fontSize="1.3em">{artist.display_name}</Typography>
         <Typography>Artist</Typography>
       </Box>
       <Divider />
