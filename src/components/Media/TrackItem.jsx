@@ -4,6 +4,7 @@ import PlayIcon from "@mui/icons-material/PlayArrow";
 import { useTheme } from "@mui/material/styles";
 import { grey, red } from "@mui/material/colors";
 import SongMenu from "./TrackMenu";
+import SongCardMenu from "../common/SongCardMenu";
 
 const TrackItem = ({ track, type }) => {
   const [isHovered, setIsHovered] = useState(false);
@@ -126,7 +127,15 @@ const TrackItem = ({ track, type }) => {
       <Typography variant="body2" color={textColor} noWrap>
         {formatDuration(track.duration)}
       </Typography>
-      <SongMenu TrackId={track.id} bgColor={activeColor} moreColor={textColor} />
+      {/* More Options */}
+      {
+        type === "playlist" ? (
+          <SongMenu TrackId={track.id} bgColor={activeColor} moreColor={textColor} />
+        ) : (
+          <SongCardMenu track={track} />
+        )
+      }
+     
     </Box>
   );
 };
