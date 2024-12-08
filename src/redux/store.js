@@ -7,6 +7,7 @@ const authSlice = createSlice({
         token: localStorage.getItem('token') || null,
         role: localStorage.getItem('role') || null, // Add role to the state
         user_id: localStorage.getItem('user_id') || null,
+        queueSongs: [],
     },
     reducers: {
         setToken: (state, action) => {
@@ -28,10 +29,21 @@ const authSlice = createSlice({
             state.user_id = action.payload;
             localStorage.setItem('user_id', action.payload);
         },
+        addTrackToQueue: (state, action) => {
+            if (action.payload && action.payload.id) {
+                state.queueSongs.push(action.payload.id);
+            } else {
+                console.error("Invalid payload for addTrackToQueue:", action.payload);
+            }
+        },
+       
+        clearQueue: (state) => {
+            state.queueSongs = [];
+        },
     },
 });
 
-export const { setToken, clearToken, setRole, setUserID } = authSlice.actions;
+export const { setToken, clearToken, setRole, setUserID, addTrackToQueue,clearQueue } = authSlice.actions;
 
 const store = configureStore({
     reducer: {
