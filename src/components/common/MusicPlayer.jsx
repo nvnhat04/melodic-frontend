@@ -25,6 +25,8 @@ import PlayScreen from "../../pages/PlayScreen";
 import useAudioPlayer from "../../hooks/useAudioPlayer";
 import trackApi from "../../api/modules/track.api";
 import createUrl from "../../hooks/createUrl";
+import { useSelector } from "react-redux";
+
 const queueSong01= [
       {
         "id": "MTVkYThlMmEtZDA5NC00NTkyLWFlMmItNDcxNDBmYTY3Yjhm",
@@ -40,45 +42,78 @@ const queueSong01= [
         ]
     }
 ]
+const queueSong02= [
+  {
+    "id": "",
+    "title": "",
+    "lyrics": "",
+    "release_date": "",
+    "duration": null,
+    "language": "",
+    "track_url": null,
+    "genres": null,
+    "artists": [
+        
+    ]
+}
+]
 
-const queueId = [
-  "MTVkYThlMmEtZDA5NC00NTkyLWFlMmItNDcxNDBmYTY3Yjhm",
-  "MzY3M2IxOTAtYTYzNS00ZmE2LTgxZjYtNjM2NmRmZjgzNTFh",
-  "M2Q1YWJjNTctYmVmZC00MGJiLTk1NGMtNWQ5YjBkNTZiMDM3",
-  "YTliMjM4OTItOThjZi00Y2Q0LTkxYjMtZTViZTRkZjEwYTY1"
-];
+// const queueId = [
+//   "MTVkYThlMmEtZDA5NC00NTkyLWFlMmItNDcxNDBmYTY3Yjhm",
+//   "MzY3M2IxOTAtYTYzNS00ZmE2LTgxZjYtNjM2NmRmZjgzNTFh",
+//   "M2Q1YWJjNTctYmVmZC00MGJiLTk1NGMtNWQ5YjBkNTZiMDM3",
+//   "YTliMjM4OTItOThjZi00Y2Q0LTkxYjMtZTViZTRkZjEwYTY1"
+// ];
 function MusicPlayer() {
 
   const [isPlayScreenOpen, setIsPlayScreenOpen] = useState(false);
-  const [queueSong, setQueueSong] = useState(queueSong01);
-  const url = createUrl(queueSong01[0].track_url);
+  const [queueSong, setQueueSong] = useState(queueSong02);
+  const url = createUrl(queueSong02[0].track_url);
   const [srcTrack, setSrcTrack] = useState(url);
-  // useEffect(() => {
-  //   //console.log('current', createUrl(queueSong[audioPlayerProps.currentSongIndex].track_url));
-  //     console.log('Updated queueSong:', queueSong);
-  // }, [queueSong]); 
+  const queueId = useSelector((state) => state.auth.queueSongs);
+  const trackCache = useRef({});
   useEffect(() => {
+    if (queueId.length === 0) {
+      console.warn('queueId is empty');
+      return;
+    }
+    console.log(queueId);
     let queueSongPlays = [];
     let promises = [];
   
     for (let trackId = 0; trackId < queueId.length; trackId++) {
-      promises.push(trackApi.getTrackById(queueId[trackId]));
+      const id = queueId[trackId];
+      if (trackCache.current[id]) {
+        promises.push(Promise.resolve(trackCache.current[id]));
+      } else {
+        const promise = trackApi.getTrackById(id).then((result) => {
+          trackCache.current[id] = result;
+          return result;
+        });
+        promises.push(promise);
+      }
     }
   
     Promise.all(promises)
       .then((results) => {
-        queueSongPlays = results; // All results are available here
-        setQueueSong(queueSongPlays); // Trigger state update
+        // Handle results
+        console.log('Results:', results);
+        setQueueSong(results);
       })
       .catch((error) => {
         console.error('Error fetching tracks:', error);
       });
-  }, []); // Re-run when `queueId` changes
-  
+  }, [queueId]);
 
 
   const audioPlayerProps = useAudioPlayer(queueSong);
-
+  useEffect(() => {
+    if (queueSong.length > 0) {
+      audioPlayerProps.setCurrentSongIndex(queueSong.length - 1); // Set the current song index to the last track
+      const lastTrack = queueSong[queueSong.length - 1]; // Get the last added track
+      audioPlayerProps.playTrack(lastTrack); // Play the last track
+    }
+  }, [queueSong]);
   // Function to open PlayScreen
   const openPlayScreen = () => {
     setIsPlayScreenOpen(true);
