@@ -12,6 +12,8 @@ import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import TopBar from "../components/common/Topbar";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import StarRateIcon from "@mui/icons-material/StarRate";
+import AddIcon from "@mui/icons-material/Add";
+import RemoveIcon from "@mui/icons-material/Remove";
 const MerchandiseDetail = () => {
   const { id } = useParams(); // Get the product ID from the URL
   const navigate = useNavigate();
@@ -84,9 +86,13 @@ const MerchandiseDetail = () => {
     });
     alert("Added to cart!");
   };
-
+   
   const handleBuyNow = () => {
-    navigate("/checkout");
+    const orderData = {
+      selectedProducts: [{ ...product, quantity: count }],
+      total: count * product.price
+    };
+    navigate("/shop/checkout", { state: orderData });
   };
   const handleShop = () => {
     navigate("/shop");
@@ -97,51 +103,80 @@ const MerchandiseDetail = () => {
   }
 
   return (
-    <Box sx={{ width: "100%", backgroundColor: "#f5f5f5" }}>
-      <TopBar />
+    <Box sx={{ width: "100%", backgroundColor: "#f5f5f5",paddingBottom: "5vh", }}>
       <Box
         sx={{
           display: "flex",
           width: "90%",
           margin: "1% 5%",
-          alignItems: "stretch",
+          flexDirection: {
+            md: "row",
+            xs: "column",
+          },
+          alignItems: { md: "stretch", sm: "center", xs: "center" },
           backgroundColor: "white",
+          justifyContent: "center",
         }}
       >
         <Box
           sx={{
-            width: "45%",
-            height: "50vw",
-            backgroundColor: "#white",
+            width: {
+              md: "45%",
+              xs: "100%",
+            },
+            height: {
+              md: "50vw",
+              xs: "100vw",
+            },
+            backgroundColor: "white",
             display: "flex",
-            alignItems: "flex-start",
+            alignItems: {
+              md: "flex-start",
+              xs: "center",
+            },
             justifyContent: "center",
           }}
         >
-          <img
+          <Box
+            component="img"
             src={product.image}
             alt={product.name}
-            style={{
+            sx={{
               marginTop: "1.3vw",
               maxWidth: "100%",
               maxHeight: "100%",
               objectFit: "cover",
-              width: "60vw",
-              height: "35vw",
+              width: { md: "60vw", sm: "80vw", xs: "90vw" },
+              height: {
+                md: "35vw",
+                sm: "60vw",
+                xs: "70vw",
+              },
             }}
           />
         </Box>
         <Box
           sx={{
-            width: "60%",
+            width: {
+              md: "60%",
+              xs: "100%",
+            },
             backgroundColor: "#white",
-            color: "#black",
+            color: "black",
             padding: "1em",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "flex-start",
           }}
         >
           <Typography
             sx={{
-              fontSize: "1.75vw",
+              fontSize: {
+                md: "1.75vw",
+                sm: "4vw",
+                xs: "5vw",
+              },
+
               fontWeight: "bold",
               marginBottom: "0.5em",
             }}
@@ -153,28 +188,52 @@ const MerchandiseDetail = () => {
               sx={{
                 display: "flex",
                 alignItems: "center",
+                justifyContent: "flex-start",
+
                 gap: "1em",
                 marginLeft: "2vw",
               }}
             >
               <Typography
-                sx={{ color: "black", fontSize: "3vw", fontWeight: "bold" }}
+                sx={{
+                  color: "black",
+                  fontSize: {
+                    md: "3vw",
+                    xs: "5vw",
+                  },
+                  fontWeight: "bold",
+                }}
               >
                 ${product.price}
               </Typography>
-              <Typography sx={{ color: "gray", fontSize: "1.2vw" }}>
+              <Typography
+                sx={{
+                  color: "gray",
+                  fontSize: {
+                    md: "1.2vw",
+                    xs: "3vw",
+                  },
+                }}
+              >
                 Sold: {product.sold}
               </Typography>
               <Typography
                 sx={{
                   color: "#ffb71f",
-                  fontSize: "1.2vw",
+                  fontSize: {
+                    md: "1.2vw",
+                    xs: "3vw",
+                  },
                   display: "flex",
                   alignItems: "center",
                 }}
               >
                 <StarRateIcon
-                  sx={{ marginRight: "0.5vw", width: "2vw", height: "2vw" }}
+                  sx={{
+                    marginRight: "0.5vw",
+                    width: { md: "2vw", xs: "4vw" },
+                    height: { md: "2vw", xs: "4vw" },
+                  }}
                 />{" "}
                 {product.rating} / 5
               </Typography>
@@ -182,7 +241,7 @@ const MerchandiseDetail = () => {
             <Box sx={{ marginLeft: "2vw", marginTop: "1.5vw", width: "90%" }}>
               <Typography
                 sx={{
-                  fontSize: "1.5vw",
+                  fontSize: { md: "1.5vw", xs: "3vw" },
                   color: "gray",
                   display: "-webkit-box",
                   WebkitLineClamp: 3,
@@ -195,8 +254,20 @@ const MerchandiseDetail = () => {
                 {product.description}
               </Typography>
             </Box>
-            <Box sx={{ marginLeft: "2vw", marginTop: "8vw", display: "flex" }}>
-              <Typography sx={{ fontSize: "1.5vw", fontWeight: "Bold" }}>
+            <Box
+              sx={{
+                marginLeft: "2vw",
+                marginTop: "8vw",
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <Typography
+                sx={{
+                  fontSize: { md: "1.5vw", xs: "3vw" },
+                  fontWeight: "Bold",
+                }}
+              >
                 Related Album:
               </Typography>
               <Link
@@ -208,19 +279,18 @@ const MerchandiseDetail = () => {
                   textDecoration: "none",
                 }}
               >
-                <img
+                <Box
+                  component="img"
                   src={albumImg}
                   alt={product.name}
-                  style={{
+                  sx={{
                     maxWidth: "100%",
                     maxHeight: "100%",
                     objectFit: "cover",
                     borderRadius: "50%",
                     marginLeft: "2vw",
-                    marginTop: "-1vw",
-                    marginBottom: "0.5vw",
-                    width: "5vw",
-                    height: "5vw",
+                    width: { md: "5vw", xs: " 10vw" },
+                    height: { md: "5vw", xs: "10vw" },
                     border: "0.1vw gray solid",
                   }}
                 />
@@ -228,7 +298,8 @@ const MerchandiseDetail = () => {
             </Box>
             <Box
               sx={{
-                marginTop: "2vw",
+                marginTop: { md: "3vw", xs: "6vw" },
+                marginBottom: "4vw",
                 marginLeft: "2vw",
                 display: "flex",
                 height: "3vw",
@@ -239,7 +310,7 @@ const MerchandiseDetail = () => {
                 sx={{
                   display: "flex",
                   alignItems: "center",
-                  fontSize: "1.5vw",
+                  fontSize: { md: "1.5vw", xs: "3vw" },
                   fontWeight: "Bold",
                 }}
               >
@@ -250,123 +321,158 @@ const MerchandiseDetail = () => {
                 alignItems="center"
                 marginLeft="2vw"
                 border="0.1vw gray solid"
+                sx={{
+                  width: { md: "10vw", xs: "20vw" },
+                  height: { md: "2vw", xs: "4vw" },
+                }}
               >
                 <Box
                   sx={{
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    height: "2vw",
-                    width: "3vw",
+                    height: "100%",
+                    width: "30%",
                     borderRight: "0.1vw gray solid",
                   }}
                 >
-                  <Button
-                    onClick={decrease}
-                    disabled={count < 1}
+                  <IconButton
                     disableRipple
+                    onClick={decrease}
                     sx={{
-                      fontSize: "2vw",
-                      width: "1.5vw",
-                      height: "1.5vw",
-                      minWidth: "0",
                       "& :hover": {
                         backgroundColor: "transparent",
                         opacity: 1,
                       },
                       "&:focus": {
-                        color: "black",
                         backgroundColor: "transparent",
                         opacity: 1,
                       },
                       "&:active": {
-                        color: "black",
                         backgroundColor: "transparent",
                         opacity: 1,
                       },
                     }}
                   >
-                    <Typography
+                    <RemoveIcon
                       sx={{
-                        fontWeight: "bold",
-                        color: "black",
-                        fontSize: "1vw",
+                        width: {
+                          xs: "20px",
+                          sm: "23px",
+                          md: "20px",
+                          lg: "25px",
+                          xl: "30px",
+                        },
+                        height: {
+                          xs: "20px",
+                          sm: "23px",
+                          md: "20px",
+                          lg: "25px",
+                          xl: "30px",
+                        },
                       }}
-                    >
-                      {" "}
-                      -{" "}
-                    </Typography>
-                  </Button>
+                    ></RemoveIcon>
+                  </IconButton>
                 </Box>
-                <Typography sx={{ fontSize: "1vw", fontWeight: "bold", width: "4vw", textAlign: "center" }}>
+
+                <Typography
+                  sx={{
+                    fontWeight: "600",
+                    fontSize: {
+                      md: "1.25vw",
+                      xs: "2.5vw",
+                    },
+                    width: "40%",
+                    textAlign: "center",
+                  }}
+                >
                   {count}
                 </Typography>
-
                 <Box
                   sx={{
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    height: "2vw",
-                    width: "3vw",
+                    height: "100%",
+                    width: "30%",
                     borderLeft: "0.1vw gray solid",
                   }}
                 >
-                  <Button
+                  <IconButton
                     disableRipple
                     onClick={increase}
                     sx={{
-                      fontSize: "2vw",
-                      width: "1.5vw",
-                      height: "1.5vw",
-                      minWidth: "0",
                       "& :hover": {
                         backgroundColor: "transparent",
                         opacity: 1,
                       },
                       "&:focus": {
-                        color: "black",
                         backgroundColor: "transparent",
                         opacity: 1,
                       },
                       "&:active": {
-                        color: "black",
                         backgroundColor: "transparent",
                         opacity: 1,
                       },
                     }}
                   >
-                    <Typography
+                    <AddIcon
                       sx={{
-                        fontWeight: "bold",
-                        fontSize: "1vw",
-                        color: "black",
+                        width: {
+                          xs: "20px",
+                          sm: "23px",
+                          md: "20px",
+                          lg: "25px",
+                          xl: "30px",
+                        },
+                        height: {
+                          xs: "20px",
+                          sm: "23px",
+                          md: "20px",
+                          lg: "25px",
+                          xl: "30px",
+                        },
                       }}
-                    >
-                      {" "}
-                      +{" "}
-                    </Typography>
-                  </Button>
+                    ></AddIcon>
+                  </IconButton>
                 </Box>
               </Box>
             </Box>
             <Box
               sx={{
+                marginTop: {
+                  md: "0",
+                  xs: "8vw"
+                },
                 display: "flex",
-                justifyContent: "space-between",
-                marginTop: "2vw",
-                marginLeft: "2vw",
-                width: "28vw",
+                alignItems: "center",
+                flexDirection: {
+                  md: "row",
+                  xs: "column",
+                },
+                width: {
+                  md: "28vw",
+                  xs: "100%",
+                },
               }}
             >
               <Button
                 onClick={handleAddToCart}
                 sx={{
+                  margin: "2vw",
+                  padding: {
+                    md: "0",
+                    sm: "3vw",
+                    xs: "4vw"
+                  },
                   backgroundColor: "#e6d8d9",
                   minWidth: "0",
                   color: "#d0011b",
                   fontSize: "0.9vw",
-                  width: "13vw",
+                  width: {
+                    md: "13vw",
+                    xs: "90%",
+                  },
                   height: "4vw",
                   border: "0.1vw #d0011b solid",
                   "&:hover": {
@@ -377,11 +483,25 @@ const MerchandiseDetail = () => {
                 <AddShoppingCartIcon
                   sx={{
                     marginRight: "0.75vw",
-                    width: "1.5vw",
-                    height: "1.5vw",
+                    width: {
+                      md: "1.5vw",
+                      xs: "3vw",
+                    },
+                    height: {
+                      md: "1.5vw",
+                      xs: "3vw",
+                    },
                   }}
                 />
-                <Typography sx={{ fontWeight: "bold", fontSize: "1vw" }}>
+                <Typography
+                  sx={{
+                    fontWeight: "bold",
+                    fontSize: {
+                      md: "1vw",
+                      xs: "2vw",
+                    },
+                  }}
+                >
                   {" "}
                   ADD TO CART
                 </Typography>
@@ -390,17 +510,33 @@ const MerchandiseDetail = () => {
                 onClick={handleBuyNow}
                 sx={{
                   backgroundColor: "#d0011b",
+                  padding: {
+                    md: "0",
+                    sm: "3vw",
+                    xs: "4vw",
+                  },
+                  width: {
+                    md: "13vw",
+                    xs: "90%",
+                  },
                   minWidth: "0",
                   color: "white",
                   fontSize: "0.9vw",
-                  width: "13vw",
                   height: "4vw",
                   "&:hover": {
                     backgroundColor: "rgba(208,1,27, 0.9)",
                   },
                 }}
               >
-                <Typography sx={{ fontWeight: "bold", fontSize: "1vw" }}>
+                <Typography
+                  sx={{
+                    fontWeight: "bold",
+                    fontSize: {
+                      md: "1vw",
+                      xs: "2vw",
+                    },
+                  }}
+                >
                   {" "}
                   BUY NOW{" "}
                 </Typography>
@@ -414,6 +550,7 @@ const MerchandiseDetail = () => {
           backgroundColor: "white",
           width: "90%",
           margin: "2% 5% -1% 5%",
+          paddingBottom:{xs: "5%"},
           display: "flex",
         }}
       >
@@ -426,34 +563,51 @@ const MerchandiseDetail = () => {
             textDecoration: "none",
           }}
         >
-          <img
+          <Box
+             component="img"
             src={artist.img}
-            style={{
+            sx={{
               maxWidth: "100%",
               maxHeight: "100%",
               objectFit: "cover",
               borderRadius: "50%",
               border: "0.1vw gray solid",
-              width: "7vw",
-              height: "7vw",
+              width: {
+                md: "7vw",
+                xs: "13vw"
+              },
+              height: {
+                md: "7vw",
+                xs: "13vw"
+              },
               marginLeft: "2vw",
               marginTop: "2vw",
             }}
           />
         </Link>
-        <Box sx={{ margin: "2vw", color: "black" }}>
-          <Typography sx={{ fontSize: "2vw" }}>
+        <Box sx={{ margin: "2vw 2vw 0vw 2vw", color: "black" }}>
+          <Typography sx={{ fontSize: {
+            md: "2vw",
+            sm: "3vw",
+            xs: "4vw"
+          } }}>
             {artist.name}'s Store
           </Typography>
           <Button
             disableRipple
             sx={{
-              width: "12vw",
+              width: {
+                md: "12vw",
+                sm: "16vw",
+                xs: "20vw"
+              },
               minWidth: "0",
-              height: "2.5vw",
+              height: {
+                md: "2.5vw",
+                xs: "5vw"
+              },
               border: "0.12vw gray solid",
               marginTop: "2vw",
-              fontSize: "0.75vw",
               "& :hover": {
                 backgroundColor: "transparent",
                 opacity: 1,
@@ -474,13 +628,23 @@ const MerchandiseDetail = () => {
             <RemoveRedEyeIcon
               sx={{
                 marginRight: "0.75vw",
-                width: "1.5vw",
-                height: "1.5vw",
+                width: {
+                  md:"1.5vw",
+                  xs:"3vw"
+                },
+                height: {
+                  md: "1.5vw",
+                  xs: "3vw"
+                },
                 color: "black",
               }}
             />{" "}
             <Typography
-              sx={{ fontWeight: "medium", fontSize: "1vw", color: "black" }}
+              sx={{ fontWeight: "medium", fontSize: {
+                md: "1vw",
+                sm: "1.5vw",
+                xs: "2vw"
+              }, color: "black" }}
             >
               {" "}
               VIEW SHOP{" "}

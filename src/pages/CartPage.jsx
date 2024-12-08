@@ -10,29 +10,57 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import TopBar from "../components/common/Topbar";
 import { Navigate, useNavigate } from "react-router-dom";
-
+import { Link } from "react-router-dom";
 const CartPage = () => {
   const mockMer = [
     {
       id: 1,
       name: "Áo thun nam",
       price: 25,
-      merchImg:
+      image:
         "https://shop.thenbhd.com/cdn/shop/products/NBHD-SCULPTURE-TEE_600x.png?v=1681766714",
     },
     {
       id: 2,
       name: "Quần jeans nữ",
       price: 30,
-      merchImg:
+      image:
         "https://shop.thenbhd.com/cdn/shop/files/NBHD-HOUSE-TEE_600x.png?v=1694035989",
     },
     {
       id: 3,
-      name: "Giày thể thao",
+      name: "Quần monster",
+      price: 25,
+      image:
+        "https://shop.thenbhd.com/cdn/shop/products/NBHD-SCULPTURE-TEE_600x.png?v=1681766714",
+    },
+    {
+      id: 4,
+      name: "Áo áo áo",
+      price: 30,
+      image:
+        "https://shop.thenbhd.com/cdn/shop/products/NEI017v1a_MIC_SWING_900x.png?v=1645740363",
+    },
+    {
+      id: 5,
+      name: "Áo monster mùa thu",
+      price: 25,
+      image:
+        "https://shop.thenbhd.com/cdn/shop/products/HOLLYWOODTEEFRONT_900x.png?v=1634018500",
+    },
+    {
+      id: 6,
+      name: "Áo này kia",
+      price: 30,
+      image:
+        "https://shop.thenbhd.com/cdn/shop/products/NBHD-SCULPTURE-TOTE_900x.png?v=1681767748",
+    },
+    {
+      id: 7,
+      name: "Mũ mùa đông",
       price: 50,
-      merchImg:
-        "https://shop.thenbhd.com/cdn/shop/products/HOLLYWOODHOODIE_600x.png?v=1634018637",
+      image:
+        "https://shop.thenbhd.com/cdn/shop/products/NEI018v2_ITS_TOO_COLD_BEANIE_PHOTO_2cf96aa8-2383-4862-ab93-305c27a1527d_900x.png?v=1647900158",
     },
   ];
   const navigate = useNavigate();
@@ -40,14 +68,11 @@ const CartPage = () => {
   const [mockCart, setMockCart] = useState([
     { user_id: 1, merchandise_id: 1, quantity: 2 },
     { user_id: 1, merchandise_id: 2, quantity: 1 },
-    { user_id: 1, merchandise_id: 1, quantity: 2 },
-    { user_id: 1, merchandise_id: 2, quantity: 1 },
-    { user_id: 1, merchandise_id: 1, quantity: 2 },
-    { user_id: 1, merchandise_id: 2, quantity: 1 },
-    { user_id: 1, merchandise_id: 1, quantity: 2 },
-    { user_id: 1, merchandise_id: 2, quantity: 1 },
-    { user_id: 1, merchandise_id: 1, quantity: 2 },
-    { user_id: 1, merchandise_id: 2, quantity: 1 },
+    { user_id: 1, merchandise_id: 3, quantity: 2 },
+    { user_id: 1, merchandise_id: 4, quantity: 1 },
+    { user_id: 1, merchandise_id: 5, quantity: 2 },
+    { user_id: 1, merchandise_id: 6, quantity: 1 },
+    { user_id: 1, merchandise_id: 7, quantity: 2 },
   ]);
   const [selectedItems, setSelectedItems] = useState([]);
   // Hàm lấy thông tin sản phẩm từ mockMer
@@ -63,7 +88,7 @@ const CartPage = () => {
         merchandise_id: item.merchandise_id,
         quantity: item.quantity,
         price: productDetails.price,
-        merchImg: productDetails.merchImg,
+        image: productDetails.image,
         name: productDetails.name,
       };
     });
@@ -85,8 +110,8 @@ const CartPage = () => {
     );
   };
   const handletoShop = () => {
-    navigate("/shop")
-  }
+    navigate("/shop");
+  };
   // Hàm xử lý thay đổi số lượng
   const updateQuantity = (merchandise_id, quantity) => {
     setMockCart((prevCart) =>
@@ -113,8 +138,14 @@ const CartPage = () => {
   const cartDetails = getCartDetails();
 
   return (
-    <Box sx={{ width: "100%", minHeight: "100vh", backgroundColor: "#f5f5f5" }}>
-      <TopBar />
+    <Box
+      sx={{
+        width: "100%",
+        minHeight: "100vh",
+        backgroundColor: "#f5f5f5",
+        paddingBottom: "5vh",
+      }}
+    >
       <Box sx={{ width: "90%", margin: "2% 5%" }}>
         <Typography
           variant="h4"
@@ -208,7 +239,7 @@ const CartPage = () => {
             </Typography>
             <Button
               onClick={() => {
-                handletoShop()
+                handletoShop();
               }}
               disableRipple
               sx={{
@@ -231,7 +262,13 @@ const CartPage = () => {
                 },
               }}
             >
-              <Typography sx={{ fontSize: "1vw", textTransform: "capitalize", fontWeight: "bold" }}>
+              <Typography
+                sx={{
+                  fontSize: "1vw",
+                  textTransform: "capitalize",
+                  fontWeight: "bold",
+                }}
+              >
                 GO SHOPPING NOW
               </Typography>
             </Button>
@@ -272,19 +309,32 @@ const CartPage = () => {
                 </Box>
               </Box>
 
-              <Box sx={{ display: "flex", alignItems: "center", width: "35%" }}>
-                <img
-                  src={item.merchImg}
-                  alt={item.name}
+              <Box sx={{ width: "35%" }}>
+                <Link
+                  to={`/shop/merchandise/${item.merchandise_id}`}
                   style={{
-                    width: "5vw",
-                    height: "5vw",
-                    objectFit: "cover",
-                    marginRight: "2vw",
-                    borderRadius: "6px",
+                    display: "flex", // Duy trì bố cục ngang
+                    alignItems: "center",
+                    textDecoration: "none", // Xóa gạch chân mặc định
+                    color: "inherit", // Giữ màu sắc hiện tại
+                    width: "100%", // Đảm bảo link bao phủ toàn bộ nội dung
                   }}
-                />
-                <Typography sx={{ fontSize: "1.5vw" }}>{item.name}</Typography>
+                >
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                    style={{
+                      width: "5vw",
+                      height: "5vw",
+                      objectFit: "cover",
+                      marginRight: "2vw",
+                      borderRadius: "6px",
+                    }}
+                  />
+                  <Typography sx={{ fontSize: "1.5vw" }}>
+                    {item.name}
+                  </Typography>
+                </Link>
               </Box>
 
               <Box
@@ -474,6 +524,12 @@ const CartPage = () => {
             </Box>
           ))
         )}
+        <Box
+          sx={{
+            height: "6vw", 
+          }}
+        />
+
         {cartDetails.length > 0 && (
           <Box
             sx={{
@@ -495,6 +551,16 @@ const CartPage = () => {
               Total: {calculateTotal()} $
             </Typography>
             <Button
+              onClick={() =>
+                navigate("/checkout", {
+                  state: {
+                    selectedProducts: cartDetails.filter((item) =>
+                      selectedItems.includes(item.merchandise_id)
+                    ),
+                    total: calculateTotal(),
+                  },
+                })
+              }
               sx={{
                 backgroundColor: "#d0011b",
                 color: "white",
