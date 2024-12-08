@@ -35,6 +35,36 @@ import Inbox from "./components/ArtistDashboard/Inbox";
 // import TrackDetail from './pages/TrackDetail';
 // import AllGenre from './pages/AllGenre';
 
+// import Playlist from './pages/Playlist';
+// import MainLayout from './components/layout/MainLayout';
+// import ShopPage from './pages/ShopPage';
+// import MerchandiseDetail from './pages/MerchandiseDetail';
+// import ManageRequest from './components/Admin/ManageRequest';
+// import ManageUsers from './components/Admin/ManageUsers';
+// import ManageTracks from './components/Admin/ManageTracks';
+// import ManagePlaylists from './components/Admin/ManagePlaylists';
+// import CartPage from './pages/CartPage';
+// import MerchSearch from './pages/MerchSearch';
+// import UploadTrack from './components/Artist/UploadTrack';
+// import Album from './pages/Album';
+// import Libraries from './pages/Libraries';
+// import TrackDetail from './pages/TrackDetail';
+// import AllGenre from './pages/AllGenre';
+// import UpdatePassword from "./pages/UpdatePassword";
+// // import Dashboard from './components/Artist/DashBoard';
+
+// import { createTheme, ThemeProvider } from "@mui/material";
+
+// import { useEffect } from 'react';
+// import { clearToken } from './redux/store';
+
+// const theme = createTheme({
+//   typography: {
+//     fontFamily: ["Poppins", "Neue Helvetica Condensed BQ", "Inter", "san-serif"].join(","),
+//   },
+// });
+
+=======
 import Playlist from "./pages/Playlist";
 import MainLayout from "./components/layout/MainLayout";
 import ShopPage from "./pages/ShopPage";
@@ -72,6 +102,7 @@ function App() {
   // console.log(token);
    //   dispatch(clearToken());
   return (
+    <ThemeProvider theme={theme}>
     <BrowserRouter>
       <Routes className="App">
         {/* <Route path="/" element={token ? <MainLayout /> : <Navigate to="/login"/> }> */}
@@ -80,12 +111,16 @@ function App() {
           <Route path="artists" element={<Libraries type="artists" />} />
           <Route path="albums" element={<Libraries type="albums" />} />
           <Route path="playlists" element={<Libraries type="playlists" />} />
-          <Route path="tracks" element={<Libraries type="tracks" />} />
-          <Route path="track/:id" element={<TrackDetail />} />
-          <Route path="playlist/:id" element={<Playlist />} />
-          <Route path="artist/:id/profile" element={<ArtistProfile />} />
-          <Route path="album/:id" element={<Album />} />
-          <Route path="genre" element={<AllGenre />} />
+
+          <Route path="favorite" element={<Libraries type="favorite" />} />
+          <Route path='tracks' element={<Libraries type="tracks" />} />
+          <Route path='track/:id' element={<TrackDetail />} />
+          <Route path='playlist/:id' element={<Playlist />} />
+          <Route path='artist/:id/profile' element={<ArtistProfile />} />
+          <Route path='album/:id' element={<Album />} />
+          <Route path='genre' element={<AllGenre />} />
+          <Route path='update-password' element={<UpdatePassword />} />
+
         </Route>
         <Route path="/artist" element={<ArtistDashboard />}>
           {/* <Route index element={<Dashboard/>} />  */}
@@ -109,6 +144,7 @@ function App() {
               path="upload-merchandise"
               element={<ArtistAddNewMerchandise/>}
               ></Route>
+
         </Route>
         <Route
           path="/admin"
@@ -129,6 +165,7 @@ function App() {
         </Route>
       </Routes>
     </BrowserRouter>
+    </ThemeProvider>
   );
 }
 

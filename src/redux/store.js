@@ -43,11 +43,35 @@ const authSlice = createSlice({
     },
 });
 
+const favoriteSlice = createSlice({
+    name: 'favorite',
+    initialState: {
+        listFavorites: [],
+    },
+    reducers: {
+        setListFavorites: (state, action) => {
+            state.listFavorites = action.payload;
+        },
+        removeFavorite: (state, action) => {
+            const track_id = action.payload;
+            if (!track_id) return; // Bỏ qua nếu track_id không hợp lệ
+            state.listFavorites = state.listFavorites.filter(e => e.track_id !== track_id);
+        },
+        addFavorite: (state, action) => {
+            state.listFavorites = [...state.listFavorites, { track_id: action.payload }];
+        },
+    },
+});
+
+export const { setListFavorites, removeFavorite, addFavorite } = favoriteSlice.actions;
+
 export const { setToken, clearToken, setRole, setUserID, addTrackToQueue,clearQueue } = authSlice.actions;
+
 
 const store = configureStore({
     reducer: {
         auth: authSlice.reducer,
+        favorite: favoriteSlice.reducer,
     },
 });
 

@@ -1,121 +1,93 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Container from "../components/common/Container";
 import CardGrid from "../components/common/CardGrid";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+
+import LibraryAPI from "../api/modules/library.api";
+import FavoriteAPI from "../api/modules/favorite.api";
+import PlaylistAPI from "../api/modules/playlist.api";
+import TrackAPI from "../api/modules/track.api";
+import { useSelector, useDispatch } from "react-redux";
+import { setListFavorites } from "../redux/store";
 
 const Libraries = ({ type }) => {
-  const data = {
-    artists: {
-      header: "Artists",
-      items: [
-        {
-          name: "Adele",
-          cover:
-            "https://tse2.mm.bing.net/th?id=OIP.8iSPE2BMlVask2TooXNt-gHaHa&pid=Api&P=0&h=180",
-          id: 1,
-        },
-        {
-          name: "Ariana Grande",
-          cover:
-            "https://tse2.mm.bing.net/th?id=OIP.YmcUI6eaWlXuYJGAxqC-EQHaGL&pid=Api&P=0&h=180",
-          id: 2,
-        },
-        {
-          name: "Taylor Swift",
-          cover:
-            "https://i.pinimg.com/236x/ec/f3/58/ecf3580e3f5b4c1572acf9a918abf826.jpg",
-          id: 3,
-        },
-        {
-          name: "Billie Eilish",
-          cover:
-            "https://i.pinimg.com/236x/35/86/c8/3586c84c0523e960f32861cdc58d2da2.jpg",
-          id: 4,
-        },
-        {
-          name: "BTS",
-          cover:
-            "https://i.pinimg.com/236x/fc/10/68/fc1068816ce57e34c5e66463b6a2f6ce.jpg",
-          id: 5,
-        },
-        {
-          name: "Drake",
-          cover:
-            "https://i.pinimg.com/236x/42/8e/ae/428eae6b0abb3c60e10a75bc1ed759f3.jpg",
-          id: 6,
-        },
-        {
-          name: "Ed Sheeran",
-          cover:
-            "https://i.pinimg.com/474x/d3/a1/4c/d3a14c1a5cb9277b6c30b1439c95f244.jpg",
-          id: 7,
-        },
-      ],
-    },
-    albums: {
-      header: "Albums",
-      items: [
-        {
-          name: "25",
-          artist: "Adele",
-          cover:
-            "https://tse2.mm.bing.net/th?id=OIP.8iSPE2BMlVask2TooXNt-gHaHa&pid=Api&P=0&h=180",
-          id: 1,
-        },
-        {
-          name: "Sweetener",
-          artist: "Ariana Grande",
-          cover:
-            "https://tse2.mm.bing.net/th?id=OIP.8iSPE2BMlVask2TooXNt-gHaHa&pid=Api&P=0&h=180",
-          id: 2,
-        },
-      ],
-    },
-    playlists: {
-      header: "Playlists",
-      items: [
-        {
-          name: "Chill",
-          image:
-            "https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Music_icon.svg/512px-Music_icon.svg.png",
-          id: 1,
-        },
-        {
-          name: "Workout",
-          image:
-            "https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/Exercise_icon.svg/512px-Exercise_icon.svg.png",
-          id: 2,
-        },
-      ],
-    },
-    tracks: {
-      header: "Tracks",
-      items: [
-        {
-          name: "Track 1",
-          cover:
-            "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Placeholder_music_album_cover.svg/512px-Placeholder_music_album_cover.svg.png",
-          artist: "Artist 1",
-          id: 1,
-        },
-        {
-          name: "Track 2",
-          cover:
-            "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Placeholder_music_album_cover.svg/512px-Placeholder_music_album_cover.svg.png",
-          artist: "Artist 2",
-          id: 2,
-        },
-      ],
-    },
-  };
+  const [list, setList] = useState([]);
+  const [header, setHeader] = useState("");
+  const token = useSelector((state) => state.auth.token);
+  const dispatch = useDispatch();
 
-  const selectedData = data[type];
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        let fetchedData = [];
+        let fetchedHeader = "";
+
+        if (type === "artists") {
+          const artistsResponse = await LibraryAPI.getRecentArtists(token);
+          fetchedData = artistsResponse;
+          fetchedHeader = "Recent Artists";
+        } else if (type === "albums") {
+          const albumsResponse = await LibraryAPI.getRecentAlbums(token);
+          fetchedData = albumsResponse;
+          fetchedHeader = "Recent Albums";
+        } else if (type === "tracks") {
+          const tracksResponse = await LibraryAPI.getRecentTracks(token);
+          fetchedData = tracksResponse;
+          fetchedHeader = "Recent Tracks";
+        } else if (type === "favorite") {
+          const favoriteResponse = await FavoriteAPI.getListFavorites(token);
+          console.log("favorite", favoriteResponse);  
+
+          // Extract track IDs
+          console.log("favorite", favoriteResponse.length);
+          const trackIds = favoriteResponse.map((item) => item.track_id);
+          console.log("trackIds", trackIds);
+
+          // Fetch track details for all favorite tracks
+          const trackDetails = await Promise.all(
+            trackIds.map(async (id) => {
+              const response = await TrackAPI.getTrackById(id);
+              return response;
+            })
+          );
+
+          // Update Redux store and fetched data
+          dispatch(setListFavorites(favoriteResponse));
+          fetchedData = trackDetails;
+          console.log("track",trackDetails);
+          fetchedHeader = "Favorites";
+        } else if (type === "playlists") {
+          const playlistsResponse = await PlaylistAPI.getPlaylistByUser(token);
+          fetchedData = playlistsResponse;
+          fetchedHeader = "Recent Playlists";
+        }
+
+        // Update state
+        setList(fetchedData);
+        setHeader(fetchedHeader);
+      } catch (error) {
+        console.error(`Error fetching ${type} data:`, error);
+      }
+    };
+
+    if (token && type) {
+      fetchData();
+    }
+  }, [token, type, dispatch]);
 
   return (
-    selectedData && (
-      <Container header={selectedData.header}>
-        <CardGrid List={selectedData.items} type={type} />
+    <Box m={5}>
+      <Container header={header}>
+        {!list || list.length === 0 ? (
+          <Typography variant="h6" color="gray">
+            No {type} found
+          </Typography>
+        ) : (
+          <CardGrid List={list} Type={type} />
+        )}
       </Container>
-    )
+    </Box>
   );
 };
 

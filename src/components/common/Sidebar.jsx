@@ -19,6 +19,7 @@ import MusicNoteIcon from "@mui/icons-material/MusicNote";
 import QueueMusicIcon from "@mui/icons-material/QueueMusic";
 import SearchIcon from "@mui/icons-material/Search";
 import StorefrontIcon from "@mui/icons-material/Storefront";
+import FavoriteIcon from "@mui/icons-material/Favorite";
 import MenuIcon from "@mui/icons-material/Menu";
 import { Link } from "react-router-dom";
 
@@ -39,6 +40,7 @@ const Sidebar = ({open = false, toggleSidebar}) => {
   const items = [
     { text: "Home", icon: <HomeIcon />, section: null },
     { text: "New", icon: <NewIcon />, section: null },
+    { text: "Favorite", icon: <FavoriteIcon />, section: "Library" },
     { text: "Artists", icon: <PersonIcon />, section: "Library" },
     { text: "Albums", icon: <AlbumIcon />, section: "Library" },
     { text: "Tracks", icon: <MusicNoteIcon />, section: "Library" },
@@ -55,7 +57,7 @@ const Sidebar = ({open = false, toggleSidebar}) => {
         padding: "10px 16px",
         color: "gray",
         fontWeight: "bold",
-        textTransform: "uppercase",
+        textTransform: "lowercase",
         fontSize: "12px",
       }}
     >
