@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import FormControl from "@mui/material/FormControl";
@@ -10,18 +10,37 @@ import Select from "@mui/material/Select";
 import Typography from "@mui/material/Typography";
 import MerchandiseCard from "../components/common/MerchandiseCard";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import { useSelector } from "react-redux";
+import ArtistApi from "../api/modules/artist.api";
 
 const ArtistAddNewMerchandise = () => {
+  const user_id = useSelector((state) => state.auth.user_id);
+
+  const [artistAlbums, setArtistAlbums] = useState([]);
+
   const [merchandise, setMerchandise] = useState({
     name: "",
     category: "",
     price: "",
     quantityInStock: "",
     description: "",
-    image:
-      "https://shop.thenbhd.com/cdn/shop/products/TheNBHD_ILoveYouD2C_1024x1024@2x.png?v=1681914792",
+    image: "",
     relatedAlbum: "",
   });
+
+  useEffect(() => {
+    const fetchArtistAlbums = async () => {
+      try {
+        const response = await ArtistApi.getAllAlbums(user_id);
+        console.log("Fetched Artist Albums:", response);
+
+        setArtistAlbums(response);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchArtistAlbums();
+  }, []);
 
   const handleChange = (event) => {
     const name = event.target.name;
@@ -31,7 +50,6 @@ const ArtistAddNewMerchandise = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    // TODO: Add API call to add new merchandise
     console.log(merchandise);
   };
 
@@ -80,8 +98,10 @@ const ArtistAddNewMerchandise = () => {
                 onChange={handleChange}
                 value={merchandise.category ?? ""}
               >
-                <MenuItem value="Digital Album">Digital Album</MenuItem>
+                <MenuItem value="apparel">Apparel</MenuItem>
+                <MenuItem value="accessories">Accessories</MenuItem>
                 <MenuItem value="Physical Album">Physical Album</MenuItem>
+                <MenuItem value="other">Other</MenuItem>
               </Select>
             </FormControl>
           </Grid>
@@ -94,8 +114,11 @@ const ArtistAddNewMerchandise = () => {
                 onChange={handleChange}
                 value={merchandise.relatedAlbum ?? ""}
               >
-                <MenuItem value="Chip Chrome">Chip Chrome</MenuItem>
-                <MenuItem value="Sweater Weather">Sweater Weather</MenuItem>
+                {artistAlbums.map((album) => (
+                  <MenuItem key={album.id} value={album.id}>
+                    {album.title}
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
           </Grid>
