@@ -10,11 +10,7 @@ import { useSelector } from "react-redux";
 const SongCardMenu = ({ songId, bgColor }) => {
   const token = useSelector((state) => state.auth.token);
   const { isFavorite, addToFavorite, removeFromFavorite } = useFavorite(songId, token);
-
-  const addSongToPlaylist = (songId) => {
-    console.log(`Song with ID ${songId} added to playlist`);
-  };
-
+ 
   const onFavoriteClick = () => {
     if (isFavorite) {
       removeFromFavorite();
@@ -26,7 +22,6 @@ const SongCardMenu = ({ songId, bgColor }) => {
   const menuItems = [
     {
       text: "Add to Playlist",
-      onClick: () => addSongToPlaylist(songId),
       icon: <AddIcon />,
     },
     {
@@ -36,7 +31,7 @@ const SongCardMenu = ({ songId, bgColor }) => {
     },
   ];
 
-  return <MoreMenu menuItems={menuItems} bgColor={bgColor} />;
+  return <MoreMenu menuItems={menuItems} bgColor={bgColor} trackId={songId} />;
 };
 
 export default SongCardMenu;
