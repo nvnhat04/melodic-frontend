@@ -12,6 +12,7 @@ import MerchandiseCard from "../components/common/MerchandiseCard";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { useSelector } from "react-redux";
 import ArtistApi from "../api/modules/artist.api";
+import MerchandiseApi from "../api/modules/merchandise.api";
 
 const ArtistAddNewMerchandise = () => {
   const user_id = useSelector((state) => state.auth.user_id);
@@ -24,7 +25,8 @@ const ArtistAddNewMerchandise = () => {
     price: "",
     quantityInStock: "",
     description: "",
-    image: "",
+    image:
+      "https://shop.thenbhd.com/cdn/shop/files/NEI-MOON-TEE_1024x1024@2x.png?v=1731339647",
     relatedAlbum: "",
   });
 
@@ -48,9 +50,34 @@ const ArtistAddNewMerchandise = () => {
     setMerchandise((values) => ({ ...values, [name]: value }));
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log(merchandise);
+
+    try {
+      const response = await MerchandiseApi.createMerchandise({
+        name: merchandise.name,
+        artist_id: user_id,
+        album_id: merchandise.relatedAlbum,
+        category: merchandise.category,
+        price: merchandise.price,
+        stock: merchandise.quantityInStock,
+        description: merchandise.description,
+        image: merchandise.image,
+      });
+      console.log("Merchandise created:", response);
+
+      setMerchandise({
+        name: "",
+        category: "",
+        price: "",
+        quantityInStock: "",
+        description: "",
+        image: "",
+        relatedAlbum: "",
+      });
+    } catch (error) {
+      console.error("Failed to create merchandise:", error);
+    }
   };
 
   return (

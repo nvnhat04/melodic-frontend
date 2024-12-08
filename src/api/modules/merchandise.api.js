@@ -36,7 +36,7 @@ const Merchandise = {
 
   async createMerchandise(data) {
     try {
-      const response = await Client.post("/merchandise", data);
+      const response = await Client.post("/merchandise/", data);
       return response;
     } catch (error) {
       if (error.response) {
