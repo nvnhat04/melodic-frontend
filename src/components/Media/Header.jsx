@@ -90,7 +90,12 @@ const MediaHeader = ({ media, mediaType }) => {
         variant="contained"
         startIcon={<PlayArrowIcon />}
         sx={{
-          
+          position: {
+            md: "absolute", // Chỉ áp dụng "absolute" từ kích thước md trở lên
+          },
+          bottom: {
+            md: "24px", // Cách đáy 24px từ kích thước md trở lên
+          },
           bgcolor: textColor,
           "&:hover": { bgcolor: red[700] },
         }}
@@ -145,7 +150,7 @@ const MediaHeader = ({ media, mediaType }) => {
 
       <CardMedia
   component="img"
-  image={mediaType === "track" ? media.cover : media.imageSrc}
+  image={media.cover}
   alt="Media Cover"
   sx={{
     width: {
@@ -153,13 +158,18 @@ const MediaHeader = ({ media, mediaType }) => {
       sm: "80%", // Slightly narrower on small screens
       md: "300px", // Fixed width on medium screens and up
     },
-    maxWidth: "300px", // Ensures the image doesn’t exceed this width
-    height: "auto", // Maintains aspect ratio
-    objectFit: "cover", // Keeps the image proportional
+    maxWidth: "370px", // Ensures the image doesn’t exceed this width
+    height: {
+      xs: "70%", // Matches the width for xs screens
+      sm: "80%", // Matches the width for sm screens
+      md: "300px", // Matches the width for md screens
+    },
+    aspectRatio: "1 / 1", // Đảm bảo hình vuông
     borderRadius: mediaType === "track" ? 2 : 1,
     mb: mediaType === "track" ? "1.5rem" : 0,
     boxShadow: 3, // Adds a subtle shadow for aesthetics
-    alignSelf: "center", // Centers the image
+    boxShadow: 3, // Tạo bóng nhẹ
+    alignSelf: "center", // Căn giữa theo trục dọc
   }}
 />
 
