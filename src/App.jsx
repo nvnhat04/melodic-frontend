@@ -78,16 +78,13 @@ function App() {
           <Route path='album/:id' element={<Album />} />
           <Route path='genre' element={<AllGenre />} />
           <Route path='update-password' element={<UpdatePassword />} />
+          <Route path="multi-search" element={<MultiSearch />} />
 
         </Route>
         <Route path="/artist" element={<ArtistDashboard />}>
           {/* <Route index element={<Dashboard/>} />  */}
           {/* <Route path="dashboard" element={<Dashboard/>} /> */}
-          <Route path="multi-search" element={<MultiSearch />} />
         </Route>
-          <Route path="/home" element ={<HomePage/>}></Route>
-          <Route path="/artist-profile" element ={<ArtistProfile/>}></Route>
-          <Route path="/play-screen" element ={<PlayScreen/>}></Route>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} /> 
 
