@@ -66,6 +66,7 @@ const Playlist = {
             const response = await Client.post("/playlist/create", playlist, {
                 headers: {
                     token: `Bearer ${accessToken}`,
+                    'Content-Type': 'multipart/form-data',
                 },
             });
             return response;

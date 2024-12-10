@@ -15,6 +15,7 @@ import SongCardMenu from "../common/SongCardMenu";
 import useTheme from "@mui/material/styles/useTheme";
 import { useSelector } from "react-redux";
 import {usePlaylistContext} from "../../hooks/PlaylistContext"; // Import the context
+import createURL from "../../hooks/createUrl";
 
 
 
@@ -165,7 +166,7 @@ const MediaHeader = ({ media, mediaType }) => {
 
       <CardMedia
         component="img"
-        image={media.cover}
+        image={media.cover.startsWith("http") ? media.cover : createURL(media.cover)}
         alt="Media Cover"
         sx={{
           width: {
@@ -183,7 +184,6 @@ const MediaHeader = ({ media, mediaType }) => {
           borderRadius: mediaType === "track" ? 2 : 1,
           mb: mediaType === "track" ? "1.5rem" : 0,
           boxShadow: 3, // Adds a subtle shadow for aesthetics
-          boxShadow: 3, // Tạo bóng nhẹ
           alignSelf: "center", // Căn giữa theo trục dọc
         }}
       />
