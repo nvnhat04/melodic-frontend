@@ -133,7 +133,7 @@ const CreatePlaylistPopup = ({ open, onClose, trackId }) => {
             '& .MuiInputBase-input': { color: '#fff' }, // Make text color white
           }}
         />
-        <Button variant="contained" component="label" sx={{ mb: 2, backgroundColor: '#e75565' }}>
+        <Button variant="contained" component="label" sx={{ mb: 2, backgroundColor: '#e75565', mt: 2, width: '100%' }}>
           Upload Cover Image
           <input
             type="file"

@@ -77,11 +77,12 @@ const Playlist = {
         }
     },
 
-    async updatePlaylist(playlist, accessToken) {
+    async updatePlaylist(playlist, id, accessToken) {
         try {
-            const response = await Client.put(`/playlist/${playlist.id}`, playlist, {
+            const response = await Client.put(`/playlist/${id}`, playlist, {
                 headers: {
                     token: `Bearer ${accessToken}`,
+                    'Content-Type': 'multipart/form-data',
                 },
             });
             return response;

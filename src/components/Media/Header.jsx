@@ -166,7 +166,7 @@ const MediaHeader = ({ media, mediaType }) => {
 
       <CardMedia
         component="img"
-        image={media.cover.startsWith("http") ? media.cover : createURL(media.cover)}
+        image={media.cover && media.cover.startsWith("http") ? media.cover : createURL(media.cover)}
         alt="Media Cover"
         sx={{
           width: {
