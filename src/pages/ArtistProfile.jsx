@@ -63,7 +63,7 @@ function ArtistProfile() {
             const response = await artistApi.getAllAlbums(artist_id);
             console.log("list album: ",response);
             if (response) {
-                setListAlbums(response.slice(0, 5));
+                setListAlbums(response.slice(0,1));
             }
         } catch(err) {
             console.error(err);
