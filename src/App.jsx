@@ -3,24 +3,43 @@ import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import {useSelector, useDispatch} from 'react-redux';
 import { Navigate } from 'react-router-dom';
+import { useEffect } from "react";
+
+// Main Layout
+import MainLayout from "./components/layout/MainLayout";
 import HomePage from './pages/HomePage';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import ArtistProfile from './pages/ArtistProfile';
+import Album from "./pages/Album";
+import Libraries from "./pages/Libraries";
+import TrackDetail from "./pages/TrackDetail";
+import Playlist from "./pages/Playlist";
+import MultiSearch from "./pages/MultiSearchPage";
+import UpdatePassword from "./pages/UpdatePassword";
+import AllGenre from './pages/AllGenre';
+// Shop Layout
+import ShopLayout from "./components/layout/ShopLayout";
+import CartPage from "./pages/CartPage";
+import MerchSearch from "./pages/MerchSearch";
+import OrderHistory from "./pages/OrderHistory";
+import CheckOutPage from "./pages/CheckOutPage";
+import ShopPage from "./pages/ShopPage";
+import MerchandiseDetail from "./pages/MerchandiseDetail";
+// Artist Layout
 import ArtistDashboard from './pages/ArtistDashboard';
 import AdminDashboard from './pages/AdminDashboard';
 import UploadTrack from "./components/ArtistDashboard/UploadTrack";
 import AddNewAlbum from "./components/ArtistDashboard/AddNewAlbum";
-
-import PlayScreen from "./pages/PlayScreen";
-
 import ArtistManageMerchandise from "./pages/ArtistManageMerchandise";
 import ArtistAddNewMerchandise from "./pages/ArtistAddNewMerchandise";
 import Inbox from "./components/ArtistDashboard/Inbox";
+// Admin Layout
+import ManageRequest from "./components/Admin/ManageRequest";
+import ManageUsers from "./components/Admin/ManageUsers";
+import ManageTracks from "./components/Admin/ManageTracks";
+import ManagePlaylists from "./components/Admin/ManagePlaylists";
 
-import Album from "./pages/Album";
-import Libraries from "./pages/Libraries";
-import TrackDetail from "./pages/TrackDetail";
 import { createTheme, ThemeProvider } from "@mui/material";
 
 const theme = createTheme({
@@ -28,48 +47,7 @@ const theme = createTheme({
     fontFamily: ["Neue Helvetica Condensed BQ", "Inter", "san-serif"].join(","),
   },
 });
-import AllGenre from './pages/AllGenre';
 
-// import Playlist from './pages/Playlist';
-// import MainLayout from './components/layout/MainLayout';
-// import ShopPage from './pages/ShopPage';
-// import MerchandiseDetail from './pages/MerchandiseDetail';
-// import ManageRequest from './components/Admin/ManageRequest';
-// import ManageUsers from './components/Admin/ManageUsers';
-// import ManageTracks from './components/Admin/ManageTracks';
-// import ManagePlaylists from './components/Admin/ManagePlaylists';
-// import CartPage from './pages/CartPage';
-// import MerchSearch from './pages/MerchSearch';
-
-
-// import Album from './pages/Album';
-// import Libraries from './pages/Libraries';
-// import TrackDetail from './pages/TrackDetail';
-// import AllGenre from './pages/AllGenre';
-
-import Playlist from "./pages/Playlist";
-import MainLayout from "./components/layout/MainLayout";
-import ShopPage from "./pages/ShopPage";
-import MerchandiseDetail from "./pages/MerchandiseDetail";
-import ManageRequest from "./components/Admin/ManageRequest";
-import ManageUsers from "./components/Admin/ManageUsers";
-import ManageTracks from "./components/Admin/ManageTracks";
-import ManagePlaylists from "./components/Admin/ManagePlaylists";
-import CartPage from "./pages/CartPage";
-import MerchSearch from "./pages/MerchSearch";
-import UploadTrack from "./components/Artist/UploadTrack";
-import Album from "./pages/Album";
-import Libraries from "./pages/Libraries";
-import TrackDetail from "./pages/TrackDetail";
-import OrderHistory from "./pages/OrderHistory";
-import CheckOutPage from "./pages/CheckOutPage";
-import ShopLayout from "./components/layout/ShopLayout";
-import MultiSearch from "./pages/MultiSearchPage";
-import AllGenre from "./pages/AllGenre";
-
-// import Dashboard from './components/Artist/DashBoard';
-import { useEffect } from "react";
-import { clearToken } from "./redux/store";
 function App() {
   const dispatch = useDispatch();
   const token = useSelector((state) => state.auth.token);
@@ -85,7 +63,6 @@ function App() {
    //   dispatch(clearToken());
   return (
     <ThemeProvider theme={theme}>
-
     <BrowserRouter>
       <Routes className="App">
         <Route path="/" element={<MainLayout />}>
@@ -93,22 +70,21 @@ function App() {
           <Route path="artists" element={<Libraries type="artists" />} />
           <Route path="albums" element={<Libraries type="albums" />} />
           <Route path="playlists" element={<Libraries type="playlists" />} />
+          <Route path="favorite" element={<Libraries type="favorite" />} />
+          <Route path='tracks' element={<Libraries type="tracks" />} />
+          <Route path='track/:id' element={<TrackDetail />} />
+          <Route path='playlist/:id' element={<Playlist />} />
+          <Route path='artist/:id/profile' element={<ArtistProfile />} />
+          <Route path='album/:id' element={<Album />} />
+          <Route path='genre' element={<AllGenre />} />
+          <Route path='update-password' element={<UpdatePassword />} />
+          <Route path="multi-search" element={<MultiSearch />} />
 
-          <Route path="tracks" element={<Libraries type="tracks" />} />
-          <Route path="track/:id" element={<TrackDetail />} />
-          <Route path="playlist/:id" element={<Playlist />} />
-          <Route path="artist/:id/profile" element={<ArtistProfile />} />
-          <Route path="album/:id" element={<Album />} />
-          <Route path="genre" element={<AllGenre />} />
         </Route>
         <Route path="/artist" element={<ArtistDashboard />}>
           {/* <Route index element={<Dashboard/>} />  */}
           {/* <Route path="dashboard" element={<Dashboard/>} /> */}
-          <Route path="multi-search" element={<MultiSearch />} />
         </Route>
-          <Route path="/home" element ={<HomePage/>}></Route>
-          <Route path="/artist-profile" element ={<ArtistProfile/>}></Route>
-          <Route path="/play-screen" element ={<PlayScreen/>}></Route>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} /> 
 
@@ -126,6 +102,7 @@ function App() {
               path="upload-merchandise"
               element={<ArtistAddNewMerchandise/>}
               ></Route>
+
         </Route>
         <Route
           path="/admin"
