@@ -53,8 +53,6 @@ const AlbumSlider = ({ list, type }) => {
         direction="horizontal"
         observer={true}
       >
-
-
         {list != null &&
           list.map((item) => (
             <SwiperSlide key={item.id}>
