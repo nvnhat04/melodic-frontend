@@ -34,19 +34,14 @@ const Merchandise = {
     }
   },
 
-  async createMerchandise(data) {
+  async createMerchandise(merchandise, accessToken) {
     try {
-      const response = await Client.post("/merchandise/", data);
-      return response;
-    } catch (error) {
-      if (error.response) {
-        return error.response;
-      }
-    }
-  },
-  async deleteMerchandise(id) {
-    try {
-      const response = await Client.delete(`/merchandise/${id}`);
+      const response = await Client.post("/merchandise", merchandise, {
+        headers: {
+          token: `Bearer ${accessToken}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
       return response;
     } catch (error) {
       if (error.response) {
@@ -55,4 +50,6 @@ const Merchandise = {
     }
   },
 };
+
 export default Merchandise;
+
