@@ -12,13 +12,15 @@ import {
 import EditNoteIcon from "@mui/icons-material/EditNote";
 import ClearIcon from "@mui/icons-material/Clear";
 import MerchandiseApi from "../../api/modules/merchandise.api";
+import { useSelector } from "react-redux";
 
 const MerchandiseItem = ({ merchandise, onDelete }) => {
+  const token = useSelector((state) => state.auth.token);
+
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const handleModifyButtonClick = () => {
     // TODO: Implement modify button click
-    console.log("Modify button clicked");
   };
 
   const handleDeleteButtonClick = () => {
@@ -31,12 +33,22 @@ const MerchandiseItem = ({ merchandise, onDelete }) => {
 
   const handleConfirmDelete = async () => {
     try {
-      const response = await MerchandiseApi.deleteMerchandise(merchandise.id);
-      alert(response.data.message);
-      setIsDialogOpen(false);
-      onDelete(merchandise.id);
+      const response = await MerchandiseApi.deleteMerchandise(
+        merchandise.id,
+        token
+      );
+
+      if (response.message === "Merchandise deleted successfully") {
+        alert("Merchandise deleted successfully");
+        setIsDialogOpen(false);
+        onDelete(merchandise.id);
+      } else {
+        console.warn("Unexpected response status:", response.status);
+        alert(`Delete failed: ${response || "Unknown error"}`);
+      }
     } catch (error) {
-      console.error("Error deleting merchandise:", error);
+      console.error("Error during delete operation:", error);
+      alert("An error occurred. Please try again.");
     }
   };
 
