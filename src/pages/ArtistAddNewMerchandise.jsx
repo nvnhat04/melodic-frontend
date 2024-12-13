@@ -15,27 +15,25 @@ import ArtistApi from "../api/modules/artist.api";
 import MerchandiseApi from "../api/modules/merchandise.api";
 
 const ArtistAddNewMerchandise = () => {
-  const user_id = useSelector((state) => state.auth.user_id);
+  const artist_id = useSelector((state) => state.auth.user_id);
+  const token = useSelector((state) => state.auth.token);
 
   const [artistAlbums, setArtistAlbums] = useState([]);
-
+  const [fileError, setFileError] = useState("");
   const [merchandise, setMerchandise] = useState({
     name: "",
     category: "",
     price: "",
-    quantityInStock: "",
+    stock: "",
     description: "",
-    image:
-      "https://shop.thenbhd.com/cdn/shop/files/NEI-MOON-TEE_1024x1024@2x.png?v=1731339647",
-    relatedAlbum: "",
+    album_id: "",
   });
+  const [image, setImage] = useState(null);
 
   useEffect(() => {
     const fetchArtistAlbums = async () => {
       try {
-        const response = await ArtistApi.getAllAlbums(user_id);
-        console.log("Fetched Artist Albums:", response);
-
+        const response = await ArtistApi.getAllAlbums(artist_id);
         setArtistAlbums(response);
       } catch (error) {
         console.error(error);
@@ -53,30 +51,40 @@ const ArtistAddNewMerchandise = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    try {
-      const response = await MerchandiseApi.createMerchandise({
-        name: merchandise.name,
-        artist_id: user_id,
-        album_id: merchandise.relatedAlbum,
-        category: merchandise.category,
-        price: merchandise.price,
-        stock: merchandise.quantityInStock,
-        description: merchandise.description,
-        image: merchandise.image,
-      });
-      console.log("Merchandise created:", response);
+    const formData = new FormData();
+    formData.append("name", merchandise.name);
+    formData.append("category", merchandise.category);
+    formData.append("price", merchandise.price);
+    formData.append("stock", merchandise.stock);
+    formData.append("description", merchandise.description);
+    formData.append("album_id", merchandise.album_id);
+    formData.append("artist_id", artist_id);
+    if (image) formData.append("image", image);
 
+    try {
+      const response = await MerchandiseApi.createMerchandise(formData, token);
       setMerchandise({
         name: "",
         category: "",
         price: "",
-        quantityInStock: "",
+        stock: "",
         description: "",
-        image: "",
-        relatedAlbum: "",
+        album_id: "",
       });
     } catch (error) {
       console.error("Failed to create merchandise:", error);
+      alert("Failed to create merchandise. Please try again later.");
+    }
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file && ["image/jpeg", "image/png", "image/jpg"].includes(file.type)) {
+      setImage(file);
+      setFileError("");
+    } else {
+      setImage(null);
+      setFileError("Please upload a valid image file (JPEG, PNG, JPG).");
     }
   };
 
@@ -136,10 +144,10 @@ const ArtistAddNewMerchandise = () => {
             <FormControl fullWidth required>
               <FormLabel>Related Album</FormLabel>
               <Select
-                id="relatedAlbum"
-                name="relatedAlbum"
+                id="album_id"
+                name="album_id"
                 onChange={handleChange}
-                value={merchandise.relatedAlbum ?? ""}
+                value={merchandise.album_id ?? ""}
               >
                 {artistAlbums.map((album) => (
                   <MenuItem key={album.id} value={album.id}>
@@ -164,7 +172,7 @@ const ArtistAddNewMerchandise = () => {
             <FormControl variant="filled" fullWidth required>
               <FormLabel>Quantity In Stock</FormLabel>
               <OutlinedInput
-                name="quantityInStock"
+                name="stock"
                 type="number"
                 fullWidth
                 onChange={handleChange}
@@ -192,9 +200,20 @@ const ArtistAddNewMerchandise = () => {
                 startIcon={<CloudUploadIcon />}
                 sx={{ backgroundColor: "#564c4d" }}
               >
+                <input
+                  type="file"
+                  accept="image/jpeg, image/png, image/jpg"
+                  onChange={handleFileChange}
+                  hidden
+                />
                 Upload image
               </Button>
             </FormControl>
+            {fileError && (
+              <Typography variant="body2" color="error" sx={{ mb: 2 }}>
+                {fileError}
+              </Typography>
+            )}
           </Grid>
           <Grid size={2} variant="filled">
             <Box
@@ -231,7 +250,17 @@ const ArtistAddNewMerchandise = () => {
           <Typography component="p" alignSelf="start">
             This is how your merchandise appears in Artist Shop.
           </Typography>
-          <MerchandiseCard merchandise={merchandise} />
+          <MerchandiseCard
+            merchandise={{
+              name: merchandise.name,
+              category: merchandise.category,
+              price: merchandise.price,
+              stock: merchandise.stock,
+              description: merchandise.description,
+              album_id: merchandise.album_id,
+              image: image ? URL.createObjectURL(image) : null,
+            }}
+          />
         </Box>
       </Box>
     </Box>
