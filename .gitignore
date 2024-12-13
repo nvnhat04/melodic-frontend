@@ -7,7 +7,7 @@
 
 # testing
 /coverage
-
+src/hooks/api.key.js
 # production
 /build
 
@@ -36,3 +36,7 @@ yarn-error.log*
 dist
 dist-ssr
 *.local
+
+
+# Google API
+src/hooks/api.key.js

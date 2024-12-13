@@ -41,5 +41,15 @@ const Account = {
             }
         }
     },
+    async getUserById(id) {
+        try {
+            const response = await Client.get(`/account/${id}`);
+            return response;
+        } catch (error) {
+            if (error.response) {
+                return error.response;
+            }
+        }
+    }
 }
 export default Account;

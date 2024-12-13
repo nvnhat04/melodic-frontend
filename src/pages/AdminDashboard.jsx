@@ -18,13 +18,16 @@ import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 const drawerWidth = 240;
-
+import accountApi from "../api/modules/account.api";
 import { Outlet } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import {useSelector} from "react-redux";
 
 
 function AdminDashboard() {
+    const user_id = useSelector((state) => state.auth.user_id);
     const [selectedItem, setSelectedItem] = useState("Dashboard");
+    const [user, setUser] = useState([]);
     // const [usersData, setUsersData] = useState([]);
     // const [tracksData, setTracksData] = useState([]);
     // const [playlistsData, setPlaylistsData] = useState([]);
@@ -34,7 +37,19 @@ function AdminDashboard() {
       navigate(path);
       setSelectedItem(item);
     }
-    
+    const fetchUsers = async () => {
+      try {
+        const res = await accountApi.getUserById(user_id);
+        if (res && res.length > 0) {
+          setUser(res[0]);
+          console.log("Users found:", res[0]);
+        } else {
+          console.error("No users found");
+        }
+      } catch (error) {
+        console.error("Error fetching users", error);
+      }
+    };
     useEffect(() => {
       // fetch users data
       // accountApi.getAllUsers().then((res) => {
@@ -48,6 +63,7 @@ function AdminDashboard() {
       // playlistApi.getAllPlaylists().then((res) => {
       //   setPlaylistsData(res);
       // });
+      fetchUsers();
       setSelectedItem("Dashboard");
       navigate("/admin");
     }, []);
@@ -72,8 +88,8 @@ function AdminDashboard() {
               src="https://images.squarespace-cdn.com/content/v1/5911f44b9de4bb1465b0417a/1517949216805-IX2GVKMUU3KIUTZU6C8Z/image-asset.jpeg"
               sx={{ width: 80, height: 80, mb: 1 }}
             />
-            <Typography variant="h6" sx={{ fontWeight: "bold" }}>Queen Serena</Typography>
-            <Typography variant="body2" color="text.secondary">admin</Typography>
+            <Typography variant="h6" sx={{ fontWeight: "bold" }}>{user.display_name}</Typography>
+            <Typography variant="body2" color="text.secondary">{user.user_role}</Typography>
           </Box>
           <Divider />
           {/*Sidebar */}
