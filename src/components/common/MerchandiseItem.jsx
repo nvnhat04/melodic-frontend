@@ -17,6 +17,7 @@ const MerchandiseItem = ({ merchandise, onDelete }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const handleModifyButtonClick = () => {
+    // TODO: Implement modify button click
     console.log("Modify button clicked");
   };
 
@@ -28,13 +29,12 @@ const MerchandiseItem = ({ merchandise, onDelete }) => {
     setIsDialogOpen(false);
   };
 
-  const confirmDelete = async () => {
+  const handleConfirmDelete = async () => {
     try {
-      await MerchandiseApi.deleteMerchandise(merchandise.id); // Assuming `delete` is defined in MerchandiseApi
-      console.log(`Merchandise ${merchandise.id} deleted`);
+      const response = await MerchandiseApi.deleteMerchandise(merchandise.id);
+      alert(response.data.message);
       setIsDialogOpen(false);
       onDelete(merchandise.id);
-      // Optionally, trigger a refresh or update the UI
     } catch (error) {
       console.error("Error deleting merchandise:", error);
     }
@@ -88,7 +88,7 @@ const MerchandiseItem = ({ merchandise, onDelete }) => {
           <Button onClick={handleDialogClose} color="primary">
             Cancel
           </Button>
-          <Button onClick={confirmDelete} color="error" autoFocus>
+          <Button onClick={handleConfirmDelete} color="error" autoFocus>
             Delete
           </Button>
         </DialogActions>
