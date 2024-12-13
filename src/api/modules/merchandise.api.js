@@ -49,7 +49,21 @@ const Merchandise = {
       }
     }
   },
+
+  async deleteMerchandise(id, accessToken) {
+    try {
+      const response = await Client.delete(`/merchandise/${id}`, {
+        headers: {
+          token: `Bearer ${accessToken}`,
+        },
+      });
+      return response;
+    } catch (error) {
+      if (error.response) {
+        return error.response;
+      }
+    }
+  },
 };
 
 export default Merchandise;
-
