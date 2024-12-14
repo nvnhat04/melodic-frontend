@@ -4,8 +4,11 @@ import Typography from "@mui/material/Typography";
 import SongCardMenu from "../common/SongCardMenu";
 import { IconButton } from "@mui/material";
 import PlayArrowRoundedIcon from "@mui/icons-material/PlayArrowRounded";
+import createURL from "../../hooks/createUrl";
+import { Link } from "react-router-dom";
 
 const TrackCard = ({ track }) => {
+  const defaultCover = "../../default/track_cover.png";
   return (
     <Box
       sx={{
@@ -14,8 +17,8 @@ const TrackCard = ({ track }) => {
         justifyContent: "space-between",
         padding: "2px 8px",
         borderTop: "1px solid #333",
-        position: "relative", // Để đặt nút play lên trên
-        "&:hover .play-button": { // Khi hover vào TrackCard, nút Play sẽ hiện lên
+        position: "relative", 
+        "&:hover .play-button": { 
           opacity: 1,
         },
       }}
@@ -30,7 +33,7 @@ const TrackCard = ({ track }) => {
         >
           <Box
             component="img"
-            src={track.track_cover ? track.track_cover : "https://i.pinimg.com/736x/c6/37/b2/c637b2464e06ad304c90d46f165e6e00.jpg"}
+            src={track.track_cover ? createURL(track.track_cover) : defaultCover}
             alt={track.title}
             sx={{
               width: "40px",
@@ -63,6 +66,10 @@ const TrackCard = ({ track }) => {
           <Typography
             variant="subtitle1"
             sx={{ color: "#fff", fontSize: "15px" }}
+            component={Link}
+            to={`/track/${track.id}`}
+            style={{ textDecoration: "none" }}
+            key={track.id}
           >
             {track.title}
           </Typography>
@@ -70,7 +77,14 @@ const TrackCard = ({ track }) => {
             variant="subtitle2"
             sx={{ color: "#aaa", fontSize: "14px" }}
           >
-            {track.artists.join(", ")}
+            {track.artists && track.artists.map((artist, index) => (
+              <React.Fragment key={artist.id}>
+                <Link to={`/artist/${artist.id}`} style={{ color: "#aaa", textDecoration: "none" }} key={artist.id}>
+                  {artist.name}
+                </Link>
+                {index < track.artists.length - 1 && ", "}
+              </React.Fragment>
+            ))}
           </Typography>
         </Box>
       </Box>
