@@ -1,73 +1,84 @@
 import React from "react";
 import PlaylistHeader from "../components/Media/Header";
 import TrackList from "../components/Media/TrackList";
-import { Box, Stack } from "@mui/material";
+import { Box, Stack, Typography } from "@mui/material";
 import Footer from "../components/Media/Footer";
 import Container from "../components/common/Container";
+import {red} from "@mui/material/colors";
+import { useState, useEffect } from "react";
+import AlbumAPI from "../api/modules/album.api";
+import { use } from "react";
+import { useParams } from "react-router-dom";
 
 const Album = () => {
-    const playlist = {
-        title: "Album Title",
-        artist: "Artist Name",
-        genre: "Genre",
-        year: "Year",
-        description: "Description of the playlist goes here. This is a long description that will be displayed on the playlist page. It should provide some information about the playlist and the songs included in it. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-        imageSrc: "https://i.pinimg.com/474x/f8/82/7c/f8827ca528db119f68520bbd2141f080.jpg",
-    };
-    const songs = [
-        {
-            id: 1,
-            title: "Song Title 1",
-            artist: "Artist Name 1",
-            duration: "150",
-            track_order: 1,
-        },
-        {
-            id: 2,
-            title: "Song Title 2",
-            artist: "Artist Name 2",
-            duration: "160",
-            track_order: 2,
-        },
-        {
-            id: 3,
-            title: "Song Title 3",
-            artist: "Artist Name 3",
-            duration: "90",
-            track_order: 3,
-        },
-        {
-            id: 4,
-            title: "Song Title 4",
-            artist: "Artist Name 4",
-            duration: "180",
-            track_order: 4,
-        },
-    ];
+  const [album, setAlbum] = useState({});
+  const [songs, setSongs] = useState([]);
+  const [merchandises, setMerchandises] = useState([]);
+  const albumId = useParams().id;
 
-    return (
-        <Box
-            sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                padding: 5,
-                bgcolor: 'black',
-                color: 'text.primary',
-                minHeight: 'calc(100vh + 200px)',
-            }}
-        >
-            <Stack spacing={5} sx={{ maxWidth: 1200, width: '100%' }}>
-                <PlaylistHeader media={playlist} mediaType="album" />
+  const redColor = red[900];
 
-                <TrackList songs={songs} type="album" />
+  useEffect(() => {
+    AlbumAPI.getAlbumDetails(albumId)
+      .then((response) => {
+        const year = new Date(response.release_date).getFullYear();
+        console.log(response);
+        setAlbum({
+            title: response.title,
+            artist: response.artist,
+            album: response.album,
+            cover: response.cover,
+            year: year,
+        });
+      })
+      .catch((error) => {
+        console.error(error);
+      });
 
-                <Container header="Related Merchandises">
-                    <Footer type="album" />
-                </Container>
-            </Stack>
-        </Box>
-    );
+    AlbumAPI.getAllTracksInAlbum(albumId)
+      .then((response) => {
+        setSongs(response);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+
+    AlbumAPI.getRelatedMerchandises(albumId)
+        .then((response) => {
+            setMerchandises(response);
+            console.log(response);
+        })
+        .catch((error) => {
+            console.error(error);
+        });
+  }, [albumId]);
+
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        padding: 5,
+        bgcolor: "black",
+        color: "text.primary",
+        minHeight: "calc(100vh + 200px)",
+      }}
+    >
+      <Stack spacing={5} sx={{ maxWidth: 1200, width: "100%" }}>
+        <PlaylistHeader media={album} mediaType="album" />
+
+        {songs && songs.length > 0 ? <TrackList songs={songs} type="album" /> : 
+        <Box sx={{ width: "100%", textAlign: "left", fontSize: 20, fontWeight: "bold" }}>
+          <Typography variant="h6" sx={{color: redColor}}>No tracks available</Typography>
+        </Box>}
+
+        <Container header="Related Merchandises">
+          <Footer type="album" list={merchandises} />
+        </Container>
+      </Stack>
+    </Box>
+  );
 };
 
 export default Album;
