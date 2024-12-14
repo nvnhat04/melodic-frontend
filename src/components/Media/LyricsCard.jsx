@@ -19,6 +19,8 @@ const LyricsCard = ({ lyrics }) => {
   const handleClose = () => {
     setOpen(false);
   };
+  const lyricsLines = lyrics.split("\n");
+
 
   return (
     <>
@@ -28,7 +30,6 @@ const LyricsCard = ({ lyrics }) => {
           bgcolor: 'rgba(40, 35, 36, 0.5)',
           width: "97%",
           color: "#fff",
-          padding: "20px",
         }}
       >
         <CardContent>
@@ -55,7 +56,12 @@ const LyricsCard = ({ lyrics }) => {
             </Stack>
             {/* Right Column for Preview Lyrics and View Button */}
             <Stack sx={{ width: "75%" }}>
-              {lyrics.slice(0, 2).map((line, index) => (
+              {/* Display the first two lines of lyrics */}
+              {/* If the lyrics contain less than two lines, display all */}
+              {lyricsLines.length === 1 && (
+                <Typography variant="body1">{lyricsLines[0]}</Typography>
+              )}
+              {lyricsLines.slice(0, 2).map((line, index) => (
                 <Typography variant="body1" key={index}>
                   {line}
                 </Typography>
@@ -80,20 +86,21 @@ const LyricsCard = ({ lyrics }) => {
       </Card>
 
       {/* Dialog Popup for Full Lyrics */}
-      <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
-        <DialogTitle>Full Lyrics</DialogTitle>
+      <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth sx={{
+    "& .MuiDialog-paper": {
+      bgcolor: "black", // Màu nền đen
+      color: "gray", // Màu chữ xám
+    },
+  }}>
+        <DialogTitle sx={{
+      color: "red", // Màu chữ của tiêu đề
+    }}>Full Lyrics</DialogTitle>
         <DialogContent>
-          <Stack direction="row" spacing={2}>
-            {/* Left Column for "Lyrics" Label in Popup */}
-            <Stack sx={{ width: "25%" }}>
-              <Typography variant="body2" sx={{ color: "gray" }}>
-                Lyrics
-              </Typography>
-            </Stack>
+          <Stack direction="row" spacing={2}>            
             {/* Right Column for Full Lyrics */}
             <Stack sx={{ width: "75%" }}>
-              {lyrics.map((line, index) => (
-                <Typography variant="body1" key={index}>
+              {lyricsLines.map((line, index) => (
+                <Typography variant="body1" key={index} sx={{ color: "white" }}>
                   {line}
                 </Typography>
               ))}
@@ -101,7 +108,7 @@ const LyricsCard = ({ lyrics }) => {
           </Stack>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="primary">
+          <Button onClick={handleClose} sx={{ color: "red" }}>
             Close
           </Button>
         </DialogActions>
