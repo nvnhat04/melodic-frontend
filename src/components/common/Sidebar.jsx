@@ -37,7 +37,6 @@ const Sidebar = ({ open = false, toggleSidebar }) => {
 
   const items = [
     { text: "Home", icon: <HomeIcon />, section: null },
-    { text: "New", icon: <NewIcon />, section: null },
     { text: "Favorite", icon: <FavoriteIcon />, section: "Library" },
     { text: "Artists", icon: <PersonIcon />, section: "Library" },
     { text: "Albums", icon: <AlbumIcon />, section: "Library" },
@@ -100,7 +99,7 @@ const Sidebar = ({ open = false, toggleSidebar }) => {
             if (e.key === "Enter") handleSearch();
           }}
           onFocus={() => {
-            if (!searchQuery.trim()) navigate("/genre"); // Chỉ chuyển trang khi chưa nhập nội dung
+            if (!searchQuery.trim()) navigate("/genres"); // Chỉ chuyển trang khi chưa nhập nội dung
           }}
           sx={{
             color: "white",
