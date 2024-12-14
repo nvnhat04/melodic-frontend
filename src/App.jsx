@@ -18,6 +18,9 @@ import Playlist from "./pages/Playlist";
 import MultiSearch from "./pages/MultiSearchPage";
 import UpdatePassword from "./pages/UpdatePassword";
 import AllGenre from './pages/AllGenre';
+import SearchGenre from './pages/SearchGenre';
+import Favorite from './pages/Favorite';
+import RecentTracks from "./pages/RecentTracks";
 // Shop Layout
 import ShopLayout from "./components/layout/ShopLayout";
 import CartPage from "./pages/CartPage";
@@ -70,16 +73,16 @@ function App() {
           <Route path="artists" element={<Libraries type="artists" />} />
           <Route path="albums" element={<Libraries type="albums" />} />
           <Route path="playlists" element={<Libraries type="playlists" />} />
-          <Route path="favorite" element={<Libraries type="favorite" />} />
-          <Route path='tracks' element={<Libraries type="tracks" />} />
           <Route path='track/:id' element={<TrackDetail />} />
           <Route path='playlist/:id' element={<Playlist />} />
           <Route path='artist/:id/profile' element={<ArtistProfile />} />
           <Route path='album/:id' element={<Album />} />
-          <Route path='genre' element={<AllGenre />} />
+          <Route path='genres' element={<AllGenre />} />
           <Route path='update-password' element={<UpdatePassword />} />
           <Route path="multi-search" element={<MultiSearch />} />
-
+          <Route path="genre" element={<SearchGenre />} />
+          <Route path="favorite" element={<Favorite />} />
+          <Route path="tracks" element={<RecentTracks />} />
         </Route>
         <Route path="/artist" element={<ArtistDashboard />}>
           {/* <Route index element={<Dashboard/>} />  */}
