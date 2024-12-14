@@ -18,7 +18,6 @@ function MultiSearch() {
 
   useEffect(() => {
     if (!searchQuery) return;
-    console.log(searchQuery);
 
     const fetchSearchResults = async () => {
       setLoading(true);
