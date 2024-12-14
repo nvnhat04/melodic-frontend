@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card, CardContent, Typography, Avatar, Box, Stack } from '@mui/material';
 
-const ArtistCard = ({ artist }) => {
+const ArtistCard = ({ artists }) => {
   const textColor = 'gray';
 
   return (
@@ -14,37 +14,63 @@ const ArtistCard = ({ artist }) => {
     >
       <CardContent sx={{ width: '100%' }}>
         <Stack
-          direction={{ xs: 'column', md: 'row' }} // Stacks vertically on small screens, horizontally on medium+
-          alignItems="center"
+          direction="column"
+          alignItems="flex-start"
+          spacing={0}
         >
-          {/* Box for "Performing Artists" text */}
-          <Box sx={{ width: { xs: '100%', md: '25%' } }}>
+          {/* Title for Performing Artists */}
+          <Box sx={{ width: '100%' }}>
             <Typography
               variant="body1"
               fontWeight="bold"
               sx={{
                 color: textColor,
-                position: "relative",
-                left: "1vw",
+                position: 'relative',
+                left: '1vw',
+                top: { 
+                  md: '2.5vh',
+                }
               }}
             >
               Performing Artists
             </Typography>
           </Box>
 
-          {/* Box for artist's details */}
-          <Stack
-            direction="row"
-            alignItems="center"
-            spacing={2}
-            sx={{ width: { xs: '100%', md: '75%' } }}
+          {/* Container for Artist Details */}
+          <Box
+            sx={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              gap: 2, // Adds space between the items
+              width: '75%', // Ensure the width is the same as the "Lyrics" section
+              paddingLeft: {
+                md: '25%', // Align with lyrics' starting position
+                xs: '0', // Align with lyrics' starting position
+              }, // Align with lyrics' starting position
+            }}
           >
-            <Avatar src={artist.avatar} alt={artist.name} sx={{ width: 45, height: 45 }} />
-            <Box>
-              <Typography variant="subtitle2" sx={{ fontWeight: 'bold' }}>{artist.name}</Typography>
-              <Typography variant="body2" color="gray" sx={{ fontWeight: 'bold' }}>{artist.role}</Typography>
-            </Box>
-          </Stack>
+            {artists.map((artist, index) => (
+              <Box
+                key={index}
+                sx={{
+                  flexBasis: { xs: '100%', sm: '48%', md: '32%', lg: '23%' },
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 2,
+                }}
+              >
+                <Avatar src={artist.avatar} alt={artist.name} sx={{ width: 45, height: 45 }} />
+                <Box>
+                  <Typography variant="subtitle2" sx={{ fontWeight: 'bold' }}>
+                    {artist.name}
+                  </Typography>
+                  <Typography variant="body2" color="gray" sx={{ fontWeight: 'bold' }}>
+                    {artist.role}
+                  </Typography>
+                </Box>
+              </Box>
+            ))}
+          </Box>
         </Stack>
       </CardContent>
     </Card>
