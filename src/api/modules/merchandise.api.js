@@ -24,7 +24,7 @@ const Merchandise = {
   async getAllMerchandiseByArtistId(id, sort) {
     try {
       const response = await Client.get(`/artist/${id}/merchandise`, {
-        params: {sort}
+        params: { sort },
       });
       return response;
     } catch (error) {
@@ -36,7 +36,19 @@ const Merchandise = {
 
   async createMerchandise(data) {
     try {
-      const response = await Client.post("/merchandise", data);
+
+      const response = await Client.post("/merchandise/", data);
+      return response;
+    } catch (error) {
+      if (error.response) {
+        return error.response;
+      }
+    }
+  },
+  async deleteMerchandise(id) {
+    try {
+      const response = await Client.delete(`/merchandise/${id}`);
+
       return response;
     } catch (error) {
       if (error.response) {

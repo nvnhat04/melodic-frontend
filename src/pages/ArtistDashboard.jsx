@@ -9,11 +9,9 @@ import { Outlet } from "react-router-dom";
 import ArtistDrawer from "../components/ArtistDashboard/ArtistDrawer";
 import { useSelector } from "react-redux";
 import accountApi from "../api/modules/account.api";
+
 const drawerWidth = 240;
-  const artist = {
-    name: "The Neighbourhood",
-    img: "https://media.pitchfork.com/photos/5a9f0c13b848c0268b2016bb/1:1/w_800,h_800,c_limit/The%20Neighbourhood.jpg",
-  };
+  
 function ArtistDashboard(props) {
   const { window } = props;
   const [mobileOpen, setMobileOpen] = useState(false);

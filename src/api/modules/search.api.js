@@ -42,6 +42,20 @@ const Search = {
             throw error;
         }
     },
+
+    async browseByGenre(genre_id, page = 1, limit = 10) {
+        try {
+            const response = await Client.get(`/search/genres`, {
+                params: { genre_id: genre_id, page, limit },
+            });
+            return response; // Trả về danh sách tracks
+        } catch (error) {
+            if (error.response) {
+                return error.response;
+            }
+            throw error;
+        }
+    }
 };
 
 export default Search;
