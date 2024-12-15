@@ -23,20 +23,21 @@ const CollectionCard = ({ collection, type }) => {
     <Link to={`/album/${collection.id}`} style={{ textDecoration: "none" }}>
       <Card
         sx={{
-          position: "relative",
+          // position: "relative",
           overflow: "hidden",
           border: "none",
           boxShadow: "none",
           padding: "10px",
           backgroundColor: "#1f1f1f",
           color: "white",
+          maxWidth: "200px",
         }}
       >
         <Box sx={{ display: "flex" }}>
           <CardMedia
             component="img"
             image={coverUrl}
-            alt={collection.name}
+            alt={collection.title}
             sx={{
               aspectRatio: "1 / 1",
               objectFit: "cover",
@@ -82,9 +83,9 @@ const CollectionCard = ({ collection, type }) => {
         </Box>
         <CardContent sx={{ padding: "0" }}>
           <Typography component="div" noWrap>
-            {collection.name}
+            {collection.title}
           </Typography>
-          <Typography color="white">{collection.artist}</Typography>
+          <Typography color="white">{collection.release_date.substring(0, 4)}</Typography>
         </CardContent>
       </Card>
     </Link>
@@ -151,8 +152,9 @@ const CollectionCard = ({ collection, type }) => {
         </Box>
         <CardContent sx={{ padding: "0" }}>
           <Typography component="div" noWrap>
-            {collection.name}
+            {collection.title}
           </Typography>
+          <Typography color="white">{collection.release_date}</Typography>
         </CardContent>
       </Card>
     </Link>
