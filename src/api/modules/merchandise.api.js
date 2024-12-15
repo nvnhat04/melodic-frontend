@@ -50,6 +50,28 @@ const Merchandise = {
     }
   },
 
+  async updateMerchandise(id, merchandise, accessToken) {
+    console.log("Updating merchandise with ID:", id); // Log the ID here
+
+    try {
+      const response = await Client.put(
+        `/merchandise/${id}`,
+        merchandise,
+        {
+          headers: {
+            token: `Bearer ${accessToken}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      return response;
+    } catch (error) {
+      if (error.response) {
+        return error.response;
+      }
+    }
+  },
+
   async deleteMerchandise(id, accessToken) {
     try {
       const response = await Client.delete(`/merchandise/${id}`, {

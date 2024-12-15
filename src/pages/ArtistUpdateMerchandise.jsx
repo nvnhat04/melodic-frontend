@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import FormControl from "@mui/material/FormControl";
@@ -10,36 +10,57 @@ import Select from "@mui/material/Select";
 import Typography from "@mui/material/Typography";
 import MerchandiseCard from "../components/common/MerchandiseCard";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import { useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
+import ArtistApi from "../api/modules/artist.api";
 import MerchandiseApi from "../api/modules/merchandise.api";
+import { useParams } from "react-router-dom";
+import createUrl from "../hooks/createUrl";
 
 const ArtistUpdateMerchandise = () => {
   const { id: merchandiseId } = useParams();
 
-  const [merchandise, setMerchandise] = useState({
+  const artist_id = useSelector((state) => state.auth.user_id);
+  const token = useSelector((state) => state.auth.token);
+  const initialMerchandise = {
     name: "",
     category: "",
     price: "",
-    quantityInStock: "",
+    stock: "",
     description: "",
-    image:
-      "https://shop.thenbhd.com/cdn/shop/products/TheNBHD_ILoveYouD2C_1024x1024@2x.png?v=1681914792",
-    relatedAlbum: "",
-  });
+    album_id: "",
+  };
+
+  const [artistAlbums, setArtistAlbums] = useState([]);
+  const [fileError, setFileError] = useState("");
+  const [merchandise, setMerchandise] = useState(initialMerchandise);
+  const [image, setImage] = useState(null);
+  const [imageUrl, setImageUrl] = useState(null);
+
+  useEffect(() => {
+    const fetchArtistAlbums = async () => {
+      try {
+        const response = await ArtistApi.getAllAlbums(artist_id);
+        setArtistAlbums(response);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchArtistAlbums();
+  }, []);
 
   useEffect(() => {
     const fetchMerchandise = async () => {
       try {
-        const data = await MerchandiseApi.getMerchandiseById(merchandiseId);
+        const response = await MerchandiseApi.getMerchandiseById(merchandiseId);
         setMerchandise({
-          name: data.name || "",
-          category: data.category || "",
-          price: data.price || "",
-          quantityInStock: data.quantityInStock || "",
-          description: data.description || "",
-          image: data.image || "",
-          relatedAlbum: data.relatedAlbum || "",
+          name: response.name || "",
+          category: response.category || "",
+          price: response.price || "",
+          stock: response.stock || "",
+          description: response.description || "",
+          album_id: response.album_id || "",
         });
+        setImage(response.image);
       } catch (error) {
         console.error(error);
       }
@@ -47,16 +68,67 @@ const ArtistUpdateMerchandise = () => {
     fetchMerchandise();
   }, []);
 
+  useEffect(() => {
+    if (image instanceof File) {
+      // Create a temporary URL for the uploaded file
+      const tempUrl = URL.createObjectURL(image);
+      setImageUrl(tempUrl);
+
+      // Clean up the URL when the component unmounts or image changes
+      return () => URL.revokeObjectURL(tempUrl);
+    } else if (typeof image === "string") {
+      // If `image` is a string (e.g., fetched URL), set it directly
+      setImageUrl(createUrl(image));
+    }
+  }, [image]);
+
   const handleChange = (event) => {
     const name = event.target.name;
     const value = event.target.value;
     setMerchandise((values) => ({ ...values, [name]: value }));
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log(merchandise);
-    // TODO: Add API call to update merchandise
+
+    const formData = new FormData();
+    formData.append("name", merchandise.name);
+    formData.append("album_id", merchandise.album_id);
+    formData.append("stock", merchandise.stock);
+    formData.append("price", merchandise.price);
+    formData.append("description", merchandise.description);
+    formData.append("category", merchandise.category);
+    formData.append("image", image);
+
+    try {
+      await MerchandiseApi.updateMerchandise(
+        merchandiseId,
+        formData,
+        token
+      );
+      setMerchandise({
+        name: "",
+        category: "",
+        price: "",
+        stock: "",
+        description: "",
+        album_id: "",
+      });
+    } catch (error) {
+      console.error("Failed to create merchandise:", error);
+      alert("Failed to create merchandise. Please try again later.");
+    }
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file && ["image/jpeg", "image/png", "image/jpg"].includes(file.type)) {
+      setImage(file);
+      setFileError("");
+    } else {
+      setImage(null);
+      setFileError("Please upload a valid image file (JPEG, PNG, JPG).");
+    }
   };
 
   return (
@@ -81,7 +153,7 @@ const ArtistUpdateMerchandise = () => {
           mr={5}
           sx={{ "& .MuiFormLabel-root": { color: "black" } }}
         >
-          {/* Merchandise Form */}
+          {/* {Merchandise Form} */}
           <Grid size={2}>
             <FormControl variant="filled" fullWidth required>
               <FormLabel component="h2" variant="h2">
@@ -102,10 +174,12 @@ const ArtistUpdateMerchandise = () => {
                 id="category"
                 name="category"
                 onChange={handleChange}
-                value={merchandise.category || ""}
+                value={merchandise.category ?? ""}
               >
-                <MenuItem value="Digital Album">Digital Album</MenuItem>
+                <MenuItem value="apparel">Apparel</MenuItem>
+                <MenuItem value="accessories">Accessories</MenuItem>
                 <MenuItem value="Physical Album">Physical Album</MenuItem>
+                <MenuItem value="other">Other</MenuItem>
               </Select>
             </FormControl>
           </Grid>
@@ -113,13 +187,16 @@ const ArtistUpdateMerchandise = () => {
             <FormControl fullWidth required>
               <FormLabel>Related Album</FormLabel>
               <Select
-                id="relatedAlbum"
-                name="relatedAlbum"
+                id="album_id"
+                name="album_id"
                 onChange={handleChange}
-                value={merchandise.relatedAlbum || ""}
+                value={merchandise.album_id ?? ""}
               >
-                <MenuItem value="Chip Chrome">Chip Chrome</MenuItem>
-                <MenuItem value="Sweater Weather">Sweater Weather</MenuItem>
+                {artistAlbums.map((album) => (
+                  <MenuItem key={album.id} value={album.id}>
+                    {album.title}
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
           </Grid>
@@ -128,8 +205,8 @@ const ArtistUpdateMerchandise = () => {
               <FormLabel>Price</FormLabel>
               <OutlinedInput
                 name="price"
+                value={merchandise.price}
                 type="number"
-                value={merchandise.price || ""}
                 fullWidth
                 onChange={handleChange}
               />
@@ -139,9 +216,9 @@ const ArtistUpdateMerchandise = () => {
             <FormControl variant="filled" fullWidth required>
               <FormLabel>Quantity In Stock</FormLabel>
               <OutlinedInput
-                name="quantityInStock"
+                name="stock"
                 type="number"
-                value={merchandise.quantityInStock || ""}
+                value={merchandise.stock}
                 fullWidth
                 onChange={handleChange}
               />
@@ -151,7 +228,7 @@ const ArtistUpdateMerchandise = () => {
             <FormControl variant="filled" fullWidth>
               <FormLabel>Description</FormLabel>
               <OutlinedInput
-                value={merchandise.description || ""}
+                value={merchandise.description ?? ""}
                 name="description"
                 multiline
                 minRows={4}
@@ -168,9 +245,20 @@ const ArtistUpdateMerchandise = () => {
                 startIcon={<CloudUploadIcon />}
                 sx={{ backgroundColor: "#564c4d" }}
               >
+                <input
+                  type="file"
+                  accept="image/jpeg, image/png, image/jpg"
+                  onChange={handleFileChange}
+                  hidden
+                />
                 Upload image
               </Button>
             </FormControl>
+            {fileError && (
+              <Typography variant="body2" color="error" sx={{ mb: 2 }}>
+                {fileError}
+              </Typography>
+            )}
           </Grid>
           <Grid size={2} variant="filled">
             <Box
@@ -200,14 +288,24 @@ const ArtistUpdateMerchandise = () => {
           flexDirection="column"
           p={4}
         >
-          {/* Preview */}
+          {/* {Preview} */}
           <Typography variant="h4" component="h2" alignSelf="start">
             Preview
           </Typography>
           <Typography component="p" alignSelf="start">
             This is how your merchandise appears in Artist Shop.
           </Typography>
-          <MerchandiseCard merchandise={merchandise} />
+          <MerchandiseCard
+            merchandise={{
+              name: merchandise.name,
+              category: merchandise.category,
+              price: merchandise.price,
+              stock: merchandise.stock,
+              description: merchandise.description,
+              album_id: merchandise.album_id,
+              image: imageUrl,
+            }}
+          />
         </Box>
       </Box>
     </Box>
