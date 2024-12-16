@@ -1,26 +1,26 @@
 import React, { useState } from "react";
-import {
-  Paper,
-  Typography,
-  Box,
-  Button,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-} from "@mui/material";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
 import EditNoteIcon from "@mui/icons-material/EditNote";
+import Paper from "@mui/material/Paper";
+import Typography from "@mui/material/Typography";
 import ClearIcon from "@mui/icons-material/Clear";
 import MerchandiseApi from "../../api/modules/merchandise.api";
+import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 const MerchandiseItem = ({ merchandise, onDelete }) => {
   const token = useSelector((state) => state.auth.token);
+  const navigate = useNavigate();
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const handleModifyButtonClick = () => {
-    // TODO: Implement modify button click
+    navigate(`/artist/update-merchandise/${merchandise.id}`);
   };
 
   const handleDeleteButtonClick = () => {
