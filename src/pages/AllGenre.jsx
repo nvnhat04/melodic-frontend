@@ -3,26 +3,36 @@ import Grid from "@mui/material/Grid2";
 import Card from "@mui/material/Card";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
+import { Link } from "react-router-dom";
 
 const categories = [
-  { title: "R&B", image: "../../rnb.jpg" },
-  { title: "RAP", image: "../../rap.jpg" },
-  { title: "HIP-HOP", image: "../../hiphop.jpg" },
-  { title: "BALLAD", image: "../../ballad.jpg" },
-  { title: "CHILL", image: "../../chill.jpg" },
-  { title: "COUNTRY", image: "../../country.jpg" },
-  { title: "SAD", image: "../../sad.jpg" },
-  { title: "ROCK", image: "../../rock.jpg" },
-  { title: "INDIE", image: "../../indie.jpg" },
-  { title: "POP", image: "../../pop.jpg" },
-  { title: "JAZZ", image: "../../jazz.jpg" },
-  { title: "K-POP", image: "../../kpop.jpg" },
- ];
+  { title: "R&B", image: "../../genres/rnb.jpg" },
+  { title: "RAP", image: "../../genres/rap.jpg" },
+  { title: "HIP-HOP", image: "../../genres/hiphop.jpg" },
+  { title: "BALLAD", image: "../../genres/ballad.jpg" },
+  { title: "CHILL", image: "../../genres/chill.jpg" },
+  { title: "COUNTRY", image: "../../genres/country.jpg" },
+  { title: "SAD", image: "../../genres/sad.jpg" },
+  { title: "ROCK", image: "../../genres/rock.jpg" },
+  { title: "INDIE", image: "../../genres/indie.jpg" },
+  { title: "POP", image: "../../genres/pop.jpg" },
+  { title: "JAZZ", image: "../../genres/jazz.jpg" },
+  { title: "K-POP", image: "../../genres/kpop.jpg" },
+];
 
 const BrowseCategories = () => {
   return (
-    <div style={{ padding: "2rem", backgroundColor: "#121212", minHeight: 'calc(100vh + 200px)' }}>
-      <Typography variant="h4" style={{ color: "gray", marginBottom: "1.5rem", fontWeight: 'bold' }}>
+    <div
+      style={{
+        padding: "2rem",
+        backgroundColor: "#121212",
+        minHeight: "calc(100vh + 200px)",
+      }}
+    >
+      <Typography
+        variant="h4"
+        style={{ color: "gray", marginBottom: "1.5rem", fontWeight: "bold" }}
+      >
         Browse Categories
       </Typography>
       <Grid
@@ -44,38 +54,43 @@ const BrowseCategories = () => {
               }, // Fixed width for each card
             }}
           >
-            <Card
-              style={{
-                position: "relative",
-                overflow: "hidden",
-                borderRadius: "12px",
-              }}
+            <Link
+              to={`/genre?id=${encodeURIComponent(category.title.toLowerCase())}`}
+              style={{ textDecoration: "none" }}
             >
-              <CardMedia
-                component="img"
-                image={category.image}
-                alt={category.title}
+              <Card
                 style={{
-                  width: "100%",
-                  height: "150px",
-                  objectFit: "cover",
-                  filter: "brightness(70%)",
-                }}
-              />
-              <Typography
-                variant="h6"
-                style={{
-                  position: "absolute",
-                  bottom: "10px",
-                  left: "10px",
-                  color: "white",
-                  fontWeight: "bold",
-                  textShadow: "1px 1px 4px rgba(0, 0, 0, 0.8)",
+                  position: "relative",
+                  overflow: "hidden",
+                  borderRadius: "12px",
                 }}
               >
-                {category.title}
-              </Typography>
-            </Card>
+                <CardMedia
+                  component="img"
+                  image={category.image}
+                  alt={category.title}
+                  style={{
+                    width: "100%",
+                    height: "150px",
+                    objectFit: "cover",
+                    filter: "brightness(70%)",
+                  }}
+                />
+                <Typography
+                  variant="h6"
+                  style={{
+                    position: "absolute",
+                    bottom: "10px",
+                    left: "10px",
+                    color: "white",
+                    fontWeight: "bold",
+                    textShadow: "1px 1px 4px rgba(0, 0, 0, 0.8)",
+                  }}
+                >
+                  {category.title}
+                </Typography>
+              </Card>
+            </Link>
           </Grid>
         ))}
       </Grid>

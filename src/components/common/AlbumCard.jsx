@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { addTrackToQueue } from "../../redux/store";
 import useAudioPlayer from "../../hooks/useAudioPlayer";
+import createURL from "../../hooks/createUrl";
 const AlbumCard = ({ album }) => {
   const dispatch = useDispatch();
 
@@ -30,7 +31,7 @@ const AlbumCard = ({ album }) => {
       <Link to={`/album/${album.id}`} style={{ textDecoration: "none" }} onClick={handleSaveToQueue}>
         <CardMedia
           component="img"
-          image={album.cover}
+          image={album.cover && album.cover.startsWith("http") ? album.cover : createURL(album.cover)}
           alt={album.title}
           sx={{
             height: {
@@ -50,7 +51,7 @@ const AlbumCard = ({ album }) => {
           {album.title}
         </Typography>
         <Typography variant="body2" color="white">
-          {album.artists[0]}
+          {album.artist}
         </Typography>
         <Box mt={1}>
           <Button

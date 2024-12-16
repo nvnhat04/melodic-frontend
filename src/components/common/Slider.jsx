@@ -52,7 +52,8 @@ const AlbumSlider = ({ list, type }) => {
         direction="horizontal"
         observer={true}
       >
-        {list != null &&
+        {list != null && (
+
           list.map((item) => (
             <SwiperSlide key={item.id}>
               {type === "Album" ? (
@@ -63,7 +64,8 @@ const AlbumSlider = ({ list, type }) => {
                 <MerchandiseCard merchandise={item} hoverEffect={"blur"} />
               )}
             </SwiperSlide>
-          ))}
+          ))
+        )}
       </Swiper>
     </Box>
   );

@@ -18,7 +18,6 @@ const ArtistAddNewMerchandise = () => {
   const user_id = useSelector((state) => state.auth.user_id);
 
   const [artistAlbums, setArtistAlbums] = useState([]);
-
   const [merchandise, setMerchandise] = useState({
     name: "",
     category: "",
@@ -44,12 +43,19 @@ const ArtistAddNewMerchandise = () => {
     fetchArtistAlbums();
   }, []);
 
+
   const handleChange = (event) => {
     const name = event.target.name;
     const value = event.target.value;
     setMerchandise((values) => ({ ...values, [name]: value }));
   };
 
+// <<<<<<< main
+//   const handleSubmit = (event) => {
+//     event.preventDefault();
+//     // TODO: Add API call to add new merchandise
+//     console.log(merchandise);
+// =======
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -78,6 +84,7 @@ const ArtistAddNewMerchandise = () => {
     } catch (error) {
       console.error("Failed to create merchandise:", error);
     }
+
   };
 
   return (
@@ -125,6 +132,10 @@ const ArtistAddNewMerchandise = () => {
                 onChange={handleChange}
                 value={merchandise.category ?? ""}
               >
+
+//                 <MenuItem value="Digital Album">Digital Album</MenuItem>
+//                 <MenuItem value="Physical Album">Physical Album</MenuItem>
+
                 <MenuItem value="apparel">Apparel</MenuItem>
                 <MenuItem value="accessories">Accessories</MenuItem>
                 <MenuItem value="Physical Album">Physical Album</MenuItem>
@@ -141,11 +152,16 @@ const ArtistAddNewMerchandise = () => {
                 onChange={handleChange}
                 value={merchandise.relatedAlbum ?? ""}
               >
+
+//                 <MenuItem value="Chip Chrome">Chip Chrome</MenuItem>
+//                 <MenuItem value="Sweater Weather">Sweater Weather</MenuItem>
+
                 {artistAlbums.map((album) => (
                   <MenuItem key={album.id} value={album.id}>
                     {album.title}
                   </MenuItem>
                 ))}
+
               </Select>
             </FormControl>
           </Grid>

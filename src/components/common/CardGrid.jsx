@@ -1,20 +1,28 @@
 import Grid from "@mui/material/Grid2";
 import MerchandiseCard from "./MerchandiseCard";
+import AlbumCard from "./AlbumCard";
+import ArtistCard from "./ArtistCard";  // Assuming you have an ArtistCard component
 
-const CardGrid = ({ List, Type = "album" }) => {
+const CardGrid = ({ List, Type = "albums" }) => {
   return (
     <Grid
       container
       spacing={2}
       sx={{
-        justifyContent: "center",
+        justifyContent: "left",
         alignItems: "flex-start",
       }}
       columns={{ md: 4, xs: 2 }}
     >
       {List.map((child, index) => (
         <Grid key={index} size={1}>
-          <MerchandiseCard merchandise={child} hoverEffect={"scale"} />
+          {Type === "Albums" ? (
+            <AlbumCard album={child} />
+          ) : Type === "Artists" ? (
+            <ArtistCard artist={child} />
+          ) : (
+            <MerchandiseCard merchandise={child} hoverEffect={"scale"} />
+          )}
         </Grid>
       ))}
     </Grid>

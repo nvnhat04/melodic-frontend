@@ -1,12 +1,13 @@
 import Client from "../client.api";
 
 const Favorite = {
-    async getListFavorites(accessToken) {
+    async getListFavorites(accessToken, page = 1, limit = 10) {
         try {
             const response = await Client.get("/favorite", {
                 headers: {
                     token: `Bearer ${accessToken}`,
                 },
+                params: { page, limit },
             });
             return response;
         } catch (error) {
