@@ -36,6 +36,7 @@ const Merchandise = {
 
   async createMerchandise(data) {
     try {
+
       const response = await Client.post("/merchandise/", data);
       return response;
     } catch (error) {
@@ -47,6 +48,7 @@ const Merchandise = {
   async deleteMerchandise(id) {
     try {
       const response = await Client.delete(`/merchandise/${id}`);
+
       return response;
     } catch (error) {
       if (error.response) {

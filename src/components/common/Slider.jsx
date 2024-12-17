@@ -62,6 +62,7 @@ const AlbumSlider = ({ list, type }) => {
             )}
           </SwiperSlide>
         ))}
+
       </Swiper>
     </Box>
   );

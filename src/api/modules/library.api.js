@@ -1,11 +1,12 @@
 import Client from "../client.api";
 const Library = {
-    async getRecentTracks(accessToken) {
+    async getRecentTracks(accessToken, page = 1, limit = 10) {
         try {
             const response = await Client.get("/library/recent-tracks",{
                 headers: {
                     token: `Bearer ${accessToken}`,
                 },
+                params: { page, limit },
             });
             return response;
         } catch (error) {
@@ -14,12 +15,13 @@ const Library = {
             }
         }
     },
-    async getRecentArtists(accessToken) {
+    async getRecentArtists(accessToken, page = 1, limit = 10) {
         try {
             const response = await Client.get("/library/recent-artists", {
                 headers: {
                     token: `Bearer ${accessToken}`,
                 },
+                params: { page, limit },
             });
             return response;
         } catch (error) {
@@ -28,12 +30,13 @@ const Library = {
             }
         }
     },
-    async getRecentAlbums(accessToken) {
+    async getRecentAlbums(accessToken, page = 1, limit = 10) {
         try {
             const response = await Client.get("/library/recent-albums", {
                 headers: {
                     token: `Bearer ${accessToken}`,
-                }
+                },
+                params: { page, limit },
             });
             return response;
         } catch (error) {
