@@ -1,81 +1,164 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Box, Typography, Button, Tabs, Tab, Divider } from "@mui/material";
-import TopBar from "../components/common/Topbar";
+import OrderApi from "../api/modules/order.api";
+import AccountApi from "../api/modules/account.api";
+import { setBalance } from "../redux/store";
+import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import createUrl from "../hooks/createUrl";
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+} from "@mui/material";
 
 const OrderHistory = () => {
-  // Dữ liệu mock đơn hàng
-  const mockOrders = [
-    {
-      id: 1,
-      merchandises: [
-        {
-          name: "Áo thun nam",
-          id: 1,
-          price: 25,
-          quantity: 2,
-          image: "https://shop.thenbhd.com/cdn/shop/products/NBHD-SCULPTURE-TEE_600x.png?v=1681766714",
-        },
-        {
-          name: "Quần jeans nữ",
-          id: 2,
-          price: 30,
-          quantity: 1,
-          image: "https://shop.thenbhd.com/cdn/shop/files/NBHD-HOUSE-TEE_600x.png?v=1694035989",
-        },
-      ],
-      status: "Cancelled",
-    },
-    {
-      id: 2,
-      merchandises: [
-        {
-          name: "Giày thể thao",
-          id: 2,
-          price: 50,
-          quantity: 1,
-          image: "https://shop.thenbhd.com/cdn/shop/products/HOLLYWOODHOODIE_600x.png?v=1634018637",
-        },
-      ],
-      status: "Completed",
-    },
-    {
-      id: 3,
-      merchandises: [
-        {
-          name: "Áo thun nam",
-          price: 25,
-          quantity: 3,
-          image: "https://shop.thenbhd.com/cdn/shop/products/NBHD-SCULPTURE-TEE_600x.png?v=1681766714",
-        },
-        {
-          name: "Quần jeans nữ",
-          price: 30,
-          quantity: 1,
-          image: "https://shop.thenbhd.com/cdn/shop/files/NBHD-HOUSE-TEE_600x.png?v=1694035989",
-        },
-      ],
-      status: "To Receive",
-    },
-  ];
-
-  // Trạng thái lọc
   const [filterStatus, setFilterStatus] = useState("All");
-  
-  // Điều hướng
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [Orders, setOrders] = useState(null);
+  const [filteredOrders, setFilteredOrders] = useState([]);
+  const userId = useSelector((state) => state.auth.user_id);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const { user_id, balance } = useSelector((state) => state.auth);
+  const groupOrders = (orders) => {
+    return orders.reduce((acc, order) => {
+      // Find the order group with the same order_id
+      const existingOrder = acc.find((o) => o.order_id === order.order_id);
+      // If the order already exists, add the merchandise to the existing order
+      if (existingOrder) {
+        existingOrder.merchandises.push({
+          merchandise_id: order.merchandise_id,
+          quantity: order.quantity,
+          price_each: order.price_each,
+          name: order.name,
+          artist_id: order.artist_id,
+          stock: order.stock,
+          album_id: order.album_id,
+          price: order.price,
+          description: order.description,
+          image: order.image,
+          created_at: order.created_at,
+          category: order.category,
+        });
+      } else {
+        // If the order doesn't exist, create a new group for this order
+        acc.push({
+          order_id: order.order_id,
+          status: order.status,
+          merchandises: [
+            {
+              merchandise_id: order.merchandise_id,
+              quantity: order.quantity,
+              price_each: order.price_each,
+              name: order.name,
+              artist_id: order.artist_id,
+              stock: order.stock,
+              album_id: order.album_id,
+              price: order.price,
+              description: order.description,
+              image: order.image,
+              created_at: order.created_at,
+              category: order.category,
+            },
+          ],
+        });
+      }
+      return acc;
+    }, []);
+  };
+  const handleOpenDialog = (orderId) => {
+    setSelectedOrder(orderId);
+    setOpenDialog(true);
+  };
 
-  // Xử lý khi nhấn tab
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+    setSelectedOrder(null);
+  };
+
+  const handleConfirmCancel = async () => {
+    if (selectedOrder) {
+      try {
+        const response = await OrderApi.updateStatus(
+          selectedOrder.order_id,
+          "cancelled"
+        );
+        if (response.success) {
+          const totalCost = selectedOrder.merchandises.reduce(
+            (total, merchandise) =>
+              total + merchandise.price * merchandise.quantity,
+            0
+          );
+          setOrders((prevOrders) =>
+            prevOrders.map((order) =>
+              order.order_id === selectedOrder.order_id
+                ? { ...order, status: "cancelled" }
+                : order
+            )
+          );
+          // order.merchandise.map (sử dụng merchandise.quantity và price_each để tính totalCost)
+          const newBalance = Number(balance) + Number(totalCost)
+          const balanceUpdateResult = await AccountApi.updateBalance(user_id, {
+            new_balance: newBalance,
+          });
+          if (balanceUpdateResult.success) {
+            dispatch(setBalance(newBalance));
+          } else {
+            console.error("Failed to update balance.");
+          }
+        } else {
+          console.error("Failed to cancel the order:", response.message);
+        }
+      } catch (error) {
+        console.error("Error cancelling order:", error);
+      }
+    }
+    handleCloseDialog(); // Close dialog after confirmation
+  };
+
+  // Fetch orders when the component is mounted or when the userId changes
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        const response = await OrderApi.getAllOrderByUserId(userId);
+
+        if (response.success) {
+          const groupedOrders = groupOrders(response.data);
+          setOrders(groupedOrders);
+        } else {
+          setOrders([]);
+        }
+      } catch (error) {
+        console.error("Error fetching orders:", error);
+        setOrders([]); // If there's an error, set empty array
+      }
+    };
+
+    if (userId) {
+      fetchOrders();
+    }
+  }, [userId]);
+
   const handleTabChange = (event, newValue) => {
     setFilterStatus(newValue);
   };
 
-  // Lọc dữ liệu theo trạng thái
-  const filteredOrders =
-    filterStatus === "All"
-      ? mockOrders
-      : mockOrders.filter((order) => order.status === filterStatus);
-
+  useEffect(() => {
+    if (Orders) {
+      setFilteredOrders(
+        filterStatus === "All"
+          ? Orders
+          : Orders.filter(
+              (order) =>
+                order.status.toLowerCase() === filterStatus.toLowerCase()
+            )
+      );
+    }
+  }, [Orders, filterStatus]);
   // Xử lý khi nhấn nút "Buy Again"
   const handleBuyAgain = (order) => {
     const orderData = {
@@ -128,7 +211,7 @@ const OrderHistory = () => {
               justifyContent: "space-between",
               width: "100%",
               "& .MuiTabs-indicator": {
-                backgroundColor: "#e75565", // Đổi màu dấu gạch chân thành đỏ
+                backgroundColor: "#e75565",
               },
             }}
           >
@@ -137,7 +220,7 @@ const OrderHistory = () => {
               value="All"
               disableRipple
               sx={{
-                width: "20%",
+                width: { md: "16.5%" },
                 fontSize: { xs: "0.8rem", sm: "1rem", md: "1.2rem" },
                 textTransform: "none",
                 color: "#000",
@@ -151,7 +234,21 @@ const OrderHistory = () => {
               value="To Ship"
               disableRipple
               sx={{
-                width: "20%",
+                width: "16.5%",
+                fontSize: { xs: "0.8rem", sm: "1rem", md: "1.2rem" },
+                textTransform: "none",
+                color: "#000",
+                "&.Mui-selected": {
+                  color: "#e75565",
+                },
+              }}
+            />
+            <Tab
+              label="Shipping"
+              value="Shipping"
+              disableRipple
+              sx={{
+                width: "16.5%",
                 fontSize: { xs: "0.8rem", sm: "1rem", md: "1.2rem" },
                 textTransform: "none",
                 color: "#000",
@@ -165,7 +262,7 @@ const OrderHistory = () => {
               value="To Receive"
               disableRipple
               sx={{
-                width: "20%",
+                width: "16.5%",
                 fontSize: { xs: "0.8rem", sm: "1rem", md: "1.2rem" },
                 textTransform: "none",
                 color: "#000",
@@ -179,7 +276,7 @@ const OrderHistory = () => {
               value="Completed"
               disableRipple
               sx={{
-                width: "20%",
+                width: "16.5%",
                 fontSize: { xs: "0.8rem", sm: "1rem", md: "1.2rem" },
                 textTransform: "none",
                 color: "#000",
@@ -193,7 +290,7 @@ const OrderHistory = () => {
               value="Cancelled"
               disableRipple
               sx={{
-                width: "20%",
+                width: "16.5%",
                 fontSize: { xs: "0.8rem", sm: "1rem", md: "1.2rem" },
                 textTransform: "none",
                 color: "#000",
@@ -207,15 +304,15 @@ const OrderHistory = () => {
 
         {/* Danh sách đơn hàng */}
         <Box position={"relative"}>
-          {filteredOrders.map((order) => {
+          {filteredOrders.map((order, index) => {
             const orderTotal = order.merchandises.reduce(
               (total, merchandise) =>
                 total + merchandise.price * merchandise.quantity,
               0
-            ); // Tính tổng giá trị đơn hàng
+            );
             return (
               <Box
-                key={order.id}
+                key={index}
                 sx={{
                   backgroundColor: "white",
                   padding: "1vw",
@@ -236,60 +333,70 @@ const OrderHistory = () => {
                   {order.status}
                 </Typography>
 
-                {/* Danh sách sản phẩm trong đơn hàng */}
-                {order.merchandises.map((merchandise, index) => (
-                  <Link
-                    key={index}
-                    to={`/shop/merchandise/${merchandise.id}`}
-                    style={{ textDecoration: "none", color: "inherit" }}
-                  >
+                <Link
+                  key={order.order_id}
+                  to={`/shop/order/${order.order_id}`}
+                  style={{ textDecoration: "none", color: "inherit" }}
+                >
+                  {order.merchandises.map((merchandise, index) => (
                     <Box
+                      key={index}
                       sx={{
                         display: "flex",
                         alignItems: "center",
                         marginBottom: "1vw",
                       }}
                     >
-                      <img
-                        src={merchandise.image}
-                        alt={merchandise.name}
+                      <Link
+                        to={`/shop/merchandise/${merchandise.merchandise_id}`}
                         style={{
-                          width: "100px",
-                          height: "100px",
-                          objectFit: "cover",
-                          marginRight: "1vw",
-                          borderRadius: "6px",
+                          textDecoration: "none",
+                          color: "inherit",
+                          display: "flex",
+                          alignItems: "center",
+                          marginBottom: "1vw",
                         }}
-                      />
-                      <Box>
-                        <Typography
-                          sx={{
-                            fontSize: { xs: "3.5vw", sm: "2vw", md: "1.2vw" },
+                      >
+                        <img
+                          src={createUrl(merchandise.image)}
+                          alt={merchandise.name}
+                          style={{
+                            width: "100px",
+                            height: "100px",
+                            objectFit: "cover",
+                            marginRight: "1vw",
+                            borderRadius: "6px",
                           }}
-                        >
-                          {merchandise.name}{" "}
+                        />
+
+                        <Box>
                           <Typography
-                            component="span"
-                            sx={{ fontSize: "0.9em", color: "gray" }}
+                            sx={{
+                              fontSize: { xs: "3.5vw", sm: "2vw", md: "1.2vw" },
+                            }}
                           >
-                            x{merchandise.quantity}
+                            {merchandise.name}{" "}
+                            <Typography
+                              component="span"
+                              sx={{ fontSize: "0.9em", color: "gray" }}
+                            >
+                              x{merchandise.quantity}
+                            </Typography>
                           </Typography>
-                        </Typography>
-                        <Typography
-                          sx={{
-                            fontSize: { xs: "3vw", sm: "1.8vw", md: "1vw" },
-                            color: "gray",
-                          }}
-                        >
-                          {merchandise.price * merchandise.quantity} $
-                        </Typography>
-                      </Box>
+                          <Typography
+                            sx={{
+                              fontSize: { xs: "3vw", sm: "1.8vw", md: "1vw" },
+                              color: "gray",
+                            }}
+                          >
+                            {merchandise.price * merchandise.quantity} $
+                          </Typography>
+                        </Box>
+                      </Link>
                     </Box>
-                  </Link>
-                ))}
-
+                  ))}
+                </Link>
                 <Divider sx={{ margin: "1vw 0" }} />
-
                 <Box
                   sx={{
                     display: "flex",
@@ -308,7 +415,7 @@ const OrderHistory = () => {
                     Order Total: {orderTotal} $
                   </Typography>
                   <Button
-                    onClick={() => handleBuyAgain(order)}  // Sử dụng hàm xử lý
+                    onClick={() => handleBuyAgain(order)} // Sử dụng hàm xử lý
                     sx={{
                       backgroundColor: "#d0011b",
                       color: "white",
@@ -318,6 +425,20 @@ const OrderHistory = () => {
                   >
                     Buy Again
                   </Button>
+                  {order.status === "to ship" && (
+                    <Button
+                      onClick={() => handleOpenDialog(order)}
+                      sx={{
+                        backgroundColor: "#d0011b",
+                        color: "white",
+                        fontSize: { xs: "3vw", sm: "2vw", md: "1vw" },
+                        "&:hover": { backgroundColor: "rgba(208,1,27, 0.9)" },
+                        marginLeft: "3vw",
+                      }}
+                    >
+                      Cancel Order
+                    </Button>
+                  )}
                 </Box>
               </Box>
             );
@@ -336,6 +457,19 @@ const OrderHistory = () => {
           </Typography>
         )}
       </Box>
+      <Dialog open={openDialog} onClose={handleCloseDialog}>
+        <DialogContent>
+          <Typography>Are you sure you want to cancel this order?</Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog} color="primary">
+            No
+          </Button>
+          <Button onClick={handleConfirmCancel} color="#d0011b">
+            Yes
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };
