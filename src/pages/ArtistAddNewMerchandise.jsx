@@ -42,12 +42,19 @@ const ArtistAddNewMerchandise = () => {
     fetchArtistAlbums();
   }, []);
 
+
   const handleChange = (event) => {
     const name = event.target.name;
     const value = event.target.value;
     setMerchandise((values) => ({ ...values, [name]: value }));
   };
 
+// <<<<<<< main
+//   const handleSubmit = (event) => {
+//     event.preventDefault();
+//     // TODO: Add API call to add new merchandise
+//     console.log(merchandise);
+// =======
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -86,6 +93,7 @@ const ArtistAddNewMerchandise = () => {
       setImage(null);
       setFileError("Please upload a valid image file (JPEG, PNG, JPG).");
     }
+
   };
 
   return (
@@ -133,6 +141,10 @@ const ArtistAddNewMerchandise = () => {
                 onChange={handleChange}
                 value={merchandise.category ?? ""}
               >
+
+//                 <MenuItem value="Digital Album">Digital Album</MenuItem>
+//                 <MenuItem value="Physical Album">Physical Album</MenuItem>
+
                 <MenuItem value="apparel">Apparel</MenuItem>
                 <MenuItem value="accessories">Accessories</MenuItem>
                 <MenuItem value="Physical Album">Physical Album</MenuItem>
@@ -149,11 +161,16 @@ const ArtistAddNewMerchandise = () => {
                 onChange={handleChange}
                 value={merchandise.album_id ?? ""}
               >
+
+//                 <MenuItem value="Chip Chrome">Chip Chrome</MenuItem>
+//                 <MenuItem value="Sweater Weather">Sweater Weather</MenuItem>
+
                 {artistAlbums.map((album) => (
                   <MenuItem key={album.id} value={album.id}>
                     {album.title}
                   </MenuItem>
                 ))}
+
               </Select>
             </FormControl>
           </Grid>

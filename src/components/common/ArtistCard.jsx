@@ -1,10 +1,11 @@
 import React from "react";
 import { Card, CardMedia, CardContent, Typography, Box } from "@mui/material";
 import { Link } from "react-router-dom";
+import createURL from "../../hooks/createUrl";
 
 const ArtistCard = ({ artist }) => {
   return (
-    <Link to={`/artist/${artist.id}`} style={{ textDecoration: "none" }}>
+    <Link to={`/artist/${artist.id || artist.artist_id}`} style={{ textDecoration: "none" }}>
       <Card
         sx={{
           overflow: "hidden",
@@ -17,8 +18,8 @@ const ArtistCard = ({ artist }) => {
       >
         <CardMedia
           component="img"
-          image={artist.cover || artist.avatar}
-          alt={artist.name || artist.display_name}
+          image={artist.avatar && artist.avatar.startsWith("http") ? artist.avatar : createURL(artist.avatar)}
+          alt={artist.name || artist.display_name || artist.artist_name}
           sx={{
             objectFit: "cover",
             borderRadius: "50%",
@@ -27,7 +28,7 @@ const ArtistCard = ({ artist }) => {
         />
         <CardContent sx={{ padding: "0" }}>
           <Typography variant="h10" component="div" noWrap textAlign={"center"}>
-            {artist.name}
+            {artist.name || artist.display_name || artist.artist_name}
           </Typography>
         </CardContent>
       </Card>

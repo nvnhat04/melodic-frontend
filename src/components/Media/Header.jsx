@@ -16,7 +16,7 @@ import useTheme from "@mui/material/styles/useTheme";
 import { useSelector } from "react-redux";
 import {usePlaylistContext} from "../../hooks/PlaylistContext"; // Import the context
 import createURL from "../../hooks/createUrl";
-
+import {Link} from "react-router-dom";
 
 
 const MediaHeader = ({ media, mediaType }) => {
@@ -29,7 +29,10 @@ const MediaHeader = ({ media, mediaType }) => {
   const handleClickOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const currentUserId = useSelector((state) => state.auth.user_id); // Lấy userId của người dùng hiện tại từ Redux store
-  const { creatorId, playlistId } = usePlaylistContext();
+  const { creatorId, playlistId } = usePlaylistContext() || {};
+  //console.log("media cover", media.cover);
+  //console.log("create URL", createURL(media.cover));
+  const defaultCover = "../../default/playlist_cover";
 
 
   const renderMediaContent = () => (
@@ -52,7 +55,9 @@ const MediaHeader = ({ media, mediaType }) => {
 
       {media.album && (
         <Typography variant="h5" sx={{ color: textColor }}>
-          {media.artist} • {media.album}
+          <Link to={`/album/${media.albumId}`} style={{ color: textColor, textDecoration: 'none' }}>
+            {media.album}
+          </Link>
         </Typography>
       )}
 
@@ -158,7 +163,7 @@ const MediaHeader = ({ media, mediaType }) => {
       {/* More Options Icon */}
       <Box sx={{ position: "absolute", bottom: 8, right: 8 }}>
         {mediaType === "track" ? (
-          <SongCardMenu track={media} />
+          <SongCardMenu songId={media.id} />
         ) : mediaType === "playlist" && creatorId === currentUserId ? (
           <MainMenu playlist={media} />
         ) : null}
@@ -166,7 +171,7 @@ const MediaHeader = ({ media, mediaType }) => {
 
       <CardMedia
         component="img"
-        image={media.cover && media.cover.startsWith("http") ? media.cover : createURL(media.cover)}
+        image={media.cover && media.cover.startsWith("http") ? media.cover : createURL(media.cover) || defaultCover}
         alt="Media Cover"
         sx={{
           width: {

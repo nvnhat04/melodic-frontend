@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import AlbumCard from "./AlbumCard.jsx";
-import TrackCard from "./TrackCard.jsx";
+import CollectionCard from "./CollectionCard.jsx";
 import MerchandiseCard from "./MerchandiseCard.jsx";
 import ArtistCard from "./ArtistCard.jsx";
 import { Box } from "@mui/material";
@@ -9,11 +9,10 @@ import "swiper/swiper-bundle.css";
 
 const AlbumSlider = ({ list, type }) => {
   const [slidesConfig, setSlidesConfig] = useState({
-    slidesPerView: 7,
-    slidesPerGroup: 7,
+    slidesPerView: 6,
+    slidesPerGroup: 6,
   });
 
-  // Update slides configuration based on screen width
   const updateSlidesConfig = () => {
     if (type === "Artist") {
       if (window.innerWidth >= 1320) {
@@ -37,13 +36,13 @@ const AlbumSlider = ({ list, type }) => {
   };
 
   useEffect(() => {
-    updateSlidesConfig(); // Initial check
-    window.addEventListener("resize", updateSlidesConfig); // Update on resize
+    updateSlidesConfig();
+    window.addEventListener("resize", updateSlidesConfig);
     return () => window.removeEventListener("resize", updateSlidesConfig);
   }, []);
 
   return (
-    <Box style={{ maxWidth: "100%" }}>
+    <Box style={{ maxWidth: "1150px", width: "100%", margin: "0 auto", overflow: "hidden" }}>
       <Swiper
         spaceBetween={1}
         slidesPerView={slidesConfig.slidesPerView}
@@ -52,21 +51,18 @@ const AlbumSlider = ({ list, type }) => {
         direction="horizontal"
         observer={true}
       >
+        {list?.map((item) => (
+          <SwiperSlide key={item.id}>
+            {type === "Album" ? (
+              <CollectionCard collection={item} type={"Album"} />
+            ) : type === "Artist" ? (
+              <ArtistCard artist={item} />
+            ) : (
+              <MerchandiseCard merchandise={item} hoverEffect={"blur"} />
+            )}
+          </SwiperSlide>
+        ))}
 
-
-        {list != null && (
-          list.map((item) => (
-            <SwiperSlide key={item.id}>
-              {type === "Album" ? (
-                <AlbumCard album={item} />
-              ) : type === "Artist" ? (
-                <ArtistCard artist={item} />
-              ) : (
-                <MerchandiseCard merchandise={item} hoverEffect={"blur"} />
-              )}
-            </SwiperSlide>
-          ))
-        )}
       </Swiper>
     </Box>
   );
