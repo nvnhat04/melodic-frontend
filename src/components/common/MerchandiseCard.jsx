@@ -34,7 +34,11 @@ const MerchandiseCard = ({ merchandise }) => {
         >
           <Box
             component="img"
-            src={merchandise.image}
+            src={
+              merchandise.image
+                ? merchandise.image
+                : "/default/merchandise_cover.jpg"
+            }
             alt={merchandise.name}
             sx={{
               width: "100%",
