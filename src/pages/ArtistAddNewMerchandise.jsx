@@ -8,27 +8,31 @@ import MenuItem from "@mui/material/MenuItem";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import Select from "@mui/material/Select";
 import Typography from "@mui/material/Typography";
-import MerchandiseCard from "../components/common/MerchandiseCard";
+import MerchandiseCardPreview from "../components/common/MerchandiseCardPreview";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { useSelector } from "react-redux";
 import ArtistApi from "../api/modules/artist.api";
 import MerchandiseApi from "../api/modules/merchandise.api";
-import MerchandiseCardPreview from "../components/common/MerchandiseCardPreview";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const ArtistAddNewMerchandise = () => {
   const artist_id = useSelector((state) => state.auth.user_id);
   const token = useSelector((state) => state.auth.token);
 
-  const [artistAlbums, setArtistAlbums] = useState([]);
-  const [fileError, setFileError] = useState("");
-  const [merchandise, setMerchandise] = useState({
+  const placeholderImage = "/default/merchandise_cover.jpg";
+  
+  const initialMerchandise = {
     name: "",
     category: "",
     price: "",
     stock: "",
     description: "",
     album_id: "",
-  });
+  };
+  const [artistAlbums, setArtistAlbums] = useState([]);
+  const [fileError, setFileError] = useState("");
+  const [merchandise, setMerchandise] = useState(initialMerchandise);
   const [image, setImage] = useState(null);
 
   useEffect(() => {
@@ -64,17 +68,15 @@ const ArtistAddNewMerchandise = () => {
 
     try {
       const response = await MerchandiseApi.createMerchandise(formData, token);
-      setMerchandise({
-        name: "",
-        category: "",
-        price: "",
-        stock: "",
-        description: "",
-        album_id: "",
-      });
+      setMerchandise(initialMerchandise);
+      setImage(null);
+
+      // Success toast
+      toast.success("Merchandise created successfully!");
     } catch (error) {
       console.error("Failed to create merchandise:", error);
-      alert("Failed to create merchandise. Please try again later.");
+      // Error toast
+      toast.error("Failed to create merchandise. Please try again later.");
     }
   };
 
@@ -164,6 +166,7 @@ const ArtistAddNewMerchandise = () => {
               <OutlinedInput
                 name="price"
                 type="number"
+                value={merchandise.price}
                 fullWidth
                 onChange={handleChange}
               />
@@ -175,6 +178,7 @@ const ArtistAddNewMerchandise = () => {
               <OutlinedInput
                 name="stock"
                 type="number"
+                value={merchandise.stock}
                 fullWidth
                 onChange={handleChange}
               />
@@ -259,11 +263,12 @@ const ArtistAddNewMerchandise = () => {
               stock: merchandise.stock,
               description: merchandise.description,
               album_id: merchandise.album_id,
-              image: image ? URL.createObjectURL(image) : null,
+              image: image ? URL.createObjectURL(image) : placeholderImage,
             }}
           />
         </Box>
       </Box>
+      <ToastContainer />
     </Box>
   );
 };
