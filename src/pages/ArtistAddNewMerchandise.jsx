@@ -135,7 +135,7 @@ const ArtistAddNewMerchandise = () => {
               >
                 <MenuItem value="apparel">Apparel</MenuItem>
                 <MenuItem value="accessories">Accessories</MenuItem>
-                <MenuItem value="Physical Album">Physical Album</MenuItem>
+                <MenuItem value="physical album">Physical Album</MenuItem>
                 <MenuItem value="other">Other</MenuItem>
               </Select>
             </FormControl>
