@@ -30,6 +30,7 @@ const UploadTrack = () => {
   const user_id = useSelector((state) => state.auth.user_id);
   const [albumList, setAlbumList] = useState([]);
   const [albumData, setAlbumData] = useState([]);
+  const [albumExists, setAlbumExists] = useState(false);
   const [parsedDuration, setParsedDuration] = useState('');
   const [durationError, setDurationError] = useState('');
   const [fileError, setFileError] = useState('');
@@ -51,7 +52,7 @@ const UploadTrack = () => {
   const fetchAlbums = async () => {
     try {
         const response = await artistApi.getAllAlbums(user_id);
-        console.log(response);
+        // console.log(response);
         if (response && response.length > 0) {
             setAlbumList(response);
         } else {
@@ -64,13 +65,26 @@ const UploadTrack = () => {
 };
   useEffect(() => {
     fetchAlbums();
+    const exists = albumList.some((album) => {
+      // console.log('Album:', album.artist_id, user_id, album.album_type);
+      if(album.title.toLowerCase() === formData.album.toLowerCase() && album.artist_id === user_id && album.album_type === 'album'){
+        // console.log('Album exists:', album);
+         setAlbumExists(true);
+          setAlbumData(album);
+        return true;
+      }
+        
+      return false;
+    });
 }, [albumList]);
 
 useEffect(() => {
   console.log('Updated Albums:', albumList);
-}, [albumList]); 
-  const initialFormData = {   
-     title: '',
+}, [ user_id]); 
+
+
+const initialFormData = {   
+    title: '',
     lyrics: '',
     release_date: null,
     duration: '',
@@ -132,34 +146,25 @@ useEffect(() => {
     const newCollaborators = formData.collaborators.filter((_, i) => i !== index);
     setFormData({ ...formData, collaborators: newCollaborators });
   };
-  const handleExistingAlbum = (e) => {
-    const { name, value } = e.target;
-    const albumExists = albumList.some((album) => {album.title === value && album.artist_id === user_id});
-    if (albumExists) {
-      setFormData({ ...formData, [name]: value });
-    } else {
-      const createNewAlbum = window.confirm('This album does not exist. Would you like to create a new album?');
-      if (createNewAlbum) {
-        navigate('/artist/add-album'); // Navigate to the "Add Album" page
-        return;
-      } else {
-        alert('Please select an existing album or create a new one.');
-        return;
-      }
-    }
-  };
+  // const handleExistingAlbum = (e) => {
+  //   const { name, value } = e.target;
+  //   const albumExists = albumList.some((album) => {album.title === value && album.artist_id === user_id});
+  //   if (albumExists) {
+  //     setFormData({ ...formData, [name]: value });
+  //   } else {
+  //     const createNewAlbum = window.confirm('This album does not exist. Would you like to create a new album?');
+  //     if (createNewAlbum) {
+  //       navigate('/artist/add-album'); // Navigate to the "Add Album" page
+  //       return;
+  //     } else {
+  //       alert('Please select an existing album or create a new one.');
+  //       return;
+  //     }
+  //   }
+  // };
   const handleSubmit = (e) => {
     e.preventDefault();
-    const albumExists = albumList.some((album) => {
-      // console.log('Album:', album.artist_id, user_id, album.album_type);
-      if(album.title.toLowerCase() === formData.album.toLowerCase() && album.artist_id === user_id && album.album_type === 'album'){
-        console.log('Album exists:', album);
-        setAlbumData(album);
-        return true;
-      }
-        
-      return false;
-    });
+  
     
 
     if (!albumExists ) {
@@ -197,6 +202,9 @@ useEffect(() => {
     if (formData.file) {
       
       data.append('file', formData.file);
+    } else {
+      alert('Please upload a valid MP3 file.');
+      return;
     }
     // console.log('FormData content:');
     for (let pair of data.entries()) {
