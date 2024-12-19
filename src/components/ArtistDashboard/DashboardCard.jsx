@@ -235,7 +235,7 @@ const DashboardCards = () => {
         "#42a5f5"
       ),
       chartColor: "#42a5f5",
-      type: "bar",
+      type: "line",
     },
     {
       icon: <PersonIcon fontSize="large" />,
@@ -247,6 +247,7 @@ const DashboardCards = () => {
         "#ab47bc"
       ),
       chartColor: "#ab47bc",
+      type: "bar",
     },
     {
       icon: <ShoppingBagIcon fontSize="large" />,
@@ -287,18 +288,26 @@ const DashboardCards = () => {
   console.log("merch types: ", merchandiseTypes); // Log to check if the data is correct
 
   return (
-    <Box display="flex" justifyContent="space-between" gap={2} flexWrap="wrap">
-      {cards.map((card, index) => (
-        <Box
-          key={index}
-          flex="1 1 calc(25% - 16px)"
-          maxWidth="calc(25% - 16px)"
-        >
-          <StatCard {...card} />
+    <Box display="flex" flexDirection="column" gap={2}>
+      {/* Row 1 */}
+      <Box display="flex" gap={2} flex="1">
+        <Box flex="1" minWidth="0">
+          <StatCard {...cards[4]} />
         </Box>
-      ))}
-      <Box flex="1 1 calc(50% - 16px)" maxWidth="calc(50% - 16px)">
-        <MostPopular tracks={mostPlayedTracks} />
+
+        <Box flex="4" minWidth="0">
+          <StatCard {...cards[2]} />
+        </Box>
+      </Box>
+
+      {/* Row 2 */}
+      <Box display="flex" gap={2} flex="1">
+        <Box flex="1" minWidth="0">
+          <StatCard {...cards[1]} />
+        </Box>
+        <Box flex="1" minWidth="0">
+          <MostPopular tracks={mostPlayedTracks} />
+        </Box>
       </Box>
     </Box>
   );

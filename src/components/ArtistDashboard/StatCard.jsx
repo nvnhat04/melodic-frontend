@@ -28,18 +28,19 @@ const StatCard = ({
   title,
   value,
   chartData,
-  chartColors = [], 
+  chartColors = [],
 }) => {
   const chartOptions = {
     responsive: true,
+    aspectRatio: type === "pie" ? 1 : 4,
     plugins: {
       legend: {
         display: type === "pie", // Ensure legend is shown for pie charts
         position: "bottom",
         labels: {
-          color: "black", 
+          color: "black",
           font: {
-            size: 12, 
+            size: 12,
           },
         },
       },
@@ -56,9 +57,9 @@ const StatCard = ({
                 },
               },
             },
-            y: { display: true },
+            y: { display: false },
           }
-        : {}, 
+        : {},
     elements: {
       line: {
         tension: 0.4,
