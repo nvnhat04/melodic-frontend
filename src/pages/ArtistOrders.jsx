@@ -38,8 +38,8 @@ const ArtistOrders = () => {
 
   return (
     <div>
-      <h1>Artist Orders</h1>
-      <DenseTable header={header} rows={orders} />
+      <h1>Orders</h1>
+      <DenseTable header={header} rows={orders} includeCheckbox={false} />
     </div>
   );
 };
