@@ -4,7 +4,7 @@ import StatCard from "./StatCard";
 import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
 import PersonIcon from "@mui/icons-material/Person";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import MailIcon from "@mui/icons-material/Mail";
+import MusicNoteIcon from "@mui/icons-material/MusicNote";
 import ArtistApi from "../../api/modules/artist.api";
 import { useSelector } from "react-redux";
 
@@ -178,7 +178,7 @@ const DashboardCards = () => {
       chartColor: "#ffca28",
     },
     {
-      icon: <MailIcon fontSize="large" />,
+      icon: <MusicNoteIcon fontSize="large" />,
       title: "Weekly Streams",
       value: totalWeeklyStreams,
       chartData: chartDataTemplate(

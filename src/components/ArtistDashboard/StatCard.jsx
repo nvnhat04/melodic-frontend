@@ -11,13 +11,7 @@ import {
 
 ChartJS.register(LineElement, PointElement, LinearScale, CategoryScale);
 
-const StatCard = ({
-  icon,
-  title,
-  value,
-  chartData,
-  chartColor,
-}) => {
+const StatCard = ({ icon, title, value, chartData, chartColor }) => {
   const chartOptions = {
     responsive: true,
     plugins: {
@@ -27,13 +21,13 @@ const StatCard = ({
       x: {
         display: true,
         ticks: {
-          color: chartColor, 
+          color: chartColor,
           font: {
             size: 10,
           },
         },
       },
-      y: { display: false }, 
+      y: { display: false },
     },
     elements: {
       line: { tension: 0.4, borderWidth: 2, borderColor: chartColor },
@@ -56,7 +50,17 @@ const StatCard = ({
         alignItems="center"
         mb={2}
       >
-        <Box>{icon}</Box>
+        <Box>
+          <span
+            style={{
+              color: chartColor,
+              fontWeight: "bold",
+              fontSize: "1.5rem",
+            }}
+          >
+            {icon}
+          </span>
+        </Box>
       </Box>
       <Typography variant="h6" fontWeight="bold" mb={1}>
         {value}
