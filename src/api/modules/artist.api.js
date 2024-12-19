@@ -120,5 +120,16 @@ const Artist = {
       }
     }
   },
+
+  getWeeklyStreams: async (artistId) => {
+    try {
+      const response = await Client.get(`/artist/${artistId}/weekly-streams`);
+      return response;
+    } catch (error) {
+      if (error.response) {
+        return error.response;
+      }
+    }
+  },
 };
 export default Artist;

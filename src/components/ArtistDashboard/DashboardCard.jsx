@@ -13,6 +13,7 @@ const DashboardCards = () => {
   const [weeklyOrders, setWeeklyOrders] = useState([]);
   const [weeklyCustomers, setWeeklyCustomers] = useState([]);
   const [weeklySales, setWeeklySales] = useState([]);
+  const [weeklyStreams, setWeeklyStreams] = useState([]);
 
   const weeklyOrdersLabels = weeklyOrders.length
     ? weeklyOrders.map((order) =>
@@ -64,6 +65,23 @@ const DashboardCards = () => {
     0
   );
 
+  const weeklyStreamsLabels = weeklyStreams.length
+    ? weeklyStreams.map((stream) =>
+        new Date(stream.played_date).toLocaleDateString("en-US", {
+          weekday: "short",
+        })
+      )
+    : ["No Data"];
+
+  const weeklyStreamsDataset = weeklyStreams.length
+    ? weeklyStreams.map((stream) => parseInt(stream.play_count, 10))
+    : [0];
+
+  const totalWeeklyStreams = weeklyStreamsDataset.reduce(
+    (sum, count) => sum + count,
+    0
+  );
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -102,6 +120,18 @@ const DashboardCards = () => {
     fetchData();
   }, [artist_id]);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await ArtistApi.getWeeklyStreams(artist_id);
+        setWeeklyStreams(response);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchData();
+  }, [artist_id]);
+
   const chartDataTemplate = (labels, datasets, color) => ({
     labels: labels,
     datasets: [
@@ -115,7 +145,7 @@ const DashboardCards = () => {
   });
   const cards = [
     {
-      icon: <ShoppingBagIcon fontSize="large" />,
+      icon: <ShoppingCartIcon fontSize="large" />,
       title: "Weekly Orders",
       value: totalWeeklyOrders,
       chartData: chartDataTemplate(
@@ -127,7 +157,7 @@ const DashboardCards = () => {
     },
     {
       icon: <PersonIcon fontSize="large" />,
-      title: "New Customers",
+      title: "Customers",
       value: totalWeeklyCustomers,
       chartData: chartDataTemplate(
         weeklyCustomersLabels,
@@ -137,7 +167,7 @@ const DashboardCards = () => {
       chartColor: "#ab47bc",
     },
     {
-      icon: <ShoppingCartIcon fontSize="large" />,
+      icon: <ShoppingBagIcon fontSize="large" />,
       title: "Weekly Sales",
       value: totalWeeklySales,
       chartData: chartDataTemplate(
@@ -147,13 +177,17 @@ const DashboardCards = () => {
       ),
       chartColor: "#ffca28",
     },
-    // {
-    //   icon: <MailIcon fontSize="large" />,
-    //   title: "Messages",
-    //   value: "234",
-    //   chartData: chartDataTemplate([], [], "#ef5350"), // Placeholder
-    //   chartColor: "#ef5350",
-    // },
+    {
+      icon: <MailIcon fontSize="large" />,
+      title: "Weekly Streams",
+      value: totalWeeklyStreams,
+      chartData: chartDataTemplate(
+        weeklyStreamsLabels,
+        weeklyStreamsDataset,
+        "#ef5350"
+      ),
+      chartColor: "#ef5350",
+    },
   ];
 
   return (
