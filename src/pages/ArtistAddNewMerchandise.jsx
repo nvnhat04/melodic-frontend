@@ -13,6 +13,7 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { useSelector } from "react-redux";
 import ArtistApi from "../api/modules/artist.api";
 import MerchandiseApi from "../api/modules/merchandise.api";
+import MerchandiseCardPreview from "../components/common/MerchandiseCardPreview";
 
 const ArtistAddNewMerchandise = () => {
   const artist_id = useSelector((state) => state.auth.user_id);
@@ -250,7 +251,7 @@ const ArtistAddNewMerchandise = () => {
           <Typography component="p" alignSelf="start">
             This is how your merchandise appears in Artist Shop.
           </Typography>
-          <MerchandiseCard
+          <MerchandiseCardPreview
             merchandise={{
               name: merchandise.name,
               category: merchandise.category,
