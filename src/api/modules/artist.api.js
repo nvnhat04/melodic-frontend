@@ -131,5 +131,31 @@ const Artist = {
       }
     }
   },
+
+  getMostPlayedTracks: async (artistId) => {
+    try {
+      const response = await Client.get(
+        `/artist/${artistId}/most-played-tracks`
+      );
+      return response;
+    } catch (error) {
+      if (error.response) {
+        return error.response;
+      }
+    }
+  },
+
+  getMerchandiseTypes: async (artistId) => {
+    try {
+      const response = await Client.get(
+        `/artist/${artistId}/merchandise/types`
+      );
+      return response;
+    } catch (error) {
+      if (error.response) {
+        return error.response;
+      }
+    }
+  },
 };
 export default Artist;
