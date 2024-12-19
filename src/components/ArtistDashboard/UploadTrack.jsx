@@ -63,24 +63,8 @@ const UploadTrack = () => {
         alert('Failed to fetch albums');
     }
 };
-  useEffect(() => {
-    fetchAlbums();
-    const exists = albumList.some((album) => {
-      // console.log('Album:', album.artist_id, user_id, album.album_type);
-      if(album.title.toLowerCase() === formData.album.toLowerCase() && album.artist_id === user_id && album.album_type === 'album'){
-        // console.log('Album exists:', album);
-         setAlbumExists(true);
-          setAlbumData(album);
-        return true;
-      }
-        
-      return false;
-    });
-}, [albumList]);
 
-useEffect(() => {
-  console.log('Updated Albums:', albumList);
-}, [ user_id]); 
+  
 
 
 const initialFormData = {   
@@ -96,6 +80,26 @@ const initialFormData = {
     file: null,
   }
   const [formData, setFormData] = useState(initialFormData);
+
+  useEffect(() => {
+      fetchAlbums();
+  }, []);
+  
+  useEffect(() => {
+      const exists = albumList.some((album) => {
+        if(album.title.toLowerCase() === formData.album.toLowerCase() && album.artist_id === user_id && album.album_type === 'album'){
+           setAlbumExists(true);
+           setAlbumData(album);
+          return true;
+        }
+        return false;
+      });
+  }, [albumList, formData.album, user_id]);
+
+
+useEffect(() => {
+  console.log('Updated Albums:', albumList);
+}, [albumList, formData.album, user_id]); 
 
   const handleChange = (e) => {
     const { name, value } = e.target;
