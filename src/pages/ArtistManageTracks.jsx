@@ -1,8 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { Button, Box } from "@mui/material";
+import Button from "@mui/material/Button";
+import Box from "@mui/material/Box";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
 import DenseTable from "../components/common/DenseTable";
 import ArtistApi from "../api/modules/artist.api";
+import TrackApi from "../api/modules/track.api";
 import { useSelector } from "react-redux";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const ArtistManageTracks = () => {
   const artist_id = useSelector((state) => state.auth.user_id);
@@ -15,28 +24,49 @@ const ArtistManageTracks = () => {
 
   const [tracks, setTracks] = useState([]);
   const [selectedTracks, setSelectedTracks] = useState([]);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const handleSelectRow = (index) => {
     const newSelectedRows = selectedTracks.includes(index)
-      ? selectedTracks.filter((rowIndex) => rowIndex !== index) // Deselect if already selected
-      : [...selectedTracks, index]; // Select if not selected
+      ? selectedTracks.filter((rowIndex) => rowIndex !== index)
+      : [...selectedTracks, index];
     setSelectedTracks(newSelectedRows);
   };
 
   const handleSelectAllRows = (event) => {
     if (event.target.checked) {
-      setSelectedTracks(tracks.map((_, index) => index)); // Select all rows
+      setSelectedTracks(tracks.map((_, index) => index));
     } else {
-      setSelectedTracks([]); // Deselect all rows
+      setSelectedTracks([]);
     }
   };
 
-  const handleDeleteRows = (rowsToDelete) => {
-    const updatedTracks = tracks.filter(
-      (_, rowIndex) => !rowsToDelete.includes(rowIndex)
-    ); // Remove selected rows
-    setTracks(updatedTracks);
-    setSelectedTracks([]); // Clear selection after deletion
+  const handleDeleteRows = async (rowsToDelete) => {
+    const tracksToDelete = rowsToDelete.map((index) => tracks[index]);
+    try {
+      for (const track of tracksToDelete) {
+        await TrackApi.deleteTrackById(track.id);
+      }
+      const updatedTracks = tracks.filter(
+        (_, rowIndex) => !rowsToDelete.includes(rowIndex)
+      );
+      setTracks(updatedTracks);
+      setSelectedTracks([]);
+
+      toast.success("Tracks deleted successfully!");
+    } catch (error) {
+      console.error("Error deleting tracks:", error);
+      toast.error("Failed to delete tracks.");
+    }
+    setIsDialogOpen(false);
+  };
+
+  const handleOpenDialog = () => {
+    setIsDialogOpen(true);
+  };
+
+  const handleCloseDialog = () => {
+    setIsDialogOpen(false);
   };
 
   useEffect(() => {
@@ -53,6 +83,7 @@ const ArtistManageTracks = () => {
         setTracks(filteredData);
       } catch (error) {
         console.error(error);
+        toast.error("Failed to fetch tracks.");
       }
     };
     fetchArtistTracks();
@@ -64,8 +95,8 @@ const ArtistManageTracks = () => {
       <Button
         variant="contained"
         color="error"
-        onClick={() => handleDeleteRows(selectedTracks)} // Delete selected rows
-        disabled={selectedTracks.length === 0} // Disable button if no rows are selected
+        onClick={handleOpenDialog}
+        disabled={selectedTracks.length === 0}
         sx={{ alignSelf: "flex-end" }}
       >
         Delete Selected
@@ -78,6 +109,31 @@ const ArtistManageTracks = () => {
         onSelectRow={handleSelectRow}
         onSelectAllRows={handleSelectAllRows}
       />
+
+      {/* Confirmation Dialog */}
+      <Dialog open={isDialogOpen} onClose={handleCloseDialog}>
+        <DialogTitle>Confirm Deletion</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to delete the selected tracks? This action
+            cannot be undone.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog} color="primary">
+            Cancel
+          </Button>
+          <Button
+            onClick={() => handleDeleteRows(selectedTracks)}
+            color="error"
+            variant="contained"
+          >
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <ToastContainer position="top-right" autoClose={3000} />
     </Box>
   );
 };
