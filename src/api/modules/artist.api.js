@@ -76,5 +76,16 @@ const Artist = {
       }
     }
   },
+
+  getAllTracks: async (artistId) => {
+    try {
+      const response = await Client.get(`/artist/${artistId}/tracks`);
+      return response;
+    } catch (error) {
+      if (error.response) {
+        return error.response;
+      }
+    }
+  },
 };
 export default Artist;
