@@ -12,9 +12,11 @@ import TrackApi from "../api/modules/track.api";
 import { useSelector } from "react-redux";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from "react-router-dom";
 
 const ArtistManageTracks = () => {
   const artist_id = useSelector((state) => state.auth.user_id);
+  const navigate = useNavigate();
 
   const header = [
     { id: "id", label: "ID" },
@@ -61,6 +63,10 @@ const ArtistManageTracks = () => {
     setIsDialogOpen(false);
   };
 
+  const handleModifyRow = (row) => {
+    navigate(`/artist/update-track/${row.id}`);
+  };
+
   const handleOpenDialog = () => {
     setIsDialogOpen(true);
   };
@@ -90,7 +96,7 @@ const ArtistManageTracks = () => {
   }, [artist_id]);
 
   return (
-    <Box display="flex" flexDirection="column" alignItems="center">
+    <Box display="flex" flexDirection="column" alignItems="center" gap={2}>
       <h1>Artist Tracks</h1>
       <Button
         variant="contained"
@@ -108,6 +114,8 @@ const ArtistManageTracks = () => {
         selectedTracks={selectedTracks}
         onSelectRow={handleSelectRow}
         onSelectAllRows={handleSelectAllRows}
+        modifiable={true}
+        onModifyRow={handleModifyRow}
       />
 
       {/* Confirmation Dialog */}
