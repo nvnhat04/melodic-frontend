@@ -21,6 +21,8 @@ import AllGenre from './pages/AllGenre';
 import SearchGenre from './pages/SearchGenre';
 import Favorite from './pages/Favorite';
 import RecentTracks from "./pages/RecentTracks";
+import Profile from "./pages/Profile";
+import EditProfile from "./pages/EditProfile";
 
 // Shop Layout
 import ShopLayout from "./components/layout/ShopLayout";
@@ -83,12 +85,15 @@ function App() {
           <Route path='artist/:id/profile' element={<ArtistProfile />} />
           <Route path='album/:id' element={<Album />} />
           <Route path='genres' element={<AllGenre />} />
-          <Route path='update-password' element={<UpdatePassword />} />
           <Route path="multi-search" element={<MultiSearch />} />
 
           <Route path="genre" element={<SearchGenre />} />
           <Route path="favorite" element={<Favorite />} />
           <Route path="tracks" element={<RecentTracks />} />
+
+          <Route path='update-password/:id' element={<UpdatePassword />} />
+          <Route path='profile/:id' element={<Profile />} />
+          <Route path='edit-profile/:id' element={<EditProfile />} />
 
         </Route>
         <Route path="/artist" element={<ArtistDashboard />}>
