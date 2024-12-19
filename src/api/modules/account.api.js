@@ -122,6 +122,7 @@ const Account = {
             if (error.response) {
                 return error.response;
             }
-        },
+        }
+}
 };
 export default Account;
