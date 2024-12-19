@@ -8,7 +8,7 @@ import MenuItem from "@mui/material/MenuItem";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import Select from "@mui/material/Select";
 import Typography from "@mui/material/Typography";
-import MerchandiseCard from "../components/common/MerchandiseCard";
+import MerchandiseCardPreview from "../components/common/MerchandiseCardPreview";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { useSelector } from "react-redux";
 import ArtistApi from "../api/modules/artist.api";
@@ -98,11 +98,7 @@ const ArtistUpdateMerchandise = () => {
     formData.append("image", image);
 
     try {
-      await MerchandiseApi.updateMerchandise(
-        merchandiseId,
-        formData,
-        token
-      );
+      await MerchandiseApi.updateMerchandise(merchandiseId, formData, token);
       setMerchandise({
         name: "",
         category: "",
@@ -292,7 +288,7 @@ const ArtistUpdateMerchandise = () => {
           <Typography component="p" alignSelf="start">
             This is how your merchandise appears in Artist Shop.
           </Typography>
-          <MerchandiseCard
+          <MerchandiseCardPreview
             merchandise={{
               name: merchandise.name,
               category: merchandise.category,

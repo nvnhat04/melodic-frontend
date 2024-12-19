@@ -11,8 +11,6 @@ const ArtistManageTracks = () => {
     { id: "id", label: "ID" },
     { id: "title", label: "Title" },
     { id: "album_title", label: "Album" },
-    { id: "created_at", label: "Created At" },
-    { id: "streams", label: "Streams" },
   ];
 
   const [tracks, setTracks] = useState([]);
@@ -50,8 +48,6 @@ const ArtistManageTracks = () => {
           id: track.track_id,
           title: track.track_title,
           album_title: track.album_title,
-          created_at: new Date(track.created_at).toISOString().split("T")[0],
-          streams: track.streams,
         }));
         console.log("filtered: ", filteredData);
         setTracks(filteredData);
