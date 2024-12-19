@@ -87,5 +87,27 @@ const Artist = {
       }
     }
   },
+
+  getWeeklyOrders: async (artistId) => {
+    try {
+      const response = await Client.get(`/artist/${artistId}/weekly-orders`);
+      return response;
+    } catch (error) {
+      if (error.response) {
+        return error.response;
+      }
+    }
+  },
+
+  getWeeklyCustomers: async (artistId) => {
+    try {
+      const response = await Client.get(`/artist/${artistId}/weekly-customers`);
+      return response;
+    } catch (error) {
+      if (error.response) {
+        return error.response;
+      }
+    }
+  },
 };
 export default Artist;
