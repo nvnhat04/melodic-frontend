@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Button, Box } from "@mui/material";
 import DenseTable from "../components/common/DenseTable";
 import ArtistApi from "../api/modules/artist.api";
 import { useSelector } from "react-redux";
@@ -15,6 +16,30 @@ const ArtistManageTracks = () => {
   ];
 
   const [tracks, setTracks] = useState([]);
+  const [selectedTracks, setSelectedTracks] = useState([]);
+
+  const handleSelectRow = (index) => {
+    const newSelectedRows = selectedTracks.includes(index)
+      ? selectedTracks.filter((rowIndex) => rowIndex !== index) // Deselect if already selected
+      : [...selectedTracks, index]; // Select if not selected
+    setSelectedTracks(newSelectedRows);
+  };
+
+  const handleSelectAllRows = (event) => {
+    if (event.target.checked) {
+      setSelectedTracks(tracks.map((_, index) => index)); // Select all rows
+    } else {
+      setSelectedTracks([]); // Deselect all rows
+    }
+  };
+
+  const handleDeleteRows = (rowsToDelete) => {
+    const updatedTracks = tracks.filter(
+      (_, rowIndex) => !rowsToDelete.includes(rowIndex)
+    ); // Remove selected rows
+    setTracks(updatedTracks);
+    setSelectedTracks([]); // Clear selection after deletion
+  };
 
   useEffect(() => {
     const fetchArtistTracks = async () => {
@@ -28,20 +53,36 @@ const ArtistManageTracks = () => {
           created_at: new Date(track.created_at).toISOString().split("T")[0],
           streams: track.streams,
         }));
-        console.log("filered: ", filteredData);
+        console.log("filtered: ", filteredData);
         setTracks(filteredData);
       } catch (error) {
         console.error(error);
       }
     };
     fetchArtistTracks();
-  }, []);
+  }, [artist_id]);
 
   return (
-    <div>
+    <Box display="flex" flexDirection="column" alignItems="center">
       <h1>Artist Tracks</h1>
-      <DenseTable header={header} rows={tracks} />
-    </div>
+      <Button
+        variant="contained"
+        color="error"
+        onClick={() => handleDeleteRows(selectedTracks)} // Delete selected rows
+        disabled={selectedTracks.length === 0} // Disable button if no rows are selected
+        sx={{ alignSelf: "flex-end" }}
+      >
+        Delete Selected
+      </Button>
+
+      <DenseTable
+        header={header}
+        rows={tracks}
+        selectedTracks={selectedTracks}
+        onSelectRow={handleSelectRow}
+        onSelectAllRows={handleSelectAllRows}
+      />
+    </Box>
   );
 };
 
