@@ -12,6 +12,7 @@ const DashboardCards = () => {
   const artist_id = useSelector((state) => state.auth.user_id);
   const [weeklyOrders, setWeeklyOrders] = useState([]);
   const [weeklyCustomers, setWeeklyCustomers] = useState([]);
+  const [weeklySales, setWeeklySales] = useState([]);
 
   const weeklyOrdersLabels = weeklyOrders.length
     ? weeklyOrders.map((order) =>
@@ -41,6 +42,28 @@ const DashboardCards = () => {
     ? weeklyCustomers.map((customer) => parseInt(customer.customer_count, 10))
     : [0];
 
+  const totalWeeklyCustomers = weeklyCustomersDataset.reduce(
+    (sum, count) => sum + count,
+    0
+  );
+
+  const weeklySalesLabels = weeklySales.length
+    ? weeklySales.map((sale) =>
+        new Date(sale.order_date).toLocaleDateString("en-US", {
+          weekday: "short",
+        })
+      )
+    : ["No Data"];
+
+  const weeklySalesDataset = weeklySales.length
+    ? weeklySales.map((sale) => parseInt(sale.sales, 10))
+    : [0];
+
+  const totalWeeklySales = weeklySalesDataset.reduce(
+    (sum, count) => sum + count,
+    0
+  );
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -59,6 +82,19 @@ const DashboardCards = () => {
         const response = await ArtistApi.getWeeklyCustomers(artist_id);
         setWeeklyCustomers(response);
         console.log(response);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchData();
+  }, [artist_id]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await ArtistApi.getWeeklySales(artist_id);
+        console.log(response);
+        setWeeklySales(response);
       } catch (error) {
         console.error(error);
       }
@@ -92,21 +128,25 @@ const DashboardCards = () => {
     {
       icon: <PersonIcon fontSize="large" />,
       title: "New Customers",
-      value: "1.35m",
+      value: totalWeeklyCustomers,
       chartData: chartDataTemplate(
         weeklyCustomersLabels,
         weeklyCustomersDataset,
         "#ab47bc"
-      ), // Placeholder
+      ),
       chartColor: "#ab47bc",
     },
-    // {
-    //   icon: <ShoppingCartIcon fontSize="large" />,
-    //   title: "Purchase Orders",
-    //   value: "1.72m",
-    //   chartData: chartDataTemplate([], [], "#ffca28"), // Placeholder
-    //   chartColor: "#ffca28",
-    // },
+    {
+      icon: <ShoppingCartIcon fontSize="large" />,
+      title: "Weekly Sales",
+      value: totalWeeklySales,
+      chartData: chartDataTemplate(
+        weeklySalesLabels,
+        weeklySalesDataset,
+        "#ffca28"
+      ),
+      chartColor: "#ffca28",
+    },
     // {
     //   icon: <MailIcon fontSize="large" />,
     //   title: "Messages",

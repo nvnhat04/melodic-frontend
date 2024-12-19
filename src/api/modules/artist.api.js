@@ -109,5 +109,16 @@ const Artist = {
       }
     }
   },
+
+  getWeeklySales: async (artistId) => {
+    try {
+      const response = await Client.get(`/artist/${artistId}/weekly-sales`);
+      return response;
+    } catch (error) {
+      if (error.response) {
+        return error.response;
+      }
+    }
+  },
 };
 export default Artist;
