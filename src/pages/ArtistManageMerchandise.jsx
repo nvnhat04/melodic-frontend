@@ -6,6 +6,7 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+import Typography from "@mui/material/Typography";
 import DenseTable from "../components/common/DenseTable";
 import MerchandiseApi from "../api/modules/merchandise.api";
 import { useSelector } from "react-redux";
@@ -67,7 +68,7 @@ const ArtistManageMerchandise = () => {
 
   const navigate = useNavigate();
   const handleModifyRow = (row) => {
-    navigate(`/artist/update-merchandise/${row.id}`); 
+    navigate(`/artist/update-merchandise/${row.id}`);
   };
 
   const handleOpenDialog = () => {
@@ -94,8 +95,14 @@ const ArtistManageMerchandise = () => {
   }, [user_id]);
 
   return (
-    <Box display="flex" flexDirection="column" alignItems="center">
-      <h1>Artist Merchandise</h1>
+    <Box display="flex" flexDirection="column" alignItems="center" gap={2}>
+      <Typography
+        component="h1"
+        variant="h5"
+        sx={{ textTransform: "uppercase", fontWeight: "bold" }}
+      >
+        Manage Merchandise
+      </Typography>
       <Button
         variant="contained"
         color="error"

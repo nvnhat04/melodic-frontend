@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import DenseTable from "../components/common/DenseTable";
 import ArtistApi from "../api/modules/artist.api";
+import { Box, Typography } from "@mui/material";
 import { useSelector } from "react-redux";
 
 const ArtistOrders = () => {
@@ -10,7 +11,6 @@ const ArtistOrders = () => {
     { id: "order_id", label: "Order ID" },
     { id: "customer", label: "Customer" },
     { id: "status", label: "Status" },
-    // { id: "total_price", label: "Total Price" },
     { id: "order_date", label: "Order Date" },
   ];
 
@@ -37,10 +37,16 @@ const ArtistOrders = () => {
   }, []);
 
   return (
-    <div>
-      <h1>Orders</h1>
+    <Box display="flex" gap={2} flexDirection="column" alignItems={"center"}>
+      <Typography
+        component="h1"
+        variant="h5"
+        sx={{ textTransform: "uppercase", fontWeight: "bold" }}
+      >
+        Orders
+      </Typography>
       <DenseTable header={header} rows={orders} includeCheckbox={false} />
-    </div>
+    </Box>
   );
 };
 

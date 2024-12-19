@@ -146,7 +146,7 @@ const ArtistUpdateMerchandise = () => {
         variant="h5"
         sx={{ textTransform: "uppercase", fontWeight: "bold" }}
       >
-        Add new merchandise
+        Modify Merchandise
       </Typography>
       <Box display="flex" flexflow="row wrap">
         <Grid

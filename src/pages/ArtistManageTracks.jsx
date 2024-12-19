@@ -6,6 +6,7 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+import Typography from "@mui/material/Typography";
 import DenseTable from "../components/common/DenseTable";
 import ArtistApi from "../api/modules/artist.api";
 import TrackApi from "../api/modules/track.api";
@@ -97,7 +98,13 @@ const ArtistManageTracks = () => {
 
   return (
     <Box display="flex" flexDirection="column" alignItems="center" gap={2}>
-      <h1>Artist Tracks</h1>
+      <Typography
+        component="h1"
+        variant="h5"
+        sx={{ textTransform: "uppercase", fontWeight: "bold" }}
+      >
+        Manage Tracks
+      </Typography>
       <Button
         variant="contained"
         color="error"
@@ -118,7 +125,6 @@ const ArtistManageTracks = () => {
         onModifyRow={handleModifyRow}
       />
 
-      {/* Confirmation Dialog */}
       <Dialog open={isDialogOpen} onClose={handleCloseDialog}>
         <DialogTitle>Confirm Deletion</DialogTitle>
         <DialogContent>
