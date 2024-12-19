@@ -15,12 +15,15 @@ import ArtistApi from "../api/modules/artist.api";
 import MerchandiseApi from "../api/modules/merchandise.api";
 import { useParams } from "react-router-dom";
 import createUrl from "../hooks/createUrl";
+import { ToastContainer, toast } from "react-toastify"; // Ensure correct import
+import "react-toastify/dist/ReactToastify.css"; // Import Toastify styles
 
 const ArtistUpdateMerchandise = () => {
   const { id: merchandiseId } = useParams();
-
   const artist_id = useSelector((state) => state.auth.user_id);
   const token = useSelector((state) => state.auth.token);
+  const placeholderImage = "/default/merchandise_cover.jpg";
+
   const initialMerchandise = {
     name: "",
     category: "",
@@ -89,27 +92,39 @@ const ArtistUpdateMerchandise = () => {
     event.preventDefault();
 
     const formData = new FormData();
-    formData.append("name", merchandise.name);
-    formData.append("album_id", merchandise.album_id);
-    formData.append("stock", merchandise.stock);
-    formData.append("price", merchandise.price);
-    formData.append("description", merchandise.description);
-    formData.append("category", merchandise.category);
-    formData.append("image", image);
+
+    // Compare each field with the initial value, and append only if it's different
+    if (merchandise.name !== initialMerchandise.name) {
+      formData.append("name", merchandise.name);
+    }
+    if (merchandise.album_id !== initialMerchandise.album_id) {
+      formData.append("album_id", merchandise.album_id);
+    }
+    if (merchandise.stock !== initialMerchandise.stock) {
+      formData.append("stock", merchandise.stock);
+    }
+    if (merchandise.price !== initialMerchandise.price) {
+      formData.append("price", merchandise.price);
+    }
+    if (merchandise.description !== initialMerchandise.description) {
+      formData.append("description", merchandise.description);
+    }
+    if (merchandise.category !== initialMerchandise.category) {
+      formData.append("category", merchandise.category);
+    }
+    if (image && image !== initialMerchandise.image) {
+      // Check if image is changed
+      formData.append("image", image);
+    }
 
     try {
       await MerchandiseApi.updateMerchandise(merchandiseId, formData, token);
-      setMerchandise({
-        name: "",
-        category: "",
-        price: "",
-        stock: "",
-        description: "",
-        album_id: "",
-      });
+      setMerchandise(initialMerchandise); // Reset the merchandise state after successful submission
+      setImage(null); // Reset the image state after successful submission
+      toast.success("Merchandise updated successfully!"); // Show success toast
     } catch (error) {
-      console.error("Failed to create merchandise:", error);
-      alert("Failed to create merchandise. Please try again later.");
+      console.error("Failed to update merchandise:", error);
+      toast.error("Failed to update merchandise. Please try again later."); // Show error toast
     }
   };
 
@@ -171,7 +186,7 @@ const ArtistUpdateMerchandise = () => {
               >
                 <MenuItem value="apparel">Apparel</MenuItem>
                 <MenuItem value="accessories">Accessories</MenuItem>
-                <MenuItem value="Physical Album">Physical Album</MenuItem>
+                <MenuItem value="physical album">Physical Album</MenuItem>
                 <MenuItem value="other">Other</MenuItem>
               </Select>
             </FormControl>
@@ -263,7 +278,7 @@ const ArtistUpdateMerchandise = () => {
             >
               <FormControl fullWidth>
                 <Button type="submit" variant="contained">
-                  Publish
+                  Save Changes
                 </Button>
               </FormControl>
               <FormControl fullWidth>
@@ -296,11 +311,13 @@ const ArtistUpdateMerchandise = () => {
               stock: merchandise.stock,
               description: merchandise.description,
               album_id: merchandise.album_id,
-              image: imageUrl,
+              image: image ? imageUrl : placeholderImage,
             }}
           />
         </Box>
       </Box>
+      {/* Add ToastContainer at the root */}
+      <ToastContainer />
     </Box>
   );
 };
