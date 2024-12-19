@@ -70,14 +70,11 @@ const ArtistUpdateMerchandise = () => {
 
   useEffect(() => {
     if (image instanceof File) {
-      // Create a temporary URL for the uploaded file
       const tempUrl = URL.createObjectURL(image);
       setImageUrl(tempUrl);
 
-      // Clean up the URL when the component unmounts or image changes
       return () => URL.revokeObjectURL(tempUrl);
     } else if (typeof image === "string") {
-      // If `image` is a string (e.g., fetched URL), set it directly
       setImageUrl(createUrl(image));
     }
   }, [image]);
