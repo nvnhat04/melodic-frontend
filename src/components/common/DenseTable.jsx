@@ -8,7 +8,9 @@ import {
   TableHead,
   TableRow,
   Paper,
+  IconButton,
 } from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit";
 
 const DenseTable = ({
   header,
@@ -16,10 +18,12 @@ const DenseTable = ({
   selectedTracks = [],
   onSelectRow,
   onSelectAllRows,
-  includeCheckbox = true,  // New prop to conditionally include checkbox column
+  modifiable = false,
+  onModifyRow, 
+  includeCheckbox = true, 
 }) => {
-  // Dynamically calculate column width based on whether there's a checkbox column
-  const columnWidth = `${100 / (header.length + (includeCheckbox ? 1 : 0))}%`; // Add 1 for checkbox if included
+
+  const columnWidth = `${100 / (header.length + (includeCheckbox ? 2 : 1))}%`; 
 
   return (
     <TableContainer component={Paper}>
@@ -45,9 +49,9 @@ const DenseTable = ({
                 align="left"
                 sx={{
                   width: columnWidth,
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  whiteSpace: 'nowrap',
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
                 }}
               >
                 {headerCell.label}
@@ -58,7 +62,6 @@ const DenseTable = ({
         <TableBody>
           {rows.map((row, rowIndex) => (
             <TableRow key={rowIndex}>
-              {/* Conditionally render the row checkbox */}
               {includeCheckbox && (
                 <TableCell padding="checkbox">
                   <Checkbox
@@ -72,15 +75,25 @@ const DenseTable = ({
                   key={cellIndex}
                   align="left"
                   sx={{
-                    width: columnWidth, // Dynamically set width
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                    whiteSpace: 'nowrap',
+                    width: columnWidth,
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
                   }}
                 >
                   {row[headerCell.id]}
                 </TableCell>
               ))}
+              {modifiable && (
+                <TableCell align="center">
+                  <IconButton
+                    color="primary"
+                    onClick={() => onModifyRow(row)} 
+                  >
+                    <EditIcon />
+                  </IconButton>
+                </TableCell>
+              )}
             </TableRow>
           ))}
         </TableBody>
