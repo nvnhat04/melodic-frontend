@@ -76,9 +76,8 @@ function App() {
           <Route path="artists" element={<Libraries type="artists" />} />
           <Route path="albums" element={<Libraries type="albums" />} />
           <Route path="playlists" element={<Libraries type="playlists" />} />
-
-          <Route path="favorite" element={<Libraries type="favorite" />} />
-          <Route path='tracks' element={<Libraries type="tracks" />} />
+          <Route path="favorite" element={<Favorite />} />
+          <Route path="tracks" element={<RecentTracks />} />
 
           <Route path='track/:id' element={<TrackDetail />} />
           <Route path='playlist/:id' element={<Playlist />} />
@@ -86,11 +85,8 @@ function App() {
           <Route path='album/:id' element={<Album />} />
           <Route path='genres' element={<AllGenre />} />
           <Route path="multi-search" element={<MultiSearch />} />
-
           <Route path="genre" element={<SearchGenre />} />
-          <Route path="favorite" element={<Favorite />} />
-          <Route path="tracks" element={<RecentTracks />} />
-
+         
           <Route path='update-password/:id' element={<UpdatePassword />} />
           <Route path='profile/:id' element={<Profile />} />
           <Route path='edit-profile/:id' element={<EditProfile />} />
