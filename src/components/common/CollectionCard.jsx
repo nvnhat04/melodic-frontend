@@ -1,8 +1,21 @@
-import React from "react";
-import { Card, CardMedia, CardContent, Typography, Box } from "@mui/material";
-import { Link } from "react-router-dom";
+
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import { Box, Card, CardContent, CardMedia, Typography } from "@mui/material";
+import React from "react";
+import { Link } from "react-router-dom";
+import createUrl from "../../hooks/createUrl";
+import { useState, useEffect } from "react";
+
 const CollectionCard = ({ collection, type }) => {
+  const [coverUrl, setCoverUrl] = useState("");
+  useEffect(() => {
+    if(collection.cover){
+      setCoverUrl(createUrl(collection.cover));
+    }else
+    {
+      setCoverUrl(createUrl("1uPpcuN038RVhwU-IHLHSsCxG61lpCHay"));
+    }
+  }, [collection.cover]);
   const handlePlay = (event) => {
     event.preventDefault();
     //play
@@ -18,13 +31,15 @@ const CollectionCard = ({ collection, type }) => {
           padding: "10px",
           backgroundColor: "#1f1f1f",
           color: "white",
+          maxWidth: "200px",
+
         }}
       >
         <Box sx={{ display: "flex" }}>
           <CardMedia
             component="img"
-            image={collection.cover}
-            alt={collection.name}
+            image={coverUrl}
+            alt={collection.title}
             sx={{
               aspectRatio: "1 / 1",
               objectFit: "cover",
@@ -70,9 +85,9 @@ const CollectionCard = ({ collection, type }) => {
         </Box>
         <CardContent sx={{ padding: "0" }}>
           <Typography component="div" noWrap>
-            {collection.name}
+            {collection.title}
           </Typography>
-          <Typography color="white">{collection.artist}</Typography>
+          <Typography color="white">{collection.release_date.substring(0, 4)}</Typography>
         </CardContent>
       </Card>
     </Link>
@@ -139,8 +154,10 @@ const CollectionCard = ({ collection, type }) => {
         </Box>
         <CardContent sx={{ padding: "0" }}>
           <Typography component="div" noWrap>
-            {collection.name}
+           {collection.title}
           </Typography>
+          <Typography color="white">{collection.release_date}</Typography>
+
         </CardContent>
       </Card>
     </Link>
