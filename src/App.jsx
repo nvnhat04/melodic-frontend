@@ -1,3 +1,5 @@
+
+// CSS
 import "./App.css";
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -21,6 +23,8 @@ import AllGenre from "./pages/AllGenre";
 import SearchGenre from "./pages/SearchGenre";
 import Favorite from "./pages/Favorite";
 import RecentTracks from "./pages/RecentTracks";
+import Profile from "./pages/Profile";
+import EditProfile from "./pages/EditProfile";
 
 // Shop Layout
 import ShopLayout from "./components/layout/ShopLayout";
@@ -71,33 +75,35 @@ function App() {
   //   dispatch(clearToken());
   return (
     <ThemeProvider theme={theme}>
-      <BrowserRouter>
-        <Routes className="App">
-          <Route path="/" element={<MainLayout />}>
-            <Route index element={<HomePage />} />
-            <Route path="artists" element={<Libraries type="artists" />} />
-            <Route path="albums" element={<Libraries type="albums" />} />
-            <Route path="playlists" element={<Libraries type="playlists" />} />
+    <BrowserRouter>
+      <Routes className="App">
+        <Route path="/" element={<MainLayout />}>
+          <Route index element={<HomePage />} />
+          <Route path="artists" element={<Libraries type="artists" />} />
+          <Route path="albums" element={<Libraries type="albums" />} />
+          <Route path="playlists" element={<Libraries type="playlists" />} />
+          <Route path="favorite" element={<Favorite />} />
+          <Route path="tracks" element={<RecentTracks />} />
 
-            <Route path="favorite" element={<Libraries type="favorite" />} />
-            <Route path="tracks" element={<Libraries type="tracks" />} />
+          <Route path='track/:id' element={<TrackDetail />} />
+          <Route path='playlist/:id' element={<Playlist />} />
+          <Route path='artist/:id/profile' element={<ArtistProfile />} />
+          <Route path='album/:id' element={<Album />} />
+          <Route path='genres' element={<AllGenre />} />
+          <Route path="multi-search" element={<MultiSearch />} />
+          <Route path="genre" element={<SearchGenre />} />
+         
+          <Route path='update-password/:id' element={<UpdatePassword />} />
+          <Route path='profile/:id' element={<Profile />} />
+          <Route path='edit-profile/:id' element={<EditProfile />} />
 
-            <Route path="track/:id" element={<TrackDetail />} />
-            <Route path="playlist/:id" element={<Playlist />} />
-            <Route path="artist/:id/profile" element={<ArtistProfile />} />
-            <Route path="album/:id" element={<Album />} />
-            <Route path="genres" element={<AllGenre />} />
-            <Route path="update-password" element={<UpdatePassword />} />
-            <Route path="multi-search" element={<MultiSearch />} />
+        </Route>
+        <Route path="/artist" element={<ArtistDashboard />}>
+          {/* <Route index element={<Dashboard/>} />  */}
+          {/* <Route path="dashboard" element={<Dashboard/>} /> */}
+        </Route>
 
-            <Route path="genre" element={<SearchGenre />} />
-            <Route path="favorite" element={<Favorite />} />
-            <Route path="tracks" element={<RecentTracks />} />
-          </Route>
-          <Route path="/artist" element={<ArtistDashboard />}>
-            {/* <Route index element={<Dashboard/>} />  */}
-            {/* <Route path="dashboard" element={<Dashboard/>} /> */}
-          </Route>
+      
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
 
