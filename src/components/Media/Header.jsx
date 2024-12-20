@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Card from "@mui/material/Card";
 import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
@@ -19,11 +19,18 @@ import createURL from "../../hooks/createUrl";
 import {Link} from "react-router-dom";
 
 
-const MediaHeader = ({ media, mediaType }) => {
+const MediaHeader = ({ media, mediaType, funct = null }) => {
   const [open, setOpen] = useState(false);
   const textColor = red[500];
   const titleColor = grey[400];
-
+  const [coverUrl, setCoverUrl] = useState("");
+  useEffect(() => {
+    if (mediaType === "track") {
+      setCoverUrl(createUrl(media.cover));
+    } else {
+      // setCoverUrl(createUrl(media.imageSrc));
+    }
+  }, [media, mediaType]);
   const theme = useTheme();
 
   const handleClickOpen = () => setOpen(true);
@@ -101,6 +108,7 @@ const MediaHeader = ({ media, mediaType }) => {
       <Button
         variant="contained"
         startIcon={<PlayArrowIcon />}
+        onClick={funct}
         sx={{
           position: {
             md: "absolute", // Chỉ áp dụng "absolute" từ kích thước md trở lên
@@ -127,7 +135,7 @@ const MediaHeader = ({ media, mediaType }) => {
     >
       <DialogContent sx={{ bgcolor: "#121212" }}>
         <Typography variant="body1" color={titleColor}>
-          {media.description}
+          {media.description ? media.description : "No description available"}
         </Typography>
       </DialogContent>
       <DialogActions sx={{ bgcolor: "#121212" }}>

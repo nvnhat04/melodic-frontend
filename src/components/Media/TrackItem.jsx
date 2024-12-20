@@ -5,6 +5,7 @@ import { useTheme } from "@mui/material/styles";
 import { grey, red } from "@mui/material/colors";
 import SongMenu from "./TrackMenu";
 import SongCardMenu from "../common/SongCardMenu";
+import { Link } from "react-router-dom";
 
 const TrackItem = ({ track, type }) => {
   const [isHovered, setIsHovered] = useState(false);
@@ -20,7 +21,13 @@ const TrackItem = ({ track, type }) => {
   };
 
   const renderLeftSide = () => (
-    <Box display="flex" alignItems="center" flex="1" overflow="hidden" sx={{ width: "30px" }}>
+    <Box
+      display="flex"
+      alignItems="center"
+      flex="1"
+      overflow="hidden"
+      sx={{ width: "30px" }}
+    >
       {/* Playing Indicator */}
       <Box
         onMouseEnter={() => setIsHovered(true)}
@@ -36,24 +43,28 @@ const TrackItem = ({ track, type }) => {
             <PlayIcon />
           </IconButton>
         ) : (
-          <Typography variant="body2" color="red" mr={2} ml={2}>
-            {track.track_order}
+          <Typography variant="body2" color="red" mr={2} ml={2} noWrap>
+            {track.orders}
           </Typography>
         )}
       </Box>
 
       {/* Divider for separation */}
-      <Divider orientation="vertical" flexItem sx={{ bgcolor: grey[500], mx: 1 }} />
+      <Divider
+        orientation="vertical"
+        flexItem
+        sx={{ bgcolor: grey[500], mx: 1 }}
+      />
 
       {/* Song Title */}
       <Box
         sx={{
           marginRight: type === "playlist" ? "10%" : "0%",
           width: {
-            xs: '200px',        // Full width on extra-small screens
-            sm: type === 'playlist' ? '200px' : '80%',  // For small screens (sm)
-            md: type === 'playlist' ? '350px' : '80%',  // For medium screens (md)
-            lg: type === 'playlist' ? '350px' : '80%',  // For large screens (lg)
+            xs: "200px", // Full width on extra-small screens
+            sm: type === "playlist" ? "200px" : "80%", // For small screens (sm)
+            md: type === "playlist" ? "350px" : "80%", // For medium screens (md)
+            lg: type === "playlist" ? "350px" : "80%", // For large screens (lg)
           },
           display: "flex",
           alignItems: "center", // Ensure all content is aligned
@@ -70,19 +81,19 @@ const TrackItem = ({ track, type }) => {
             whiteSpace: "nowrap",
           }}
         >
-          {track.title}
+          {track.track_title}
         </Typography>
       </Box>
-      <Divider orientation="vertical" flexItem sx={{ bgcolor: grey[500], mx: 1 }} />
-
-      {type === "playlist" && (
-        <Box sx={{
-          display: {
-            xs: "none",
-            sm: "block",
-            md: "block",
-          }
-        }}>
+    
+        <Box
+          sx={{
+            display: {
+              xs: "none",
+              sm: "block",
+              md: "block",
+            },
+          }}
+        >
           {/* Divider between title and artist */}
           {/* Artist */}
           <Typography
@@ -96,15 +107,29 @@ const TrackItem = ({ track, type }) => {
               whiteSpace: "nowrap",
             }}
           >
-           {Array.isArray(track.artists) ? track.artists.map((artist, index) => (
-              <span key={index}>
-                <a href={`/artist/${artist.id}`}>{artist.display_name}</a>
-                {index < track.artists.length - 1 ? ", " : ""}
-              </span>
-            )) : "Unknown Artist"}
+            {track.artists &&
+              track.artists.map((artist, index) => (
+                <React.Fragment key={artist.id}>
+                  <Link
+                    to={`/artist/${artist.id}`}
+                    style={{ color: "#aaa", textDecoration: "none" }}
+                    key={artist.id}
+                  >
+                    {artist.display_name}
+                  </Link>
+                  {index < track.artists.length - 1 && ", "}
+                </React.Fragment>
+              )
+              )}
+              {track.artists.length === 0 && "Unknown Artist"}
           </Typography>
+            <Divider
+              orientation="vertical"
+              flexItem
+              sx={{ bgcolor: grey[500], mx: 1 }}
+            />
         </Box>
-      )}
+  
     </Box>
   );
 
