@@ -40,6 +40,22 @@ const Music = {
                 return error.response;
             }
         }
+    },
+    async addPlayRecord(data, token) {
+        try {
+            const response = await Client.post("/music/play-record", data,
+                {
+                    headers: {
+                        token: `Bearer ${token}`,
+                    }
+                }
+            );
+            return response;
+        } catch (error) {
+            if (error.response) {
+                return error.response;
+            }
+        }
     }
 }
 export default Music;
