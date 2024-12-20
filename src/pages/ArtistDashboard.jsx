@@ -82,7 +82,7 @@ function ArtistDashboard(props) {
                 right: 20,
               }}
             >
-              <UserMenu />
+              <UserMenu artist={true} />
             </Box>
           ) : (
             <Button
