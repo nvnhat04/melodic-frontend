@@ -8,6 +8,8 @@ import PlayArrowRoundedIcon from "@mui/icons-material/PlayArrowRounded";
 import { useDispatch } from "react-redux";
 import { addTrackToQueue } from "../../redux/store";
 import useAudioPlayer from "../../hooks/useAudioPlayer";
+import { Link } from "react-router-dom";
+import createURL from "../../hooks/createUrl"
 
 const TrackCard = ({ track }) => {
   const dispatch = useDispatch();
@@ -15,7 +17,7 @@ const TrackCard = ({ track }) => {
   const handleSaveToQueue = () => {
     dispatch(addTrackToQueue({ id: track.id }));
   };
-
+  const defaultCover = "../../default/track_cover.png";
 
 
   return (
@@ -43,7 +45,7 @@ const TrackCard = ({ track }) => {
         >
           <Box
             component="img"
-            src={track.track_cover ? createURL(track.track_cover) : defaultCover}
+            src={track.cover ? createURL(track.cover) : defaultCover}
             alt={track.title}
             sx={{
               width: "40px",
@@ -94,16 +96,6 @@ const TrackCard = ({ track }) => {
                 {index < track.artists.length - 1 ? ", " : ""}
               </span>
             )) : "Unknown Artist"}
-
-//             {track.artists && track.artists.map((artist, index) => (
-//               <React.Fragment key={artist.id}>
-//                 <Link to={`/artist/${artist.id}`} style={{ color: "#aaa", textDecoration: "none" }} key={artist.id}>
-//                   {artist.name}
-//                 </Link>
-//                 {index < track.artists.length - 1 && ", "}
-//               </React.Fragment>
-//             ))}
-
           </Typography>
         </Box>
       </Box>
