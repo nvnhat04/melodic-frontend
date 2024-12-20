@@ -21,10 +21,10 @@ import {
 import { Box, Slider} from "@mui/material";
 import { Link } from "react-router-dom";
 import { Modal } from "@mui/material";
-import PlayScreen from "../../pages/PlayScreen";
-import useAudioPlayer from "../../hooks/useAudioPlayer";
-import trackApi from "../../api/modules/track.api";
-import createUrl from "../../hooks/createUrl";
+import PlayScreen from "../../../pages/PlayScreen";
+import useAudioPlayer from "../../../hooks/useAudioPlayer";
+import trackApi from "../../../api/modules/track.api";
+import createUrl from "../../../hooks/createUrl";
 import { useSelector } from "react-redux";
 
 const queueSong01= [
@@ -70,14 +70,14 @@ function MusicPlayer() {
   const [queueSong, setQueueSong] = useState(queueSong02);
   const url = createUrl(queueSong02[0].track_url);
   const [srcTrack, setSrcTrack] = useState(url);
-  const queueId = useSelector((state) => state.auth.queueSongs);
+  const queueId = useSelector((state) => state.queueSongs.queueSongs);
   const trackCache = useRef({});
   useEffect(() => {
     if (queueId.length === 0) {
       console.warn('queueId is empty');
       return;
     }
-    console.log(queueId);
+    console.log("QueueID:", queueId);
     let queueSongPlays = [];
     let promises = [];
   
@@ -123,7 +123,9 @@ function MusicPlayer() {
     setIsPlayScreenOpen(false);
   };
 
-
+  useEffect(() => {
+    console.log(queueSong[audioPlayerProps.currentSongIndex].artists);
+  }, []);
 
   return (
     <Box
@@ -173,9 +175,12 @@ function MusicPlayer() {
           <p style={{ margin: 0, fontSize: "1.2em" }}>
             {queueSong[audioPlayerProps.currentSongIndex].title}
           </p>
-          <p style={{ margin: 0, fontSize: "0.7em" }}>
-            {queueSong[audioPlayerProps.currentSongIndex].artists[0]}
-          </p>
+           {Array.isArray(queueSong[audioPlayerProps.currentSongIndex].artists) ? queueSong[audioPlayerProps.currentSongIndex].artists.map((artist, index) => (
+                <span key={index}>
+                  <a href={`/artist/${artist.id}`} style = {{color : 'white', textDecoration: 'none', fontSize: "0.7em"}}>{artist.display_name}</a>
+                  {index < queueSong[audioPlayerProps.currentSongIndex].artists.length - 1 ? ", " : ""}
+                </span>
+          )) : "Unknown Artist"} 
         </Box>
         <MdLibraryAdd size={20} />
       </Box>
