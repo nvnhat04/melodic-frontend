@@ -35,6 +35,7 @@ const TrackItem = ({ track, type }) => {
         sx={{
           display: "flex",
           alignItems: "center",
+          justifyContent: "center",
           width: "30px", // Fixed width for track order
         }}
       >
@@ -43,7 +44,7 @@ const TrackItem = ({ track, type }) => {
             <PlayIcon />
           </IconButton>
         ) : (
-          <Typography variant="body2" color="red" mr={2} ml={2} noWrap>
+          <Typography variant="body2" color="red" noWrap>
             {track.orders}
           </Typography>
         )}

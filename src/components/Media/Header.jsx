@@ -26,7 +26,7 @@ const MediaHeader = ({ media, mediaType, funct = null }) => {
   const [coverUrl, setCoverUrl] = useState("");
   useEffect(() => {
     if (mediaType === "track") {
-      setCoverUrl(createUrl(media.cover));
+      setCoverUrl(createURL(media.cover));
     } else {
       // setCoverUrl(createUrl(media.imageSrc));
     }

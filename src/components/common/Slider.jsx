@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
-import AlbumCard from "./AlbumCard.jsx";
 import CollectionCard from "./CollectionCard.jsx";
 import MerchandiseCard from "./MerchandiseCard.jsx";
 import ArtistCard from "./ArtistCard.jsx";
@@ -42,7 +41,14 @@ const Slider = ({ list, type }) => {
   }, []);
 
   return (
-    <Box style={{ maxWidth: "1150px", width: "100%", margin: "0 auto", overflow: "hidden" }}>
+    <Box
+      style={{
+        maxWidth: "1150px",
+        width: "100%",
+        margin: "0 auto",
+        overflow: "hidden",
+      }}
+    >
       <Swiper
         spaceBetween={1}
         slidesPerView={slidesConfig.slidesPerView}
@@ -55,6 +61,8 @@ const Slider = ({ list, type }) => {
           <SwiperSlide key={item.id}>
             {type === "Album" ? (
               <CollectionCard collection={item} type={"Album"} />
+            ) : type === "Playlist" ? (
+              <CollectionCard collection={item} type={"Playlist"} />
             ) : type === "Artist" ? (
               <ArtistCard artist={item} />
             ) : (
@@ -62,7 +70,6 @@ const Slider = ({ list, type }) => {
             )}
           </SwiperSlide>
         ))}
-
       </Swiper>
     </Box>
   );

@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, Stack, Button, Typography } from "@mui/material";
-import MusicPlayer from "../common/MusicPlayer";
+import MusicPlayer from "../common/MusicPlayerBar/MusicPlayer";
 import Sidebar from "../common/Sidebar";
 import MainTopbar from "../common/MainTopbar";
 import { Link, Outlet } from "react-router-dom";
@@ -52,7 +52,7 @@ const MainLayout = () => {
       <Box pt={5}>
          <MainTopbar /> 
       </Box>
-      <Box minHeight={'calc(100vh + 200px)'} bgcolor={'black'}>
+      <Box minHeight={'calc(100vh + 200px)'} bgcolor={'#1f1f1f'}>
       <Outlet />
       </Box>
       <Box>
