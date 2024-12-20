@@ -8,67 +8,64 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Typography from "@mui/material/Typography";
 import DenseTable from "../components/common/DenseTable";
-import MerchandiseApi from "../api/modules/merchandise.api";
+import ArtistApi from "../api/modules/artist.api";
+import TrackApi from "../api/modules/track.api";
 import { useSelector } from "react-redux";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 
-const ArtistManageMerchandise = () => {
-  const user_id = useSelector((state) => state.auth.user_id);
-  const token = useSelector((state) => state.auth.token);
-  const [merchandiseList, setMerchandiseList] = useState([]);
-  const [selectedMerchandise, setSelectedMerchandise] = useState([]);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+const ArtistManageTracks = () => {
+  const artist_id = useSelector((state) => state.auth.user_id);
+  const navigate = useNavigate();
 
   const header = [
     { id: "id", label: "ID" },
-    { id: "name", label: "Name" },
-    { id: "price", label: "Price" },
-    { id: "stock", label: "Stock" },
-    { id: "total_sold", label: "Total Sold" },
+    { id: "title", label: "Title" },
+    { id: "album_title", label: "Album" },
   ];
 
+  const [tracks, setTracks] = useState([]);
+  const [selectedTracks, setSelectedTracks] = useState([]);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
   const handleSelectRow = (index) => {
-    const newSelectedRows = selectedMerchandise.includes(index)
-      ? selectedMerchandise.filter((rowIndex) => rowIndex !== index)
-      : [...selectedMerchandise, index];
-    setSelectedMerchandise(newSelectedRows);
+    const newSelectedRows = selectedTracks.includes(index)
+      ? selectedTracks.filter((rowIndex) => rowIndex !== index)
+      : [...selectedTracks, index];
+    setSelectedTracks(newSelectedRows);
   };
 
   const handleSelectAllRows = (event) => {
     if (event.target.checked) {
-      setSelectedMerchandise(merchandiseList.map((_, index) => index));
+      setSelectedTracks(tracks.map((_, index) => index));
     } else {
-      setSelectedMerchandise([]);
+      setSelectedTracks([]);
     }
   };
 
   const handleDeleteRows = async (rowsToDelete) => {
-    const merchandiseToDelete = rowsToDelete.map(
-      (index) => merchandiseList[index]
-    );
+    const tracksToDelete = rowsToDelete.map((index) => tracks[index]);
     try {
-      for (const merchandise of merchandiseToDelete) {
-        await MerchandiseApi.deleteMerchandise(merchandise.id, token);
+      for (const track of tracksToDelete) {
+        await TrackApi.deleteTrackById(track.id);
       }
-      const updatedMerchandiseList = merchandiseList.filter(
+      const updatedTracks = tracks.filter(
         (_, rowIndex) => !rowsToDelete.includes(rowIndex)
       );
-      setMerchandiseList(updatedMerchandiseList);
-      setSelectedMerchandise([]);
+      setTracks(updatedTracks);
+      setSelectedTracks([]);
 
-      toast.success("Merchandise deleted successfully!");
+      toast.success("Tracks deleted successfully!");
     } catch (error) {
-      console.error("Error deleting merchandise:", error);
-      toast.error("Failed to delete merchandise.");
+      console.error("Error deleting tracks:", error);
+      toast.error("Failed to delete tracks.");
     }
     setIsDialogOpen(false);
   };
 
-  const navigate = useNavigate();
   const handleModifyRow = (row) => {
-    navigate(`/artist/update-merchandise/${row.id}`);
+    navigate(`/artist/update-track/${row.id}`);
   };
 
   const handleOpenDialog = () => {
@@ -80,19 +77,24 @@ const ArtistManageMerchandise = () => {
   };
 
   useEffect(() => {
-    const fetchMerchandiseList = async () => {
+    const fetchArtistTracks = async () => {
       try {
-        const response = await MerchandiseApi.getAllMerchandiseByArtistId(
-          user_id
-        );
-        setMerchandiseList(response || []);
+        const data = await ArtistApi.getAllTracks(artist_id);
+        console.log(data);
+        const filteredData = data.map((track) => ({
+          id: track.track_id,
+          title: track.track_title,
+          album_title: track.album_title,
+        }));
+        console.log("filtered: ", filteredData);
+        setTracks(filteredData);
       } catch (error) {
-        console.error("Error fetching merchandise:", error);
-        toast.error("Failed to fetch merchandise.");
+        console.error(error);
+        toast.error("Failed to fetch tracks.");
       }
     };
-    fetchMerchandiseList();
-  }, [user_id]);
+    fetchArtistTracks();
+  }, [artist_id]);
 
   return (
     <Box display="flex" flexDirection="column" alignItems="center" gap={2}>
@@ -101,13 +103,13 @@ const ArtistManageMerchandise = () => {
         variant="h5"
         sx={{ textTransform: "uppercase", fontWeight: "bold" }}
       >
-        Manage Merchandise
+        Manage Tracks
       </Typography>
       <Button
         variant="contained"
         color="error"
         onClick={handleOpenDialog}
-        disabled={selectedMerchandise.length === 0}
+        disabled={selectedTracks.length === 0}
         sx={{ alignSelf: "flex-end" }}
       >
         Delete Selected
@@ -115,21 +117,20 @@ const ArtistManageMerchandise = () => {
 
       <DenseTable
         header={header}
-        rows={merchandiseList}
-        selectedTracks={selectedMerchandise}
+        rows={tracks}
+        selectedTracks={selectedTracks}
         onSelectRow={handleSelectRow}
         onSelectAllRows={handleSelectAllRows}
         modifiable={true}
         onModifyRow={handleModifyRow}
       />
 
-      {/* Confirmation Dialog */}
       <Dialog open={isDialogOpen} onClose={handleCloseDialog}>
         <DialogTitle>Confirm Deletion</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Are you sure you want to delete the selected merchandise? This
-            action cannot be undone.
+            Are you sure you want to delete the selected tracks? This action
+            cannot be undone.
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -137,7 +138,7 @@ const ArtistManageMerchandise = () => {
             Cancel
           </Button>
           <Button
-            onClick={() => handleDeleteRows(selectedMerchandise)}
+            onClick={() => handleDeleteRows(selectedTracks)}
             color="error"
             variant="contained"
           >
@@ -151,4 +152,4 @@ const ArtistManageMerchandise = () => {
   );
 };
 
-export default ArtistManageMerchandise;
+export default ArtistManageTracks;

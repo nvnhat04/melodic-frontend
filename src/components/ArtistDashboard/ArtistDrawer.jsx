@@ -15,6 +15,7 @@ import ListItemText from "@mui/material/ListItemText";
 import Toolbar from "@mui/material/Toolbar";
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
+import createUrl from "../../hooks/createUrl";
 
 const drawerWidth = 240;
 
@@ -23,11 +24,9 @@ const ArtistDrawer = ({
   handleDrawerClose,
   handleDrawerTransitionEnd,
   container,
-  artist
+  artist,
 }) => {
   const location = useLocation();
-  
-
 
   const navItems = [
     {
@@ -69,7 +68,7 @@ const ArtistDrawer = ({
       text: "Add New Album",
       ref: "/artist/add-album",
       icon: <AddBoxIcon />,
-    }
+    },
   ];
 
   const drawer = (
@@ -85,7 +84,7 @@ const ArtistDrawer = ({
       >
         <Box
           component="img"
-          src={artist.avatar}
+          src={createUrl(artist.avatar)}
           alt={artist.display_name}
           sx={{
             width: "70%",
