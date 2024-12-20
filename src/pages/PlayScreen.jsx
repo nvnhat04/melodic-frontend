@@ -251,8 +251,17 @@ const PlayScreen = ({
                   letterSpacing: "0px",
                 }}
               >
-                {queueSong[currentSongIndex].artists}
               </Typography>
+              {queueSong[currentSongIndex].artists.map((artist, index) => (
+              <a
+                key={index}
+                href={`/artist/${artist.id}`}
+                style={{ color: "#a5bfd2", textDecoration: "none" }}
+              >
+                {artist.name}
+                {index < queueSong[currentSongIndex].artists.length - 1 && ", "}
+              </a>
+              ))}
             </Box>
             {/* Action Buttons */}
             <Box
