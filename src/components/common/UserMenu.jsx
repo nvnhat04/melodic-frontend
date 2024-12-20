@@ -14,7 +14,7 @@ import TextAvatar from "./TextAvatar";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
-const UserMenu = () => {
+const UserMenu = ({ artist = false }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const navigate = useNavigate();
   const open = Boolean(anchorEl);
@@ -70,7 +70,13 @@ const UserMenu = () => {
         disableScrollLock
       >
         {/* Các mục trong menu */}
-        <MenuItem onClick={() => navigateTo(`/profile/${userId}`)}>
+        <MenuItem
+          onClick={() =>
+            navigateTo(
+              artist ? `/artist/${userId}/profile` : `/profile/${userId}`
+            )
+          }
+        >
           <ListItemIcon>
             <AccountCircleIcon fontSize="medium" sx={{ color: "white" }} />
           </ListItemIcon>

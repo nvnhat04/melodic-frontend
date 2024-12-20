@@ -34,8 +34,6 @@ import OrderHistory from "./pages/OrderHistory";
 import CheckOutPage from "./pages/CheckOutPage";
 import ShopPage from "./pages/ShopPage";
 import MerchandiseDetail from "./pages/MerchandiseDetail";
-import ArtistShop from "./pages/ArtistShop";
-import OrderDetail from "./pages/OrderDetail";
 // Artist Layout
 import ArtistDashboard from "./pages/ArtistDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
@@ -44,14 +42,16 @@ import AddNewAlbum from "./components/ArtistDashboard/AddNewAlbum";
 import ArtistManageMerchandise from "./pages/ArtistManageMerchandise";
 import ArtistAddNewMerchandise from "./pages/ArtistAddNewMerchandise";
 import Inbox from "./components/ArtistDashboard/Inbox";
+import DashboardCards from "./components/ArtistDashboard/DashboardCard";
+import ArtistOrders from "./pages/ArtistOrders";
+import ArtistManageTracks from "./pages/ArtistManageTracks";
+import ArtistUpdateMerchandise from "./pages/ArtistUpdateMerchandise";
 // Admin Layout
 import ManageRequest from "./components/Admin/ManageRequest";
 import ManageUsers from "./components/Admin/ManageUsers";
 import ManageTracks from "./components/Admin/ManageTracks";
 import ManagePlaylists from "./components/Admin/ManagePlaylists";
-//OrderManager Layout
-import OrderManagerDashboard from "./pages/OrderManagerDashboard";
-import OrderManageDetail from "./components/OrderManager/OrderManageDetail";
+
 import { createTheme, ThemeProvider } from "@mui/material";
 
 const theme = createTheme({
@@ -108,8 +108,7 @@ function App() {
           <Route path="/register" element={<Register />} />
 
           <Route path="/artist" element={<ArtistDashboard />}>
-            {/* <Route index element={<Dashboard/>} /> */}
-
+            <Route index element={<DashboardCards />} />
             <Route path="upload-track" element={<UploadTrack />} />
             <Route path="inbox" element={<Inbox />} />
             <Route path="add-album" element={<AddNewAlbum />} />
@@ -121,6 +120,12 @@ function App() {
               path="upload-merchandise"
               element={<ArtistAddNewMerchandise />}
             ></Route>
+            <Route
+              path="update-merchandise/:id"
+              element={<ArtistUpdateMerchandise />}
+            ></Route>
+            <Route path="orders" element={<ArtistOrders />} />
+            <Route path="tracks" element={<ArtistManageTracks />} />
           </Route>
           <Route
             path="/admin"
@@ -137,23 +142,10 @@ function App() {
             <Route index element={<ShopPage />} />
             <Route path="merchandise/:id" element={<MerchandiseDetail />} />
             <Route path="merch-search" element={<MerchSearch />} />
-            <Route path="artist/:id" element={<ArtistShop />} />
             <Route path="cart" element={<CartPage />} />
             <Route path="order-history" element={<OrderHistory />} />
-            <Route path="order/:id" element={<OrderDetail />} />
             <Route path="checkout" element={<CheckOutPage />} />
           </Route>
-          <Route
-            path="/order_manage"
-            element={
-              role === "order_manager" ? (
-                <OrderManagerDashboard />
-              ) : (
-                <Navigate to="/shop" />
-              )
-            }
-          ></Route>
-          <Route path="order_manage/order/:id" element={<OrderManageDetail />} />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>
