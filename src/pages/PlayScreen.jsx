@@ -132,6 +132,8 @@ const PlayScreen = ({
         handleReplay,
   } = audioPlayerProps;
 
+  const defaultTrackCover = "../../default/track_cover.png";
+
   // Function to extract colors and create gradient
   const extractColors = async () => {
     const imgSrc = imageRef.current.src;
@@ -211,7 +213,7 @@ const PlayScreen = ({
           <Box sx={{ display: "flex", justifyContent: "center", mb: 2, mt: 2 }}>
             <img
               ref={imageRef}
-              src={queueSong[currentSongIndex].cover ? queueSong[currentSongIndex].cover : "https://i.ytimg.com/vi/82ZTNQNEQgE/maxresdefault.jpg"}
+              src={queueSong[currentSongIndex].cover ? queueSong[currentSongIndex].cover : defaultTrackCover}
               alt="Song cover"
               style={{
                 width: "100%",
