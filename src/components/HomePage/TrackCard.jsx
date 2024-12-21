@@ -1,10 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import SongCardMenu from "../common/SongCardMenu";
 import { IconButton } from "@mui/material";
 import PlayArrowRoundedIcon from "@mui/icons-material/PlayArrowRounded";
-
+import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addTrackToQueue } from "../../redux/store";
 import useAudioPlayer from "../../hooks/useAudioPlayer";
@@ -12,11 +12,16 @@ import { Link } from "react-router-dom";
 import createURL from "../../hooks/createUrl"
 
 const TrackCard = ({ track }) => {
+  const defaultCover = "../../default/track_cover.png";
+  // console.log(track.id);
+  // console.log("Track Artists:", track.artists);
   const dispatch = useDispatch();
 
   const handleSaveToQueue = () => {
+    console.log("Add to queue:", track.id);
     dispatch(addTrackToQueue({ id: track.id }));
   };
+
   const defaultCover = "../../default/track_cover.png";
 
 
@@ -28,12 +33,11 @@ const TrackCard = ({ track }) => {
         justifyContent: "space-between",
         padding: "2px 8px",
         borderTop: "1px solid #333",
-        position: "relative", 
-        "&:hover .play-button": { 
+        position: "relative",
+        "&:hover .play-button": {
           opacity: 1,
         },
       }}
-      onClick={handleSaveToQueue}
     >
       {/* Album cover + Info */}
       <Box sx={{ display: "flex", alignItems: "center", gap: "16px" }}>
@@ -45,8 +49,12 @@ const TrackCard = ({ track }) => {
         >
           <Box
             component="img"
-            src={track.cover ? createURL(track.cover) : defaultCover}
-            alt={track.title}
+
+            src={
+              track.track_cover ? createURL(track.track_cover) : defaultCover
+            }
+            // alt={track.title}
+
             sx={{
               width: "40px",
               height: "40px",
@@ -68,8 +76,9 @@ const TrackCard = ({ track }) => {
               color: "#ccc", // Đảm bảo màu trắng cho nút Play
               fontSize: "32px", // Kích thước của nút Play
             }}
+            onClick={handleSaveToQueue}
           >
-            <PlayArrowRoundedIcon sx={{ fontSize: 'inherit'}}/>
+            <PlayArrowRoundedIcon sx={{ fontSize: "inherit" }} />
           </IconButton>
         </Box>
 
@@ -87,15 +96,29 @@ const TrackCard = ({ track }) => {
           </Typography>
           <Typography
             variant="subtitle2"
-            sx={{ color: "#aaa", fontSize: "14px" }}
+            sx={{ color: "white", fontSize: "14px" }}
           >
-
-        {Array.isArray(track.artists) ? track.artists.map((artist, index) => (
+            {/* {Array.isArray(track.artists) ? track.artists.map((artist, index) => (
               <span key={index}>
-                <a href={`/artist/${artist.id}`}>{artist.display_name}</a>
+                <a href={`/artist/${artist.id}`} style={{textDecoration: 'none', color: 'white' }}>{artist.display_name}</a>
                 {index < track.artists.length - 1 ? ", " : ""}
               </span>
-            )) : "Unknown Artist"}
+
+            )) : "Unknown Artist"} */}
+
+            {track.artists &&
+              track.artists.map((artist, index) => (
+                <React.Fragment key={artist.id}>
+                  <Link
+                    to={`/artist/${artist.id}`}
+                    style={{ color: "#aaa", textDecoration: "none" }}
+                    key={artist.id}
+                  >
+                    {artist.display_name}
+                  </Link>
+                  {index < track.artists.length - 1 && ", "}
+                </React.Fragment>
+              ))}
           </Typography>
         </Box>
       </Box>

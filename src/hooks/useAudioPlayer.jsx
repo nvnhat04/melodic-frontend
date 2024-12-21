@@ -1,6 +1,7 @@
 import {useState, useRef, useEffect} from 'react';
 import createUrl from './createUrl';
-
+import musicApi from '../api/modules/music.api';
+import {useSelector} from 'react-redux';
 function debounce(func, wait) {
     let timeout;
     return function(...args) {
@@ -15,6 +16,8 @@ const useAudioPlayer = (queueSong) => {
     const [currentTime, setCurrentTime] = useState(0);
     const [currentVolume, setCurrentVolume] = useState(100);
     const audioRef = useRef(null);
+    const user_id = useSelector(state => state.auth.user_id);
+    const token = useSelector(state => state.auth.token);
 
     const [currentSongIndex, setCurrentSongIndex] = useState(0);
 
@@ -23,7 +26,21 @@ const useAudioPlayer = (queueSong) => {
             console.error("Invalid track data");
             return;
         }
-    
+        try {
+            musicApi.addPlayRecord({user_id, track_id: track.id}, token).then((response) => {
+                console.log("Play record added", response);
+                if(response){
+                    console.log("Play record added");
+                }else{
+                    console.error("Error adding play record:", response);
+                }
+
+            });
+            // console.log("Play record added");
+        } catch (error) {
+            console.error("Error adding play record:", error);
+        }
+       
         const trackUrl = createUrl(track.track_url); // Create URL for the track
         audioRef.current.src = trackUrl;
     
@@ -62,7 +79,7 @@ const useAudioPlayer = (queueSong) => {
             return;
         }
     
-        const nextSongIndex = (currentSongIndex + 1) % queueSong.length; // Loop back to the first song if at the end
+        const nextSongIndex = (currentSongIndex - 1 + queueSong.length) % queueSong.length; // Loop back to the first song if at the end
         setCurrentSongIndex(nextSongIndex);
     
         const nextSong = queueSong[nextSongIndex];
@@ -70,7 +87,7 @@ const useAudioPlayer = (queueSong) => {
     };
     
     const handlePrevious = () => {
-        const previousSongIndex = (currentSongIndex - 1 + queueSong.length) % queueSong.length; // Loop back to the last song if at the beginning
+        const previousSongIndex = (currentSongIndex + 1 ) % queueSong.length; // Loop back to the last song if at the beginning
         setCurrentSongIndex(previousSongIndex);
         const previousSong = queueSong[previousSongIndex];
         audioRef.current.src = createUrl(previousSong.track_url);

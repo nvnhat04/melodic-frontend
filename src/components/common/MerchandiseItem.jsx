@@ -1,23 +1,26 @@
 import React, { useState } from "react";
-import {
-  Paper,
-  Typography,
-  Box,
-  Button,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-} from "@mui/material";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
 import EditNoteIcon from "@mui/icons-material/EditNote";
+import Paper from "@mui/material/Paper";
+import Typography from "@mui/material/Typography";
 import ClearIcon from "@mui/icons-material/Clear";
 import MerchandiseApi from "../../api/modules/merchandise.api";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const MerchandiseItem = ({ merchandise, onDelete }) => {
+  const token = useSelector((state) => state.auth.token);
+  const navigate = useNavigate();
+
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const handleModifyButtonClick = () => {
-    console.log("Modify button clicked");
+    navigate(`/artist/update-merchandise/${merchandise.id}`);
   };
 
   const handleDeleteButtonClick = () => {
@@ -28,15 +31,24 @@ const MerchandiseItem = ({ merchandise, onDelete }) => {
     setIsDialogOpen(false);
   };
 
-  const confirmDelete = async () => {
+  const handleConfirmDelete = async () => {
     try {
-      await MerchandiseApi.deleteMerchandise(merchandise.id); // Assuming `delete` is defined in MerchandiseApi
-      console.log(`Merchandise ${merchandise.id} deleted`);
-      setIsDialogOpen(false);
-      onDelete(merchandise.id);
-      // Optionally, trigger a refresh or update the UI
+      const response = await MerchandiseApi.deleteMerchandise(
+        merchandise.id,
+        token
+      );
+
+      if (response.message === "Merchandise deleted successfully") {
+        alert("Merchandise deleted successfully");
+        setIsDialogOpen(false);
+        onDelete(merchandise.id);
+      } else {
+        console.warn("Unexpected response status:", response.status);
+        alert(`Delete failed: ${response || "Unknown error"}`);
+      }
     } catch (error) {
-      console.error("Error deleting merchandise:", error);
+      console.error("Error during delete operation:", error);
+      alert("An error occurred. Please try again.");
     }
   };
 
@@ -88,7 +100,7 @@ const MerchandiseItem = ({ merchandise, onDelete }) => {
           <Button onClick={handleDialogClose} color="primary">
             Cancel
           </Button>
-          <Button onClick={confirmDelete} color="error" autoFocus>
+          <Button onClick={handleConfirmDelete} color="error" autoFocus>
             Delete
           </Button>
         </DialogActions>
