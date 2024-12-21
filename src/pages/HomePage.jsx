@@ -12,6 +12,7 @@ import MusicAPI from "../api/modules/music.api";
 import FavoriteAPI from "../api/modules/favorite.api";
 import { useSelector, useDispatch } from "react-redux";
 import { setListFavorites } from "../redux/store";
+import CollectionCard from "../components/common/CollectionCard";
 
 function HomePage() {
   const [popularAlbums, setPopularAlbums] = useState([]);
@@ -34,24 +35,17 @@ function HomePage() {
           1,
           token
         );
-        setDailyTopHits(DailyTopHitsPlaylist);
-
+        setDailyTopHits(DailyTopHitsPlaylist[0]);
         const topTracks = await playlistAPI.getPlaylistById(2, token);
-        setMelodicTopTracks(topTracks);
-
+        setMelodicTopTracks(topTracks[0]);
         const dailyTopFavorites = await playlistAPI.getPlaylistById(47, token);
-        setDailyTopFavorites(dailyTopFavorites);
-
+        setDailyTopFavorites(dailyTopFavorites[0]);
         const newReleases = await MusicAPI.getNewReleases();
         setNewReleases(newReleases);
-        console.log(newReleases);
-
         const popularAlbums = await MusicAPI.getTopAlbums();
         setPopularAlbums(popularAlbums);
-
         const topArtists = await MusicAPI.getTopArtists();
         setTopArtists(topArtists);
-
         const publicPlaylists = await MusicAPI.getPublicPlaylists();
         setMoods(publicPlaylists);
       } catch (error) {
@@ -60,7 +54,6 @@ function HomePage() {
     };
     fetchData();
   }, []);
-  console.log(dailyTopFavorites)
   return (
     <Stack
       spacing={5}
@@ -77,31 +70,32 @@ function HomePage() {
             display: "flex", // Sử dụng flexbox để xếp theo hàng ngang
             gap: "10px",
             width: "100%", // Đảm bảo chiều rộng của Box là 100%
+            justifyContent: "space-between"
           }}
         >
-          {dailyTopHits.length > 0 && <Box
+          {dailyTopHits && <Box
             sx={{
               flex: "1", // Chia đều không gian cho hai Card
-              maxWidth: "33%", // Đảm bảo mỗi Card không vượt quá 50% chiều rộng
+              maxWidth: "30%", // Đảm bảo mỗi Card không vượt quá 50% chiều rộng
             }}
           >
-            <AlbumSlider list={dailyTopHits} type={"Playlist"} />
+            <CollectionCard collection={dailyTopHits} type={"Playlist"} />
           </Box>}
-          {melodicTopTracks.length > 0 && <Box
+          {melodicTopTracks && <Box
             sx={{
               flex: "1",
-              maxWidth: "33%",
+              maxWidth: "30%",
             }}
           >
-            <AlbumSlider list={melodicTopTracks} type={"Playlist"} />
+            <CollectionCard collection={melodicTopTracks} type={"Playlist"} />
           </Box>}
-          {dailyTopFavorites.length > 0 && <Box
+          {dailyTopFavorites && <Box
             sx={{
               flex: "1",
-              maxWidth: "33%",
+              maxWidth: "30%",
             }}
           >
-            <AlbumSlider list={dailyTopFavorites} type={"Playlist"} />
+            <CollectionCard collection={dailyTopFavorites} type={"Playlist"} />
           </Box>}
         </Box>
       </Container>
@@ -118,7 +112,7 @@ function HomePage() {
 
       {moods.length > 0 && (
         <Container header="Moods">
-          <AlbumSlider list={moods} type={"Album"} />
+          <AlbumSlider list={moods} type={"Playlist"} />
         </Container>
       )}
 

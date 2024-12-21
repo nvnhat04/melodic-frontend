@@ -62,7 +62,7 @@ const ArtistCard = ({ artists }) => {
                 <Avatar src={artist.avatar} alt={artist.name} sx={{ width: 45, height: 45 }} />
                 <Box>
                   <Typography variant="subtitle2" sx={{ fontWeight: 'bold' }}>
-                    {artist.name}
+                    {artist.display_name}
                   </Typography>
                   <Typography variant="body2" color="gray" sx={{ fontWeight: 'bold' }}>
                     {artist.role}

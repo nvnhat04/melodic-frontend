@@ -51,7 +51,7 @@ import ManageRequest from "./components/Admin/ManageRequest";
 import ManageUsers from "./components/Admin/ManageUsers";
 import ManageTracks from "./components/Admin/ManageTracks";
 import ManagePlaylists from "./components/Admin/ManagePlaylists";
-
+import ScrollToTop from "./components/common/SrcollToTop"
 import { createTheme, ThemeProvider } from "@mui/material";
 
 const theme = createTheme({
@@ -76,6 +76,7 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
     <BrowserRouter>
+    <ScrollToTop />
       <Routes className="App">
         <Route path="/" element={<MainLayout />}>
           <Route index element={<HomePage />} />

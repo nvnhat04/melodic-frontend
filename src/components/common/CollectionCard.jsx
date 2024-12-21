@@ -1,4 +1,3 @@
-
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import { Box, Card, CardContent, CardMedia, Typography } from "@mui/material";
 import React from "react";
@@ -9,10 +8,9 @@ import { useState, useEffect } from "react";
 const CollectionCard = ({ collection, type }) => {
   const [coverUrl, setCoverUrl] = useState("");
   useEffect(() => {
-    if(collection.cover){
+    if (collection.cover) {
       setCoverUrl(createUrl(collection.cover));
-    }else
-    {
+    } else {
       setCoverUrl(createUrl("1uPpcuN038RVhwU-IHLHSsCxG61lpCHay"));
     }
   }, [collection.cover]);
@@ -28,19 +26,19 @@ const CollectionCard = ({ collection, type }) => {
           overflow: "hidden",
           border: "none",
           boxShadow: "none",
-          padding: "10px",
+          padding: "5%",
           backgroundColor: "#1f1f1f",
           color: "white",
           maxWidth: "200px",
-
         }}
       >
-        <Box sx={{ display: "flex" }}>
+        <Box sx={{ display: "flex", justifyContent: "center" }}>
           <CardMedia
             component="img"
             image={coverUrl}
             alt={collection.title}
             sx={{
+              width: "100%",
               aspectRatio: "1 / 1",
               objectFit: "cover",
               borderRadius: "6px",
@@ -83,11 +81,15 @@ const CollectionCard = ({ collection, type }) => {
             </Box>
           </Box>
         </Box>
-        <CardContent sx={{ padding: "0" }}>
+        <CardContent sx={{ padding: "0", margin: "5%" }}>
           <Typography component="div" noWrap>
             {collection.title}
           </Typography>
-          <Typography color="white">{ new Date(collection.release_date).getFullYear()}</Typography>
+          {collection.release_date && (
+            <Typography color="white">
+              {new Date(collection.release_date).getFullYear()}
+            </Typography>
+          )}
         </CardContent>
       </Card>
     </Link>
@@ -99,17 +101,18 @@ const CollectionCard = ({ collection, type }) => {
           overflow: "hidden",
           border: "none",
           boxShadow: "none",
-          padding: "10px",
+          padding: "5%",
           backgroundColor: "#1f1f1f",
           color: "white",
         }}
       >
-        <Box sx={{ display: "flex" }}>
+        <Box sx={{ display: "flex", justifyContent: "center" }}>
           <CardMedia
             component="img"
             image={collection.cover}
             alt={collection.name}
             sx={{
+              width: "100%",
               aspectRatio: "1 / 1",
               objectFit: "cover",
               borderRadius: "6px",
@@ -152,12 +155,18 @@ const CollectionCard = ({ collection, type }) => {
             </Box>
           </Box>
         </Box>
-        <CardContent sx={{ padding: "0" }}>
+        <CardContent
+          sx={{
+            padding: "0",
+            display: "flex",
+            justifyContent: "center",
+            margin: "5%",
+          }}
+        >
           <Typography component="div" noWrap>
-           {collection.title}
+            {collection.name}
           </Typography>
           <Typography color="white">{collection.release_date}</Typography>
-
         </CardContent>
       </Card>
     </Link>
