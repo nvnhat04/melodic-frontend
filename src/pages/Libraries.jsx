@@ -55,7 +55,7 @@ const Libraries = ({ type }) => {
   }, [token, type, dispatch]);
 
   return (
-    <Box ml={2} mr={2}>
+    <Box ml={2} mr={2} mt={6}>
       <Container header={header}>
         {!list || list.length === 0 ? (
           <Typography variant="h6" color="gray">
