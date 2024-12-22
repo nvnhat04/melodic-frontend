@@ -9,11 +9,13 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import StorefrontRoundedIcon from "@mui/icons-material/Storefront";
 import MusicVideoIcon from "@mui/icons-material/MusicVideo";
 import TextAvatar from "../common/TextAvatar";
-import { useSelector, useDispatch } from "react-redux";
+import UserMenu from "./UserMenu";
+import { useSelector } from "react-redux";
 function TopBar() {
   const navigate = useNavigate();
   const location = useLocation();
   const user_name = useSelector((state) => state.auth.display_name);
+  const token = useSelector((state) => state.auth.token);
   const [searchTerm, setSearchTerm] = React.useState("");
   const [isSticky, setIsSticky] = React.useState(false);
 
@@ -208,13 +210,8 @@ function TopBar() {
             }}
           />
         </IconButton>
-        <IconButton
-          sx={{
-            color: "#000000",
-          }}
-        >
-          <TextAvatar text={user_name} />
-        </IconButton>
+
+        {token && <UserMenu />}
       </Box>
       <Box width={"3%"}></Box>
     </Box>

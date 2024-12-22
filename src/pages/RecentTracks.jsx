@@ -72,7 +72,7 @@ const RecentTracks = () => {
             <Stack spacing={2} sx={{ marginTop: 2 }} paddingLeft={2}>
                 {tracks.map((track) => (
                     <Box key={track.id} sx={{ width: "100%" }}>
-                        <TrackCard track={track} /> {/* Pass track detail to TrackCard */}
+                        <TrackCard track={track.detail} /> {/* Pass track detail to TrackCard */}
                     </Box>
                 ))}
 

@@ -114,7 +114,7 @@ const ArtistDrawer = ({
               }}
             >
               <ListItemButton>
-                <ListItemIcon sx={{ minWidth: "40px" }}>
+                <ListItemIcon sx={{ minWidth: "40px", color: "#f94c57" }}>
                   {option.icon}
                 </ListItemIcon>
                 <ListItemText primary={option.text} />
@@ -138,7 +138,7 @@ const ArtistDrawer = ({
           keepMounted: true,
         }}
         sx={{
-          display: { xs: "block", sm: "none" },
+                    display: { xs: "block", sm: "none" },
           "& .MuiDrawer-paper": {
             boxSizing: "border-box",
             width: drawerWidth,

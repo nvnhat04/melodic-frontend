@@ -16,13 +16,17 @@ import { useSelector } from "react-redux";
 import {clearToken} from "../../redux/store";
 import { useDispatch } from "react-redux";
 
+
 const UserMenu = ({ artist = false }) => {
   const user = useSelector((state) => state.auth.user);
   const [anchorEl, setAnchorEl] = useState(null);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const open = Boolean(anchorEl);
   const userId = useSelector((state) => state.auth.user_id);
   const dispatch = useDispatch();
+
+  const user_name = useSelector((state) => state.auth.display_name);
 
   const handleMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -35,6 +39,7 @@ const UserMenu = ({ artist = false }) => {
   const handleLogout = () => {
     console.log("User logged out");
     handleMenuClose();
+    dispatch(clearToken());
     // Xử lý logout tại đây, ví dụ xóa token:
     dispatch(clearToken());
     navigate("/login"); // Điều hướng đến trang đăng nhập.
@@ -49,7 +54,7 @@ const UserMenu = ({ artist = false }) => {
     <>
       {/* Nút mở menu */}
       <IconButton onClick={handleMenuOpen} size="medium" edge="end">
-        <TextAvatar text={"U"} />
+        <TextAvatar text={user_name} />
       </IconButton>
 
       {/* Menu */}
