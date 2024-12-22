@@ -54,16 +54,12 @@ const Merchandise = {
     console.log("Updating merchandise with ID:", id); // Log the ID here
 
     try {
-      const response = await Client.put(
-        `/merchandise/${id}`,
-        merchandise,
-        {
-          headers: {
-            token: `Bearer ${accessToken}`,
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      const response = await Client.put(`/merchandise/${id}`, merchandise, {
+        headers: {
+          token: `Bearer ${accessToken}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
       return response;
     } catch (error) {
       if (error.response) {
@@ -175,7 +171,9 @@ const Merchandise = {
   },
   async getBySearch(searchTerm) {
     try {
-      const response = await Client.get(`/merchandise/search?searchTerm=${encodeURIComponent(searchTerm)}`);
+      const response = await Client.get(
+        `/merchandise/search?searchTerm=${encodeURIComponent(searchTerm)}`
+      );
       return response;
     } catch (error) {
       if (error.response) {
@@ -183,8 +181,17 @@ const Merchandise = {
       }
       return { success: false, message: "An unexpected error occurred." };
     }
-  }
-  
+  },
+  async getMostPopularStore() {
+    try {
+      const response = await Client.get(`/merchandise/most-popular-store`);
+      return response;
+    } catch (error) {
+      if (error.response) {
+        return error.response;
+      }
+    }
+  },
 };
 
 export default Merchandise;
