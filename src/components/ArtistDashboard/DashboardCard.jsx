@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Box, Card } from "@mui/material";
+import { Box, Card, Divider } from "@mui/material";
 import StatCard from "./StatCard";
 import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
 import PersonIcon from "@mui/icons-material/Person";
@@ -8,14 +8,23 @@ import MusicNoteIcon from "@mui/icons-material/MusicNote";
 import ArtistApi from "../../api/modules/artist.api";
 import { useSelector } from "react-redux";
 import { CardContent, Typography } from "@mui/material";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 const MostPopular = ({ tracks }) => {
   return (
-    <Card elevation={4} sx={{ maxWidth: "30rem", height: "20rem" }}>
+    <Card elevation={3} sx={{}}>
       <CardContent>
         <Typography variant="h6" fontWeight="bold" gutterBottom>
           Most Popular Tracks
         </Typography>
+        <Divider
+          sx={{
+            marginTop: 1,
+            marginBottom: 2,
+            borderWidth: "1.7px",
+            backgroundColor: "#243870",
+          }}
+        />
         {tracks.map((track, index) => (
           <Box
             key={track.id}
@@ -38,6 +47,11 @@ const MostPopular = ({ tracks }) => {
 };
 
 const DashboardCards = () => {
+  const theme = createTheme({
+    typography: {
+      fontFamily: ["Inter", "san-serif"].join(","),
+    },
+  });
   const artist_id = useSelector((state) => state.auth.user_id);
   const [weeklyOrders, setWeeklyOrders] = useState([]);
   const [weeklyCustomers, setWeeklyCustomers] = useState([]);
@@ -198,13 +212,13 @@ const DashboardCards = () => {
     if (type === "pie") {
       const colors = labels.map(
         (_, i) => `hsl(${(i * 360) / labels.length}, 70%, 50%)`
-      ); // Generate unique colors for each label
+      );
       return {
         labels: labels,
         datasets: [
           {
             data: datasets,
-            backgroundColor: colors, // Use different colors for pie chart
+            backgroundColor: colors,
             borderColor: colors.map((c) => c.replace(/50%/, "40%")), // Darker shade for border
           },
         ],
@@ -217,7 +231,7 @@ const DashboardCards = () => {
         {
           data: datasets,
           borderColor: color,
-          backgroundColor: `${color}33`, // Add transparency to the color
+          backgroundColor: `${color}`,
           fill: true,
         },
       ],
@@ -232,9 +246,9 @@ const DashboardCards = () => {
       chartData: chartDataTemplate(
         weeklyOrdersLabels,
         weeklyOrdersDataset,
-        "#42a5f5"
+        "#035096"
       ),
-      chartColor: "#42a5f5",
+      iconColor: "#035096",
       type: "line",
     },
     {
@@ -246,7 +260,7 @@ const DashboardCards = () => {
         weeklyCustomersDataset,
         "#ab47bc"
       ),
-      chartColor: "#ab47bc",
+      iconColor: "#ab47bc",
       type: "bar",
     },
     {
@@ -256,9 +270,9 @@ const DashboardCards = () => {
       chartData: chartDataTemplate(
         weeklySalesLabels,
         weeklySalesDataset,
-        "#ffca28"
+        "#EF6F2F"
       ),
-      chartColor: "#ffca28",
+      iconColor: "#EF6F2F",
     },
     {
       icon: <MusicNoteIcon fontSize="large" />,
@@ -269,10 +283,10 @@ const DashboardCards = () => {
         weeklyStreamsDataset,
         "#ef5350"
       ),
-      chartColor: "#ef5350",
+      iconColor: "#ef5350",
     },
     {
-      icon: <MusicNoteIcon fontSize="large" />,
+      icon: <ShoppingCartIcon fontSize="large" />,
       title: "Merchandise Types",
       chartData: chartDataTemplate(
         merchandiseTypesLabels,
@@ -280,36 +294,35 @@ const DashboardCards = () => {
         "#66bb6a",
         "pie"
       ),
-      chartColor: "#66bb6a",
+      iconColor: "#66bb6a",
       type: "pie",
     },
   ];
 
-  console.log("merch types: ", merchandiseTypes); // Log to check if the data is correct
-
   return (
-    <Box display="flex" flexDirection="column" gap={2}>
-      {/* Row 1 */}
-      <Box display="flex" gap={2} flex="1">
-        <Box flex="1" minWidth="0">
-          <StatCard {...cards[4]} />
+    <ThemeProvider theme={theme}>
+      <Box display="flex" flexDirection="column" gap={3} p={1}>
+        {/* Row 1 */}
+        <Box display="flex" gap={2} flex="1">
+          <Box flex="1">
+            <StatCard {...cards[4]} />
+          </Box>
+          <Box flex="4">
+            <StatCard {...cards[2]} />
+          </Box>
         </Box>
 
-        <Box flex="4" minWidth="0">
-          <StatCard {...cards[2]} />
+        {/* Row 2 */}
+        <Box display="flex" gap={2} flex="1">
+          <Box flex="2" minWidth="0">
+            <StatCard {...cards[1]} />
+          </Box>
+          <Box flex="1" minWidth="0">
+            <MostPopular tracks={mostPlayedTracks} />
+          </Box>
         </Box>
       </Box>
-
-      {/* Row 2 */}
-      <Box display="flex" gap={2} flex="1">
-        <Box flex="1" minWidth="0">
-          <StatCard {...cards[1]} />
-        </Box>
-        <Box flex="1" minWidth="0">
-          <MostPopular tracks={mostPlayedTracks} />
-        </Box>
-      </Box>
-    </Box>
+    </ThemeProvider>
   );
 };
 
