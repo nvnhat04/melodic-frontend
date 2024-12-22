@@ -12,6 +12,8 @@ import {
 } from "../redux/store";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast, Slide, Zoom } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function Login() {
   const [username, setUsername] = useState("");
@@ -30,7 +32,8 @@ function Login() {
     };
     Account.login(data).then((response) => {
       if (!response.auth) {
-        alert("Login failed");
+        console.log(response);
+        toast.error(response.data);
       } else {
         dispatch(setToken(response.token));
         dispatch(setRole(response.role));
@@ -94,6 +97,18 @@ function Login() {
           </Link>
         </p>
       </div>
+      <ToastContainer
+              position="top-right"
+              autoClose={2000}
+              hideProgressBar={true}
+              transition={Slide}
+              newestOnTop={false}
+              closeOnClick
+              rtl={false}
+              pauseOnFocusLoss
+              draggable
+              closeButton={false}
+            />
     </div>
   );
 }
