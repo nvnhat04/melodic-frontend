@@ -76,7 +76,6 @@ const CartPage = () => {
 
     fetchCart();
   }, [userId]);
-  console.log(cart);
   const handleSelectAll = (event) => {
     if (event.target.checked) {
       setSelectedItems(cart.map((item) => item.merchandise_id));

@@ -86,20 +86,19 @@ const CheckOutPage = () => {
 
         // Create the order for this artist
         const createdOrder = await OrderApi.createOrderByUserId(order, token);
-
         // Add the products for this artist to the created order
         await Promise.all(
           artistProducts.map(async (product) => {
             const productDetails = {
-              order_id: createdOrder.data.id, 
-              id: product.id,
+              order_id: createdOrder.data, 
+              id: product.id || product.merchandise_id,
               quantity: product.quantity,
               price: product.price,
             };
 
             // Add product to the order
             await OrderApi.addToOrderMerchandise(productDetails, token);
-            await MerchandiseApi.updateStock(product.id, product.quantity);
+            await MerchandiseApi.updateStock(productDetails.id, product.quantity);
 
             if (fromCart) {
               await CartApi.deleteItem(user_id, product.id);
@@ -137,7 +136,6 @@ const CheckOutPage = () => {
       toast.error("Failed to place the order. Please try again.");
     }
   };
-
   return (
     <Box
       sx={{
