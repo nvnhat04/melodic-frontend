@@ -43,7 +43,7 @@ const MerchandiseDetail = () => {
         console.error("Error fetching merchandise:", error);
       }
     };
-
+    
     const fetchTotalSold = async () => {
       try {
         const response = await MerchandiseApi.getMerchandiseTotalSoldById(id);
