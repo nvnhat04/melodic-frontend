@@ -23,7 +23,7 @@ const OrderHistory = () => {
   const userId = useSelector((state) => state.auth.user_id);
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
-  const { user_id, balance } = useSelector((state) => state.auth);
+  const { user_id, balance, token } = useSelector((state) => state.auth);
   const groupOrders = (orders) => {
     return orders.reduce((acc, order) => {
       // Find the order group with the same order_id
@@ -45,17 +45,17 @@ const OrderHistory = () => {
           category: order.category,
         });
       } else {
-        // If the order doesn't exist, create a new group for this order
         acc.push({
           order_id: order.order_id,
           status: order.status,
+          delivery_method: order.delivery_method,
           merchandises: [
             {
               merchandise_id: order.merchandise_id,
               quantity: order.quantity,
-              price_each: order.price_each,
               name: order.name,
               artist_id: order.artist_id,
+              artist_name: order.artist_name,
               stock: order.stock,
               album_id: order.album_id,
               price: order.price,
@@ -79,13 +79,13 @@ const OrderHistory = () => {
     setOpenDialog(false);
     setSelectedOrder(null);
   };
-
   const handleConfirmCancel = async () => {
     if (selectedOrder) {
       try {
         const response = await OrderApi.updateStatus(
           selectedOrder.order_id,
-          "cancelled"
+          "cancelled",
+          token
         );
         if (response.success) {
           const totalCost = selectedOrder.merchandises.reduce(
@@ -100,8 +100,11 @@ const OrderHistory = () => {
                 : order
             )
           );
+          const shipCost =
+            selectedOrder.delivery_method === "standard" ? 5 : 10;
           // order.merchandise.map (sử dụng merchandise.quantity và price_each để tính totalCost)
-          const newBalance = Number(balance) + Number(totalCost)
+          const newBalance =
+            Number(balance) + Number(totalCost) + Number(shipCost);
           const balanceUpdateResult = await AccountApi.updateBalance(user_id, {
             new_balance: newBalance,
           });
@@ -120,11 +123,15 @@ const OrderHistory = () => {
     handleCloseDialog(); // Close dialog after confirmation
   };
 
-  // Fetch orders when the component is mounted or when the userId changes
+  useEffect(() => {
+    if (!token) {
+      navigate("/login", { replace: true }); // Redirect to login if no token
+    }
+  }, [token, navigate]);
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await OrderApi.getAllOrderByUserId(userId);
+        const response = await OrderApi.getAllOrderByUserId(userId, token);
 
         if (response.success) {
           const groupedOrders = groupOrders(response.data);
@@ -305,11 +312,12 @@ const OrderHistory = () => {
         {/* Danh sách đơn hàng */}
         <Box position={"relative"}>
           {filteredOrders.map((order, index) => {
-            const orderTotal = order.merchandises.reduce(
-              (total, merchandise) =>
-                total + merchandise.price * merchandise.quantity,
-              0
-            );
+            const orderTotal =
+              order.merchandises.reduce(
+                (total, merchandise) =>
+                  total + merchandise.price * merchandise.quantity,
+                0
+              ) + (order.delivery_method === "standard" ? 5 : 10);
             return (
               <Box
                 key={index}

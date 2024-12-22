@@ -255,52 +255,41 @@ const ManageOrder = () => {
                         marginBottom: "1vw",
                       }}
                     >
-                      <Link
-                        to={`/shop/merchandise/${merchandise.merchandise_id}`}
+                      <img
+                        src={createUrl(merchandise.image)}
+                        alt={merchandise.name}
                         style={{
-                          textDecoration: "none",
-                          color: "inherit",
-                          display: "flex",
-                          alignItems: "center",
-                          marginBottom: "1vw",
+                          width: "100px",
+                          height: "100px",
+                          objectFit: "cover",
+                          marginRight: "1vw",
+                          borderRadius: "6px",
                         }}
-                      >
-                        <img
-                          src={createUrl(merchandise.image)}
-                          alt={merchandise.name}
-                          style={{
-                            width: "100px",
-                            height: "100px",
-                            objectFit: "cover",
-                            marginRight: "1vw",
-                            borderRadius: "6px",
-                          }}
-                        />
+                      />
 
-                        <Box>
+                      <Box>
+                        <Typography
+                          sx={{
+                            fontSize: { xs: "3.5vw", sm: "2vw", md: "1.2vw" },
+                          }}
+                        >
+                          {merchandise.name}{" "}
                           <Typography
-                            sx={{
-                              fontSize: { xs: "3.5vw", sm: "2vw", md: "1.2vw" },
-                            }}
+                            component="span"
+                            sx={{ fontSize: "0.9em", color: "gray" }}
                           >
-                            {merchandise.name}{" "}
-                            <Typography
-                              component="span"
-                              sx={{ fontSize: "0.9em", color: "gray" }}
-                            >
-                              x{merchandise.quantity}
-                            </Typography>
+                            x{merchandise.quantity}
                           </Typography>
-                          <Typography
-                            sx={{
-                              fontSize: { xs: "3vw", sm: "1.8vw", md: "1vw" },
-                              color: "gray",
-                            }}
-                          >
-                            {merchandise.price * merchandise.quantity} $
-                          </Typography>
-                        </Box>
-                      </Link>
+                        </Typography>
+                        <Typography
+                          sx={{
+                            fontSize: { xs: "3vw", sm: "1.8vw", md: "1vw" },
+                            color: "gray",
+                          }}
+                        >
+                          {merchandise.price * merchandise.quantity} $
+                        </Typography>
+                      </Box>
                     </Box>
                   ))}
                 </Link>

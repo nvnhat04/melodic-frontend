@@ -20,6 +20,7 @@ const CartPage = () => {
   const [cart, setCart] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
   const userId = useSelector((state) => state.auth.user_id);
+  const token = useSelector((state) => state.auth.token);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [isSm, setIsSm] = useState(windowWidth < 960);
 
@@ -39,9 +40,14 @@ const CartPage = () => {
     };
   }, [isSm]);
   useEffect(() => {
+    if (!token) {
+      navigate("/login", { replace: true }); // Redirect to login if no token
+    }
+  }, [token, navigate]);
+  useEffect(() => {
     const fetchCart = async () => {
       try {
-        const response = await CartApi.getCartById(userId);
+        const response = await CartApi.getCartById(userId, token);
         if (response) {
           setCart(response);
           // Loop through each item to check and update quantity if necessary
@@ -70,7 +76,6 @@ const CartPage = () => {
 
     fetchCart();
   }, [userId]);
-
   const handleSelectAll = (event) => {
     if (event.target.checked) {
       setSelectedItems(cart.map((item) => item.merchandise_id));
@@ -92,11 +97,14 @@ const CartPage = () => {
   // Hàm xử lý thay đổi số lượng
   const updateQuantity = async (merchandise_id, newQuantity) => {
     try {
-      const response = await CartApi.updateQuantity({
-        userId: userId,
-        merchandiseId: merchandise_id,
-        quantity: newQuantity,
-      });
+      const response = await CartApi.updateQuantity(
+        {
+          userId: userId,
+          merchandiseId: merchandise_id,
+          quantity: newQuantity,
+        },
+        token
+      );
       if (response.success) {
         setCart((prevCart) =>
           prevCart.map((item) =>

@@ -3,19 +3,25 @@ import { useParams, Link } from "react-router-dom";
 import { Box, Typography, Divider } from "@mui/material";
 import OrderApi from "../api/modules/order.api";
 import createUrl from "../hooks/createUrl";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 const OrderDetail = () => {
   const [orderData, setOrderData] = useState(null);
   const { id } = useParams();
+  const token = useSelector((state) => state.auth.token);
+  const navigate = useNavigate();
   const total = orderData
     ? orderData.reduce(
         (acc, product) => acc + product.price * product.quantity,
         0
       )
     : 0;
+ 
+
   useEffect(() => {
     const fetchOrderDetail = async () => {
       try {
-        const response = await OrderApi.getOrderDetail(id);
+        const response = await OrderApi.getOrderDetail(id, token);
         if (response.success) {
           setOrderData(response.data);
         }

@@ -13,8 +13,8 @@ import { useLocation, useNavigate, Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import OrderApi from "../api/modules/order.api";
 import AccountApi from "../api/modules/account.api";
-import CartApi from "../api/modules/cart.api"
-import MerchandiseApi from "../api/modules/merchandise.api"
+import CartApi from "../api/modules/cart.api";
+import MerchandiseApi from "../api/modules/merchandise.api";
 import { ToastContainer, toast, Slide, Zoom } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import createUrl from "../hooks/createUrl";
@@ -22,82 +22,120 @@ const CheckOutPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
-  const { selectedProducts, total, fromCart  } = location.state || {
+  const [deliveryMethods, setDeliveryMethods] = useState({});
+  const { selectedProducts, total, fromCart } = location.state || {
     selectedProducts: [],
     total: 0,
     fromCart: false,
   };
 
-  const { user_id, display_name, phone, address, balance } = useSelector(
+  const { user_id, display_name, phone, address, balance, token } = useSelector(
     (state) => state.auth
   );
-
-  const [deliveryMethod, setDeliveryMethod] = useState("standard");
   const [name, setName] = useState(display_name || "");
   const [phoneNumber, setPhone] = useState(phone || "");
   const [userAddress, setAddress] = useState(address || "");
   const [isEditingInfo, setIsEditingInfo] = useState(false);
+  const groupByArtist = (products) => {
+    return products.reduce((groups, product) => {
+      const artistId = product.artist_id;
+      const artistName = product.artist_name;
+      if (!groups[artistId]) {
+        groups[artistId] = {
+          artistName: artistName,
+          products: [],
+        };
+      }
 
+      groups[artistId].products.push(product);
+
+      return groups;
+    }, {});
+  };
+
+  const groupedProducts = groupByArtist(selectedProducts);
   const handlePlaceOrder = async () => {
     try {
-      const totalCost = total + (deliveryMethod === "express" ? 10 : 5);
+      let totalCost = 0;
+      const orderDetails = [];
+
+      // Iterate over each artist's grouped products
+      for (const artistId in groupedProducts) {
+        const artistProducts = groupedProducts[artistId].products;
+        const artistDeliveryMethod = deliveryMethods[artistId] || "standard"; // Default to "standard" if not set
+
+        // Calculate the total cost for this artist/store
+        const artistTotal = artistProducts.reduce(
+          (sum, product) => sum + product.price * product.quantity,
+          0
+        );
+        const deliveryCost = artistDeliveryMethod === "express" ? 10 : 5;
+        const artistTotalCost = artistTotal + deliveryCost;
+
+        totalCost += artistTotalCost; // Add this artist's total cost to the overall total
+
+        // Prepare the order details for this artist/store
+        const order = {
+          user_id,
+          deliveryMethod: artistDeliveryMethod,
+          name,
+          phone: phoneNumber,
+          address: userAddress,
+          total: artistTotalCost,
+        };
+
+        // Create the order for this artist
+        const createdOrder = await OrderApi.createOrderByUserId(order, token);
+        // Add the products for this artist to the created order
+        await Promise.all(
+          artistProducts.map(async (product) => {
+            const productDetails = {
+              order_id: createdOrder.data, 
+              id: product.id || product.merchandise_id,
+              quantity: product.quantity,
+              price: product.price,
+            };
+
+            // Add product to the order
+            await OrderApi.addToOrderMerchandise(productDetails, token);
+            await MerchandiseApi.updateStock(productDetails.id, product.quantity);
+
+            if (fromCart) {
+              await CartApi.deleteItem(user_id, product.id);
+            }
+          })
+        );
+        // Add order info for later balance update
+        orderDetails.push({ createdOrder, artistTotalCost });
+      }
+
+      // Check if the total cost is within the available balance
       if (totalCost > balance) {
         toast.error("Insufficient balance to complete the purchase.");
         return;
       }
 
-      // Proceed with order placement if balance is sufficient
-      const order = {
-        user_id,
-        deliveryMethod,
-        name,
-        phone : phoneNumber,
-        address: userAddress,
-        total: totalCost,
-      };
-
-      const createdOrder = await OrderApi.createOrderByUserId(order);
-
-      // Lặp qua từng sản phẩm trong selectedProducts và thêm vào đơn hàng
-      await Promise.all(
-        selectedProducts.map(async (product) => {
-          const productDetails = {
-            order_id: createdOrder.data.id, // Lấy order_id trực tiếp từ createdOrder
-            id: product.id, // ID của sản phẩm
-            quantity: product.quantity, // Số lượng sản phẩm
-            price: product.price, // Giá mỗi sản phẩm
-          };
-
-          // Gọi API để thêm sản phẩm vào đơn hàng
-          await OrderApi.addToOrderMerchandise(productDetails);
-          await MerchandiseApi.updateStock(product.id, product.quantity)
-          if (fromCart) {
-            await CartApi.deleteItem(user_id, product.id)
-          }
-        })
-      );
+      // Update the user's balance after all orders are placed
       const newBalance = balance - totalCost;
       const balanceUpdateResult = await AccountApi.updateBalance(user_id, {
         new_balance: newBalance,
       });
+
       if (balanceUpdateResult.success) {
         // Update balance in Redux
         dispatch(setBalance(newBalance));
-        toast.success("Order placed successfully!");
+        toast.success("Order(s) placed successfully!");
         setTimeout(() => {
           navigate("/shop", { replace: true });
         }, 3000);
       } else {
         toast.error("Failed to update balance.");
       }
-      // Sau khi thêm tất cả sản phẩm vào đơn hàng, cập nhật trạng thái
     } catch (error) {
       console.error("Failed to place order:", error);
       toast.error("Failed to place the order. Please try again.");
     }
   };
-
   return (
     <Box
       sx={{
@@ -138,7 +176,7 @@ const CheckOutPage = () => {
                 sx={{
                   fontWeight: "bold",
                   marginBottom: { md: "1vw", sm: "2vw", xs: "3vw" },
-                  fontSize: { xs: "4vw", sm: "3vw", md: "2vw" }, // Cập nhật font-size cho responsive
+                  fontSize: { xs: "4vw", sm: "3vw", md: "2vw" },
                 }}
               >
                 Delivery Information
@@ -155,7 +193,7 @@ const CheckOutPage = () => {
                     onChange={(e) => setName(e.target.value)}
                     sx={{
                       marginBottom: { md: "1vw", sm: "2vw", xs: "3vw" },
-                      fontSize: { xs: "2vw", sm: "3vw", md: "2vw" }, // Cập nhật font-size cho responsive
+                      fontSize: { xs: "2vw", sm: "3vw", md: "2vw" },
                     }}
                   />
                   <TextField
@@ -165,7 +203,7 @@ const CheckOutPage = () => {
                     onChange={(e) => setPhone(e.target.value)}
                     sx={{
                       marginBottom: { md: "1vw", sm: "2vw", xs: "3vw" },
-                      fontSize: { xs: "2vw", sm: "3vw", md: "2vw" }, // Cập nhật font-size cho responsive
+                      fontSize: { xs: "2vw", sm: "3vw", md: "2vw" },
                     }}
                   />
                   <TextField
@@ -177,7 +215,7 @@ const CheckOutPage = () => {
                     rows={2}
                     variant="outlined"
                     sx={{
-                      fontSize: { xs: "2vw", sm: "3vw", md: "2vw" }, // Cập nhật font-size cho responsive
+                      fontSize: { xs: "2vw", sm: "3vw", md: "2vw" },
                     }}
                   />
                   <Button
@@ -257,98 +295,133 @@ const CheckOutPage = () => {
             >
               Product Ordered
             </Typography>
-            <Box sx={{ marginBottom: "2vw" }}>
-              {selectedProducts.map((merchandise, index) => (
-                <Link
-                  key={index}
-                  to={`/shop/merchandise/${
-                    merchandise.id || merchandise.merchandise_id
-                  }`}
-                  style={{ textDecoration: "none", color: "inherit" }}
+            {Object.keys(groupedProducts).map((artistId) => (
+              <Box
+                backgroundColor={"white"}
+                padding={"2vw"}
+                key={artistId}
+                sx={{ marginBottom: "3vw", marginLeft: "3vw" }}
+              >
+                <Typography
+                  variant="h5"
+                  sx={{
+                    fontWeight: "bold",
+                    marginBottom: { md: "1vw", sm: "2vw", xs: "3vw" },
+                    fontSize: { xs: "3vw", sm: "2.5vw", md: "1.5vw" },
+                  }}
                 >
-                  <Box
+                  {groupedProducts[artistId].artistName}'s Store
+                </Typography>
+                <Box sx={{ marginBottom: "2vw" }}>
+                  {groupedProducts[artistId].products.map(
+                    (merchandise, index) => (
+                      <Link
+                        key={index}
+                        to={`/shop/merchandise/${
+                          merchandise.id || merchandise.merchandise_id
+                        }`}
+                        style={{ textDecoration: "none", color: "inherit" }}
+                      >
+                        <Box
+                          sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            backgroundColor: "white",
+                            padding: { md: "1vw", xs: "3vw" },
+                            marginBottom: { md: "1vw", sm: "2vw", xs: "3vw" },
+                            borderRadius: "6px",
+                          }}
+                        >
+                          <Box
+                            component="img"
+                            src={createUrl(merchandise.image)}
+                            alt={merchandise.name}
+                            sx={{
+                              width: { md: "15vw", sm: "22.5vw", xs: " 30vw" },
+                              height: { md: "15vw", sm: "22.5vw", xs: "30vw" },
+                              objectFit: "cover",
+                              marginRight: "2vw",
+                              borderRadius: "6px",
+                            }}
+                          />
+
+                          <Box sx={{ flexGrow: 1 }}>
+                            <Typography
+                              sx={{
+                                fontSize: {
+                                  xs: "3.5vw",
+                                  sm: "2.5vw",
+                                  md: "1.5vw",
+                                },
+                                fontWeight: "bold",
+                              }}
+                            >
+                              {merchandise.name}
+                            </Typography>
+                            <Typography
+                              sx={{
+                                fontSize: {
+                                  xs: "3.5vw",
+                                  sm: "2.5vw",
+                                  md: "1.5vw",
+                                },
+                                color: "gray",
+                              }}
+                            >
+                              {merchandise.quantity} x {merchandise.price}$ ={" "}
+                              {merchandise.quantity * merchandise.price}$
+                            </Typography>
+                          </Box>
+                        </Box>
+                      </Link>
+                    )
+                  )}
+                </Box>
+                <Box sx={{ marginBottom: "2vw" }}>
+                  <Typography
+                    variant="h5"
                     sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      backgroundColor: "white",
-                      padding: { md: "1vw", xs: "3vw" },
+                      fontWeight: "bold",
                       marginBottom: { md: "1vw", sm: "2vw", xs: "3vw" },
-                      borderRadius: "6px",
+                      fontSize: { xs: "3vw", sm: "2.5vw", md: "1.5vw" },
                     }}
                   >
-                    <Box
-                      component="img"
-                      src={createUrl(merchandise.image)}
-                      alt={merchandise.name}
-                      sx={{
-                        width: { md: "15vw", sm: "22.5vw", xs: " 30vw" },
-                        height: { md: "15vw", sm: "22.5vw", xs: "30vw" },
-                        objectFit: "cover",
-                        marginRight: "2vw",
-                        borderRadius: "6px",
+                    Delivery Method
+                  </Typography>
+                  <Box
+                    backgroundColor={"white"}
+                    padding={{ md: "1vw", xs: "3vw" }}
+                  >
+                    <RadioGroup
+                      value={deliveryMethods[artistId] || "standard"}
+                      onChange={(e) => {
+                        setDeliveryMethods({
+                          ...deliveryMethods,
+                          [artistId]: e.target.value,
+                        });
                       }}
-                    />
-
-                    <Box sx={{ flexGrow: 1 }}>
-                      <Typography
+                    >
+                      <FormControlLabel
+                        value="standard"
+                        control={<Radio />}
+                        label="Standard Delivery (5$)"
                         sx={{
-                          fontSize: { xs: "3.5vw", sm: "2.5vw", md: "1.5vw" },
-                          fontWeight: "bold",
+                          fontSize: { xs: "4vw", sm: "3vw", md: "2vw" },
                         }}
-                      >
-                        {merchandise.name}
-                      </Typography>
-                      <Typography
+                      />
+                      <FormControlLabel
+                        value="express"
+                        control={<Radio />}
+                        label="Express Delivery (10$)"
                         sx={{
-                          fontSize: { xs: "3.5vw", sm: "2.5vw", md: "1.5vw" },
-                          color: "gray",
+                          fontSize: { xs: "4vw", sm: "3vw", md: "2vw" },
                         }}
-                      >
-                        {merchandise.quantity} x {merchandise.price}$ ={" "}
-                        {merchandise.quantity * merchandise.price}$
-                      </Typography>
-                    </Box>
+                      />
+                    </RadioGroup>
                   </Box>
-                </Link>
-              ))}
-            </Box>
-
-            {/* Delivery Method Section */}
-            <Box sx={{ marginBottom: "2vw" }}>
-              <Typography
-                variant="h5"
-                sx={{
-                  fontWeight: "bold",
-                  marginBottom: { md: "1vw", sm: "2vw", xs: "3vw" },
-                  fontSize: { xs: "3.5vw", sm: "3vw", md: "2vw" }, // Cập nhật font-size cho responsive
-                }}
-              >
-                Delivery Method
-              </Typography>
-              <Box backgroundColor={"white"} padding={{ md: "1vw", xs: "3vw" }}>
-                <RadioGroup
-                  value={deliveryMethod}
-                  onChange={(e) => setDeliveryMethod(e.target.value)}
-                >
-                  <FormControlLabel
-                    value="standard"
-                    control={<Radio />}
-                    label="Standard Delivery (5$)"
-                    sx={{
-                      fontSize: { xs: "4vw", sm: "3vw", md: "2vw" }, // Cập nhật font-size cho responsive
-                    }}
-                  />
-                  <FormControlLabel
-                    value="express"
-                    control={<Radio />}
-                    label="Express Delivery (10$)"
-                    sx={{
-                      fontSize: { xs: "4vw", sm: "3vw", md: "2vw" }, // Cập nhật font-size cho responsive
-                    }}
-                  />
-                </RadioGroup>
+                </Box>
               </Box>
-            </Box>
+            ))}
 
             {/* Total and Place Order Section */}
             <Box
@@ -367,7 +440,17 @@ const CheckOutPage = () => {
                   fontSize: { xs: "4vw", sm: "3vw", md: "2vw" },
                 }}
               >
-                Total: {total + (deliveryMethod === "express" ? 10 : 5)}$
+                Total:{" "}
+                {Object.keys(groupedProducts).reduce((totalCost, artistId) => {
+                  const shippingCost =
+                    deliveryMethods[artistId] === "express" ? 10 : 5;
+                  const artistTotal = groupedProducts[artistId].products.reduce(
+                    (acc, product) => acc + product.price * product.quantity,
+                    0
+                  );
+                  return totalCost + artistTotal + shippingCost;
+                }, 0)}
+                $
               </Typography>
 
               <Typography

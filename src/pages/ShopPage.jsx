@@ -16,7 +16,9 @@ function ShopPage() {
   const [newArrivals, setNewArrivals] = useState([]);
   const [trendingNow, setTrendingNow] = useState([]);
   const [artistStore, setArtistStore] = useState([]);
+  const [popularArtistStore, setPopularArtistStore] = useState([]);
   const [artistName, setArtistName] = useState([]);
+  const [popularArtistName, setPopularArtistName] = useState([]);
   const userId = useSelector((state) => state.auth.user_id);
   useEffect(() => {
     const fetchNewArrivals = async () => {
@@ -37,7 +39,7 @@ function ShopPage() {
           setTrendingNow(response.data);
         }
       } catch (error) {
-        console.error("Error fetching new arrivals:", error);
+        console.error("Error fetching trending now", error);
       }
     };
 
@@ -49,12 +51,24 @@ function ShopPage() {
           setArtistName(response.data[0].display_name);
         }
       } catch (error) {
-        console.error("Error fetching new arrivals:", error);
+        console.error("Error fetching fav store", error);
+      }
+    };
+    const fetchPopularStore = async () => {
+      try {
+        const response = await MerchandiseApi.getMostPopularStore();
+        if (!response.data.message) {
+          setPopularArtistStore(response.data);
+          setPopularArtistName(response.data[0].display_name);
+        }
+      } catch (error) {
+        console.error("Error fetching fav store", error);
       }
     };
     fetchNewArrivals();
     fetchTrendingNow();
     fetchFavArtistStore();
+    fetchPopularStore()
   }, []);
   return (
     <Stack
@@ -74,6 +88,11 @@ function ShopPage() {
       {artistStore.length > 0 && (
         <Container color="black" header={`${artistName}'s store`}>
           <MerchandiseSlider list={artistStore} type={"merchandise"} />
+        </Container>
+      )}
+       {popularArtistStore.length > 0 && (
+        <Container color="black" header={`${popularArtistName}'s store`}>
+          <MerchandiseSlider list={popularArtistStore} type={"merchandise"} />
         </Container>
       )}
     </Stack>

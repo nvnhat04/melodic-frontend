@@ -1,9 +1,13 @@
 import Client from "../client.api";
 
 const Order = {
-  async createOrderByUserId(data) {
+  async createOrderByUserId(data, accessToken) {
     try {
-      const response = await Client.post(`/order/create`, data);
+      const response = await Client.post(`/order/create`, data, {
+        headers: {
+          token: `Bearer ${accessToken}`,
+        },
+      });
       return response;
     } catch (error) {
       if (error.response) {
@@ -13,9 +17,14 @@ const Order = {
       }
     }
   },
-  async addToOrderMerchandise(data) {
+
+  async addToOrderMerchandise(data, accessToken) {
     try {
-      const response = await Client.post(`/order/add`, data);
+      const response = await Client.post(`/order/add`, data, {
+        headers: {
+          token: `Bearer ${accessToken}`,
+        },
+      });
       return response;
     } catch (error) {
       if (error.response) {
@@ -27,9 +36,14 @@ const Order = {
       }
     }
   },
-  async getAllOrderByUserId(userId) {
+
+  async getAllOrderByUserId(userId, accessToken) {
     try {
-      const response = await Client.get(`/order/all/${userId}`);
+      const response = await Client.get(`/order/all/${userId}`, {
+        headers: {
+          token: `Bearer ${accessToken}`,
+        },
+      });
       return response;
     } catch (error) {
       if (error.response) {
@@ -41,9 +55,14 @@ const Order = {
       }
     }
   },
-  async getOrderDetail(orderId) {
+
+  async getOrderDetail(orderId, accessToken) {
     try {
-      const response = await Client.get(`/order/${orderId}`);
+      const response = await Client.get(`/order/${orderId}`, {
+        headers: {
+          token: `Bearer ${accessToken}`,
+        },
+      });
       return response;
     } catch (error) {
       if (error.response) {
@@ -55,11 +74,18 @@ const Order = {
       }
     }
   },
-  async updateStatus(orderId, status) {
+
+  async updateStatus(orderId, status, accessToken) {
     try {
-      const response = await Client.put(`/order/update-status/${orderId}`, {
-        status: status,
-      });
+      const response = await Client.put(
+        `/order/update-status/${orderId}`,
+        { status: status },
+        {
+          headers: {
+            token: `Bearer ${accessToken}`,
+          },
+        }
+      );
       return response;
     } catch (error) {
       if (error.response) {
@@ -71,6 +97,7 @@ const Order = {
       }
     }
   },
+
   async getAllOrder() {
     try {
       const response = await Client.get(`/order/all`);
@@ -86,4 +113,5 @@ const Order = {
     }
   },
 };
+
 export default Order;
