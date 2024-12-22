@@ -8,10 +8,26 @@ import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addTrackToQueue } from "../../redux/store";
 import useAudioPlayer from "../../hooks/useAudioPlayer";
-import { Link } from "react-router-dom";
 import createURL from "../../hooks/createUrl"
 
 const TrackCard = ({ track }) => {
+
+  let artistsArray;
+
+if (Array.isArray(track.artists)) {
+  // Nếu track.artists đã là một mảng, gán trực tiếp
+  artistsArray = track.artists;
+} else {
+  // Nếu track.artists là chuỗi, chuyển đổi thành mảng
+  const artistsArrayString = `[${track.artists}]`;
+  artistsArray = JSON.parse(artistsArrayString);
+}
+
+// Kiểm tra kết quả
+console.log("artistsArray", artistsArray);
+console.log("track.artists", track.artists);
+
+  
   const defaultCover = "../../default/track_cover.png";
   // console.log(track.id);
   // console.log("Track Artists:", track.artists);
@@ -21,9 +37,7 @@ const TrackCard = ({ track }) => {
     console.log("Add to queue:", track.id);
     dispatch(addTrackToQueue({ id: track.id }));
   };
-
-  const defaultCover = "../../default/track_cover.png";
-
+  console.log("Track:", track); 
 
   return (
     <Box
@@ -106,8 +120,8 @@ const TrackCard = ({ track }) => {
 
             )) : "Unknown Artist"} */}
 
-            {track.artists &&
-              track.artists.map((artist, index) => (
+            {artistsArray &&
+              artistsArray.map((artist, index) => (
                 <React.Fragment key={artist.id}>
                   <Link
                     to={`/artist/${artist.id}`}
@@ -116,7 +130,7 @@ const TrackCard = ({ track }) => {
                   >
                     {artist.display_name}
                   </Link>
-                  {index < track.artists.length - 1 && ", "}
+                  {index < artistsArray.length - 1 && ", "}
                 </React.Fragment>
               ))}
           </Typography>

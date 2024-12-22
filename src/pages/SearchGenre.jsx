@@ -68,8 +68,8 @@ const SearchGenre = () => {
     return (
         <Box mt={5}>
             {/* Tiêu đề thể loại */}
-            <Typography variant="h4" sx={{ color: "gray", fontWeight: "bold", paddingLeft: "10px" }}>
-                {genre ? `Genre: ${genre}` : "No genre selected"}
+            <Typography variant="h4" sx={{ color: "gray", fontWeight: "bold", paddingLeft: "10px", marginLeft: "10px" }}>
+                {genre ? `${genre}` : "No genre selected"}
             </Typography>
 
             {/* Danh sách bài hát */}

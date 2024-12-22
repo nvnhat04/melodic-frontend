@@ -23,7 +23,9 @@ const EditProfilePage = () => {
     display_name: "",
     username: "",
     bio: "",
-    dateOfBirth: null, // Use null for DatePicker compatibility
+    dateOfBirth: null, // Use null for DatePicker compatibility,
+    phone: "",
+    address: "",
   });
   const navigate = useNavigate();
   const id = useSelector((state) => state.auth.user_id);
@@ -36,11 +38,14 @@ const EditProfilePage = () => {
         profile.avatar = createURL(profile.avatar); // Tạo URL cho avatar
         setUserProfile(profile);
         setAvatar(profile.avatar);
+        console.log("Profile:", profile);
         setFormData({
           display_name: profile.display_name || "",
           username: profile.username || "",
           bio: profile.bio || "",
           dateOfBirth: profile.date_of_birth ? dayjs(profile.date_of_birth) : null,
+          phone: profile.phone || "",
+          address: profile.address || "",
         });
       })
       .catch((error) => {
@@ -68,6 +73,8 @@ const EditProfilePage = () => {
       bio: formData.bio,
       date_of_birth: formData.dateOfBirth ? formData.dateOfBirth.format("YYYY-MM-DD") : null,
       avatar: avatar,
+      phone: formData.phone,
+      address: formData.address,
     };
   
     try {
@@ -229,6 +236,26 @@ const EditProfilePage = () => {
             rows={4}
             fullWidth
             padding="1em"
+            sx={{ marginBottom: "1em" }}
+          />
+
+           {/* Phone Field */}
+           <TextField
+            label="Phone"
+            name="phone"
+            value={formData.phone || ""}
+            onChange={handleInputChange}
+            fullWidth
+            sx={{ marginBottom: "1em" }}
+          />
+
+          {/* Address Field */}
+          <TextField
+            label="Address"
+            name="address"
+            value={formData.address || ""}
+            onChange={handleInputChange}
+            fullWidth
             sx={{ marginBottom: "1em" }}
           />
 
