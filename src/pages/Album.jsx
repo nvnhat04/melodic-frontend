@@ -97,9 +97,14 @@ const handleAddAllTracksToQueue = () => {
           <Typography variant="h6" sx={{color: redColor}}>No tracks available</Typography>
         </Box>}
 
-        <Container header="Related Merchandises">
-          <Footer type="album" list={merchandises} />
-        </Container>
+        {/* Related Merchandise */}
+        {merchandises.length > 0 &&
+        <Container header="Related Merchandise">
+        <Footer type="album" list={merchandises} />
+      </Container>
+        }
+
+        
       </Stack>
     </Box>
   );
