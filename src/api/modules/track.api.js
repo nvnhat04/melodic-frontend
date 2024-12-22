@@ -76,7 +76,18 @@ const Track = {
                 return error.response;
             }
         }
+    },
+    async updateTrack(track) {
+        try {
+            const response = await Client.put('/track/update', track);
+            return response;
+        } catch (error) {
+            if (error.response) {
+                return error.response;
+            }
+        }
     }
+
 
 };
 export default Track;

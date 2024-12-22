@@ -14,27 +14,159 @@ import createUrl from "../hooks/createUrl";
 const artistData = [
   {
     id: null,
-    name: "",
+    display_name: "",
     avatar:"",
   },
 ];
 const topSongs01 = [
   {
-    id: "",
-    title: "",
-    artists: [],
-    cover: "",
-    release_date: "",
-    track_url: "",
+    "id": "MjU4Yzc1ZmUtYjE1Ni00YzgyLWFhYjktNWJjMTE2ZGVhMmRh",
+    "title": "Stargazing",
+    "release_date": "2024-12-04T17:00:00.000Z",
+    "track_url": "1WxzMpFCb1MoCSqfkI2d9IHNClq5e9upt",
+    "cover": null,
+    "genres": [],
+    "artists": []
   },
   {
-    id: "",
-    title: "",
-    artists: ["", ""],
-    cover: "",
-    release_date: "",
-    track_url: "",
+    "id": "ZmNkNDk1NTAtZGM0Yy00ZWM3LTg1NWEtNDE5MDIwMTM1ZTE0",
+    "title": "Stargazing",
+    "release_date": "2024-12-04T17:00:00.000Z",
+    "track_url": "1JrtBa0b9zRmsPRIodaJiIrozYj3piQd9",
+    "cover": null,
+    "genres": [],
+    "artists": []
   },
+  {
+    "id": "YzgxYTNhMzQtNDBmNy00NTBkLTk2NzYtNjVmODM3ZmNkNjAz",
+    "title": "Summer cruel",
+    "release_date": "2024-11-30T17:00:00.000Z",
+    "track_url": "1SOKem-klZOV5-aTNxnFjF2t5X0-yEXc5",
+    "cover": null,
+    "genres": [],
+    "artists": []
+  },
+  {
+    "id": "YjdkZTAyZWItZDBjMy00YjYwLTk0YjctMTRkZTExMDhlZWJk",
+    "title": "Summer cruel",
+    "release_date": "2024-11-30T17:00:00.000Z",
+    "track_url": "1KvJ5otauKw9lR55Jh5wqul8U4f5dfr9p",
+    "cover": "1uPpcuN038RVhwU-IHLHSsCxG61lpCHay",
+    "genres": [
+      "ballad",
+      "pop"
+    ],
+    "artists": [
+      {
+        "id": "34",
+        "display_name": "Sơn Tùng M-TP",
+        "username": "sontungmtp"
+      },
+      {
+        "id": "34",
+        "display_name": "Sơn Tùng M-TP",
+        "username": "sontungmtp"
+      },
+      {
+        "id": "8",
+        "display_name": "nhat nguyen",
+        "username": "nhat123"
+      },
+      {
+        "id": "8",
+        "display_name": "nhat nguyen",
+        "username": "nhat123"
+      }
+    ]
+  },
+  {
+    "id": "MzU5NTUwMTYtY2Q2Mi00MDcyLThhMGYtNzRmNzMwMzJiMjIx",
+    "title": "The first song",
+    "release_date": "2024-11-28T17:00:00.000Z",
+    "track_url": "1WnfzLsUevKTbHP-DGdf7eq1lOOXxRdjV",
+    "cover": null,
+    "genres": [],
+    "artists": []
+  },
+  {
+    "id": "ZmYwMTQ1YmYtMjU4Ni00ZThmLWFjMzMtZGUyNTc2NzEwY2Q1",
+    "title": "The 2thTrack",
+    "release_date": "2024-11-28T17:00:00.000Z",
+    "track_url": "1Ap3WyfAiLN22wUZSHlNBtTd-QmWwGoqq",
+    "cover": "1uPpcuN038RVhwU-IHLHSsCxG61lpCHay",
+    "genres": [
+      "ballad",
+      "hip hop",
+      "pop"
+    ],
+    "artists": [
+      {
+        "id": "8",
+        "display_name": "nhat nguyen",
+        "username": "nhat123"
+      },
+      {
+        "id": "8",
+        "display_name": "nhat nguyen",
+        "username": "nhat123"
+      },
+      {
+        "id": "8",
+        "display_name": "nhat nguyen",
+        "username": "nhat123"
+      }
+    ]
+  },
+  {
+    "id": "MzU5YWVlNzUtODk1ZS00MzVhLThhMmQtZTAyZTBlNTM4OTU2",
+    "title": "The first song",
+    "release_date": "2024-11-28T17:00:00.000Z",
+    "track_url": "1S_a_tfkRSJQ8D16YQDqO4wN4yhP0C1rZ",
+    "cover": "1uPpcuN038RVhwU-IHLHSsCxG61lpCHay",
+    "genres": [
+      "ballad",
+      "pop"
+    ],
+    "artists": [
+      {
+        "id": "8",
+        "display_name": "nhat nguyen",
+        "username": "nhat123"
+      },
+      {
+        "id": "8",
+        "display_name": "nhat nguyen",
+        "username": "nhat123"
+      },
+      {
+        "id": "34",
+        "display_name": "Sơn Tùng M-TP",
+        "username": "sontungmtp"
+      },
+      {
+        "id": "34",
+        "display_name": "Sơn Tùng M-TP",
+        "username": "sontungmtp"
+      }
+    ]
+  },
+  {
+    "id": "M2Q1YWJjNTctYmVmZC00MGJiLTk1NGMtNWQ5YjBkNTZiMDM3",
+    "title": "Hãy trao cho anh",
+    "release_date": "2024-11-26T17:00:00.000Z",
+    "track_url": "1wCbyOR0E__okyNu0N2EgadixMG876mr1",
+    "cover": "1uPpcuN038RVhwU-IHLHSsCxG61lpCHay",
+    "genres": [
+      "r&b"
+    ],
+    "artists": [
+      {
+        "id": "34",
+        "display_name": "Sơn Tùng M-TP",
+        "username": "sontungmtp"
+      }
+    ]
+  }
 ];
 const listAlbumsMock = [
   {
@@ -42,6 +174,7 @@ const listAlbumsMock = [
     name: "",
     artist: "l",
     cover:"",
+    release_date: "",
   },
 ];
 
@@ -55,15 +188,16 @@ function ArtistProfile() {
         id: null,
         title: "",
         artists: [],
-        track_cover: "", // Placeholder
+        track_cover: "",
+        release_date: "", // Placeholder
     });
     const [latestUrl, setLatestUrl] = useState(null);
     const fetchAlbums = async () => {
         try {
             const response = await artistApi.getAllAlbums(artist_id);
-            console.log("list album: ",response);
+            // console.log("list album: ",response);
             if (response) {
-                setListAlbums(response.slice(0,1));
+                setListAlbums(response);
             }
         } catch(err) {
             console.error(err);
@@ -104,7 +238,7 @@ function ArtistProfile() {
     useEffect(() => {
         fetchAlbums();
         fetchTopSongs();
-        fetchLatestSong();
+        // fetchLatestSong();
         fetchArtist();
         // console.log(artist);
         // console.log(listAlbums);
@@ -119,13 +253,12 @@ function ArtistProfile() {
       fetchLatestSong();
       // console.log('latest song: ',latestSong);
       if(latestSong) {
-        // console.log('latest song cover: ',latestSong.cover);
         setLatestUrl(createUrl(latestSong.cover));
       } else {
         console.log("latest song is null");
       }
       // console.log('latest url: ',latestUrl);
-    }, []);
+    }, [latestSong]);
 
   return (
     <Box
@@ -231,12 +364,8 @@ function ArtistProfile() {
               <Typography variant="h6" sx={{ fontWeight: "bold" }}>
                 {latestSong.title}
               </Typography>
-              <Typography variant="h8">{() => {
-                const releaseDate = new Date(latestSong.release_date);
-                console.log('real',releaseDate.toLocaleDateString());
-                return releaseDate.toLocaleTimeString();
-              }}</Typography>
-              <Typography variant="h8">Description</Typography>
+              <Typography variant="h8">{latestSong.release_date.substring(0,4)}</Typography>
+            
             </Box>
           </Box>
         </Box>

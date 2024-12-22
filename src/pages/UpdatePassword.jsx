@@ -14,6 +14,8 @@ import { FilledInput } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import AccountAPI from "../../src/api/modules/account.api.js"
 import {useSelector} from "react-redux";
+import { ToastContainer, toast, Slide, Zoom } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function UpdatePassword() {
     const navigate = useNavigate();
@@ -40,15 +42,15 @@ function UpdatePassword() {
     const handleSubmit = (event) => {
       event.preventDefault();
       if (formData.newPassword !== formData.confirmNewPassword) {
-        console.log("New password and confirm new password do not match");
+        toast.error("New password and confirm new password do not match");
         return;
       }
       if (formData.newPassword.length < 6) {
-        console.log("Password must be at least 6 characters");
+        toast.error("Password must be at least 6 characters");
         return;
       }
       if (formData.newPassword === formData.oldPassword) {
-        console.log("New password must be different from old password");
+        toast.error("New password must be different from old password");
         return;
       }
 
@@ -56,19 +58,21 @@ function UpdatePassword() {
       // API logic here
       AccountAPI.changePassword(id, { oldPassword, newPassword }, token)
     .then((response) => {
+      console.log(response.success);
       if (response.success === false) {
-        console.log("Old password is incorrect");
-      } else if (response.suceess === true) {
-        console.log("Password updated successfully");
-        navigate(`/profile/${id}`);
+        toast.error("Old password is incorrect");
+      }
+       else if (response.success == true) {
+        toast.success("Password updated successfully");
+        setFormData({
+          oldPassword: "",
+          newPassword: "",
+          confirmNewPassword: "",
+        });
       } else {
-        console.log("Failed to update password");
+        toast.error("Failed to update password");
       }
     })
-    .catch((error) => {
-      console.error("Error updating password:", error);
-    });
-
     };
   
     const handleChange = (event) => {
@@ -126,6 +130,7 @@ function UpdatePassword() {
                     name="oldPassword"
                     value={formData.oldPassword}
                     onChange={handleChange}
+                    required
                     endAdornment={
                       <InputAdornment position="end">
                         <IconButton
@@ -176,6 +181,7 @@ function UpdatePassword() {
                     name="newPassword"
                     value={formData.newPassword}
                     onChange={handleChange}
+                    required
                     endAdornment={
                       <InputAdornment position="end">
                         <IconButton
@@ -226,6 +232,7 @@ function UpdatePassword() {
                     name="confirmNewPassword"
                     value={formData.confirmNewPassword}
                     onChange={handleChange}
+                    required
                     endAdornment={
                       <InputAdornment position="end">
                         <IconButton
@@ -266,6 +273,18 @@ function UpdatePassword() {
             </form>
           </Container>
         </Stack>
+        <ToastContainer
+                      position="top-right"
+                      autoClose={2000}
+                      hideProgressBar={true}
+                      transition={Slide}
+                      newestOnTop={false}
+                      closeOnClick
+                      rtl={false}
+                      pauseOnFocusLoss
+                      draggable
+                      closeButton={false}
+                    />
       </Box>
     );
   }
