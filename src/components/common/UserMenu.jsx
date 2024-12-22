@@ -13,16 +13,21 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import TextAvatar from "./TextAvatar";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import {clearToken} from "../../redux/store";
 import { useDispatch } from "react-redux";
-import { clearToken } from "../../redux/store";
+
 
 const UserMenu = ({ artist = false }) => {
+  const user = useSelector((state) => state.auth.user);
   const [anchorEl, setAnchorEl] = useState(null);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const open = Boolean(anchorEl);
   const userId = useSelector((state) => state.auth.user_id);
+  const dispatch = useDispatch();
+
   const user_name = useSelector((state) => state.auth.display_name);
+
   const handleMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -36,8 +41,10 @@ const UserMenu = ({ artist = false }) => {
     handleMenuClose();
     dispatch(clearToken());
     // Xử lý logout tại đây, ví dụ xóa token:
+    dispatch(clearToken());
     navigate("/login"); // Điều hướng đến trang đăng nhập.
   };
+  
 
   const navigateTo = (path) => {
     handleMenuClose();

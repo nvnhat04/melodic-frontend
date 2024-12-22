@@ -4,8 +4,10 @@ import { useState , useEffect} from "react";
 const tracks = [
     { id: "id", label: "ID" },
     { id: "title", label: "Title" },
-    { id: "artist", label: "Artist" },
-    { id: "image", label: "Image" },
+    { id: "artists", label: "Artist" },
+    {id: "album", label: "Album Title"},
+    {id: 'language', label: 'Language'},
+    {id: 'genres', label: 'Genres'},
     {id: "track_url", label: "Track URL"},
   ];
 function ManageTracks() {
