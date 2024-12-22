@@ -26,6 +26,7 @@ import useAudioPlayer from "../../../hooks/useAudioPlayer";
 import trackApi from "../../../api/modules/track.api";
 import createUrl from "../../../hooks/createUrl";
 import { useSelector } from "react-redux";
+import { use } from "react";
 
 const queueSong01= [
       {
@@ -54,6 +55,13 @@ const queueSong02= [
     "genres": null,
     "artists": [
         
+    ],
+    "album": [
+        {
+            "id": "",
+            "album_title": "",
+            "cover": ""
+        }
     ]
 }
 ]
@@ -70,6 +78,7 @@ function MusicPlayer() {
   const [queueSong, setQueueSong] = useState(queueSong02);
   const url = createUrl(queueSong02[0].track_url);
   const [srcTrack, setSrcTrack] = useState(url);
+  const [cover, setCover] = useState(null);
   const queueId = useSelector((state) => state.queueSongs.queueSongs);
   const trackCache = useRef({});
   useEffect(() => {
@@ -124,8 +133,13 @@ function MusicPlayer() {
   };
 
   useEffect(() => {
-    console.log(queueSong[audioPlayerProps.currentSongIndex].artists);
-  }, []);
+    console.log("artist",queueSong[audioPlayerProps.currentSongIndex].artists);
+    console.log("cover",queueSong[audioPlayerProps.currentSongIndex].album[0].cover);
+    setCover(queueSong[audioPlayerProps.currentSongIndex].album[0].cover? createUrl(queueSong[audioPlayerProps.currentSongIndex].album[0].cover): "https://www.scdn.co/i/_global/open-graph-default.png");
+  }, [queueSong]);
+  useEffect(() => {
+    console.log("cover",cover);
+  }, [cover]);
 
   return (
     <Box
@@ -162,7 +176,7 @@ function MusicPlayer() {
           position: "relative",
           paddingLeft: "20px"}}>
         <img
-          src={ "https://www.scdn.co/i/_global/open-graph-default.png"}
+          src={cover ? cover: "https://www.scdn.co/i/_global/open-graph-default.png"}
           alt="img"
           style={{
             width: "20%",

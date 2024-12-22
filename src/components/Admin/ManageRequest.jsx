@@ -67,13 +67,13 @@ function ManageRequest() {
     trackApi
       .enableTrack(id)
       .then((res) => {
-        if (res.status === 200) {
+        if (res) {
           // console.log("Track enabled:", res);
-          // alert(res.data.message + " 01");
+          alert("Track enabled successfully");
             fetchTracks();
         } else {
           console.error("Failed to enable track");
-          alert(res.data.message);
+          console.log(res);
         }
       })
       .catch((error) => {
@@ -86,6 +86,7 @@ function ManageRequest() {
       .then((res) => {
         if (res) {
           console.log("Track disabled:", res);
+          alert("Track disabled successfully");
             fetchTracks();
         } else {
           console.error("Failed to disable track");

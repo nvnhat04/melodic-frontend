@@ -3,7 +3,7 @@ import { useParams} from "react-router-dom";
 import { useState, useEffect } from "react";
 
 import PlaylistHeader from "../components/Media/Header";
-import TrackList from "../components/Media/TrackList";
+import TrackList from "../components/Media/TrackListAlbum";
 import { Box, Stack, Typography } from "@mui/material";
 import Footer from "../components/Media/Footer";
 import Container from "../components/common/Container";

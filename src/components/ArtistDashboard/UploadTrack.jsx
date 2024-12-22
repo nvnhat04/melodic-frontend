@@ -64,24 +64,9 @@ const UploadTrack = () => {
     }
 };
 
-  useEffect(() => {
-    fetchAlbums();
-    const exists = albumList.some((album) => {
-      // console.log('Album:', album.artist_id, user_id, album.album_type);
-      if(album.title.toLowerCase() === formData.album.toLowerCase() && album.artist_id === user_id && album.album_type === 'album'){
-        // console.log('Album exists:', album);
-         setAlbumExists(true);
-          setAlbumData(album);
-        return true;
-      }
-        
-      return false;
-    });
-}, [albumList]);
 
-useEffect(() => {
-  console.log('Updated Albums:', albumList);
-}, [ user_id]); 
+
+
 
 
 const initialFormData = {   
@@ -303,12 +288,19 @@ useEffect(() => {
         name="album"
         fullWidth
         value={formData.album}
+        select
         // onBlur={handleExistingAlbum} // Xử lý khi mất focus
         // onKeyDown={(e) => e.key === 'Enter' && handleExistingAlbum(e)} // Xử lý khi nhấn Enter
         onChange={handleChange}
         required
         sx={{ mb: 2 }}
-      />
+      >
+        {albumList.map((album) => (
+          <MenuItem key={album.id} value={album.title}>
+            {album.title}
+          </MenuItem>
+        ))}
+      </TextField>
         <DatePicker
           label="Release Date"
           value={formData.release_date}
@@ -394,7 +386,7 @@ useEffect(() => {
 
      {/* File upload */}
         <Button variant="contained" component="label"  sx={{ mb: 2, backgroundColor: '#e75565' }}>
-          Upload File
+          Upload File Track
           <input
             type="file"
             hidden

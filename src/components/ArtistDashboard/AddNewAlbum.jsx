@@ -73,7 +73,7 @@ const AddNewAlbum = () => {
         console.log(response.result);
         if(response.success){
           setFormData(initialFormData);
-          alert('Track added successfully');
+          alert('Album added successfully');
         }
         else {
           alert('Failed to add album');

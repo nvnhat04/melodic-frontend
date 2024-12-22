@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Box } from "@mui/material";
-import CollaborationRequestCard from "../common/CollaborationRequestCard";
+import CollaborationRequestCard from "./CollaborationRequestCard";
 import artistApi from "../../api/modules/artist.api";
 import { useSelector } from "react-redux";
 function Inbox() {
@@ -43,19 +43,22 @@ function Inbox() {
     useEffect(() => {
         fetchRequests();
     }, [user_id]);
-
+    // useEffect(() => {
+    //     console.log("Requests data found:", requests);
+    // }, [requests]);
   return (
    <Box>
         {requests.map((request) => (
-        <CollaborationRequestCard
-            key={request.track_id}
-            title={request.title}
-            cover={request.cover}
-            artist={request.original_artist_name}
-            daysAgo={"daysAgo"}
-            onAccept={() => handleApprove(request.track_id)}
-            onDecline={() => handleReject(request.track_id)}
-        />
+                <CollaborationRequestCard
+                    request={request}   
+                    onAccept={() => handleApprove(request.track_id)}
+                    onDecline={() => handleReject(request.track_id)}
+                />
+            // : <CollaborationRequestCard
+            //     request={request}
+            //     // onAccept={() => handleApprove(request.track_id)}
+            //     // onDecline={() => handleReject(request.track_id)}
+            // />
         ))}
    </Box>
   );
