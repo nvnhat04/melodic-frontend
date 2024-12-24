@@ -11,6 +11,8 @@ import {
 import Container from "../components/common/Container";
 import MerchandiseApi from "../api/modules/merchandise.api";
 import { useSelector } from "react-redux";
+import { clearQueue } from "../redux/store";
+import { useDispatch } from "react-redux";
 
 function ShopPage() {
   const [newArrivals, setNewArrivals] = useState([]);
@@ -20,6 +22,7 @@ function ShopPage() {
   const [artistName, setArtistName] = useState([]);
   const [popularArtistName, setPopularArtistName] = useState([]);
   const userId = useSelector((state) => state.auth.user_id);
+  const dispatch = useDispatch();
   useEffect(() => {
     const fetchNewArrivals = async () => {
       try {
@@ -69,6 +72,7 @@ function ShopPage() {
     fetchTrendingNow();
     fetchFavArtistStore();
     fetchPopularStore()
+    dispatch(clearQueue());
   }, []);
   return (
     <Stack

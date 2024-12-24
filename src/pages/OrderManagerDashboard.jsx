@@ -8,18 +8,23 @@ const drawerWidth = 240;
 import accountApi from "../api/modules/account.api";
 import ManageOrder from "../components/OrderManager/ManageOrders";
 import { useNavigate } from "react-router-dom";
-import {useSelector} from "react-redux";
-
+import {useSelector, useDispatch} from "react-redux";
+import { clearToken } from "../redux/store";
+import { Button } from "@mui/material";
 
 function OrderManagerDashboard() {
     const user_id = useSelector((state) => state.auth.user_id);
     const [user, setUser] = useState([]);
-
+  const dispatch = useDispatch();
     const navigate = useNavigate();
     const handleNavigate = (path, item) => {
       navigate(path);
       setSelectedItem(item);
     }
+       const handleLogout = () => {
+          dispatch(clearToken());
+          navigate("/login");
+        };
     const fetchUsers = async () => {
       try {
         const res = await accountApi.getUserById(user_id);
@@ -60,6 +65,7 @@ function OrderManagerDashboard() {
             />
             <Typography variant="h6" sx={{ fontWeight: "bold" }}>{user.display_name}</Typography>
             <Typography variant="body2" color="text.secondary">{user.user_role}</Typography>
+            <Button onClick={handleLogout}>Logout</Button>
           </Box>
           <Divider />
         </Drawer>

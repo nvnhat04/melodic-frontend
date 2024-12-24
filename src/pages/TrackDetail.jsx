@@ -12,11 +12,16 @@ import Header from "../components/Media/Header";
 import LyricsCard from "../components/Media/LyricsCard";
 import ArtistCard from "../components/Media/ArtistCard";
 import TrackAPI from "../api/modules/track.api";
-
+import { useDispatch } from "react-redux";
+import { addTrackToQueue, clearQueue } from "../redux/store";
+import { useSelector } from "react-redux";
 const TrackDetail = () => {
   const { id } = useParams();
   console.log(id);
   const [songData, setSongData] = useState(null);
+  const dispatch = useDispatch();
+  // const songs = useSelector((state) => state.queueSongs.queueSongs);
+
 
   useEffect(() => {
     const loadSongData = async () => {
@@ -42,7 +47,10 @@ const TrackDetail = () => {
   }, [id]);
 
   if (!songData) return <Typography>Loading...</Typography>;
-
+  const handleAddAllTracksToQueue = () => {
+    dispatch(clearQueue());
+    dispatch(addTrackToQueue({ id: songData.id }));
+  };
   return (
     <Box
       sx={{
@@ -58,7 +66,7 @@ const TrackDetail = () => {
     >
       <Grid2 container spacing={5} sx={{ maxWidth: 1200, width: "100%" }}>
         <Grid2 item xs={12} sx={{ width: "100%" }}>
-          {songData && <Header media={songData} mediaType="track" />}
+          {songData && <Header media={songData} mediaType="track" funct={handleAddAllTracksToQueue} />}
         </Grid2>
 
         <Grid2 item xs={12} sx={{ width: "100%" }}>

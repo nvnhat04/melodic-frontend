@@ -21,17 +21,24 @@ const drawerWidth = 240;
 import accountApi from "../api/modules/account.api";
 import { Outlet } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import {useSelector} from "react-redux";
-
+import {useSelector, useDispatch} from "react-redux";
+import { Button } from "@mui/material";
+import { clearToken } from "../redux/store";
+import createURL from "../hooks/createUrl";
 
 function AdminDashboard() {
     const user_id = useSelector((state) => state.auth.user_id);
     const [selectedItem, setSelectedItem] = useState("Dashboard");
     const [user, setUser] = useState([]);
+    const dispatch = useDispatch();
     // const [usersData, setUsersData] = useState([]);
     // const [tracksData, setTracksData] = useState([]);
     // const [playlistsData, setPlaylistsData] = useState([]);
     const navigate = useNavigate();
+    const handleLogout = () => {
+      dispatch(clearToken());
+      navigate("/login");
+    };
 
     const handleNavigate = (path, item) => {
       navigate(path);
@@ -85,11 +92,12 @@ function AdminDashboard() {
         >
           <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", p: 2 }}>
             <Avatar
-              src="https://images.squarespace-cdn.com/content/v1/5911f44b9de4bb1465b0417a/1517949216805-IX2GVKMUU3KIUTZU6C8Z/image-asset.jpeg"
+              src={createURL(user.avatar)}
               sx={{ width: 80, height: 80, mb: 1 }}
             />
             <Typography variant="h6" sx={{ fontWeight: "bold" }}>{user.display_name}</Typography>
             <Typography variant="body2" color="text.secondary">{user.user_role}</Typography>
+            <Button variant="contained" color="primary" sx={{ fontSize: '10px', color: '#e0e0e0', backgroundColor:'#d60017' }} onClick={handleLogout}>Logout</Button>
           </Box>
           <Divider />
           {/*Sidebar */}

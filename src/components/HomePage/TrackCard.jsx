@@ -9,9 +9,10 @@ import { useDispatch } from "react-redux";
 import { addTrackToQueue } from "../../redux/store";
 import useAudioPlayer from "../../hooks/useAudioPlayer";
 import createURL from "../../hooks/createUrl"
+import { useState } from "react";
 
 const TrackCard = ({ track }) => {
-
+  const [cover, setCover] = useState(null);
   let artistsArray;
 
 if (Array.isArray(track.artists)) {
@@ -24,10 +25,12 @@ if (Array.isArray(track.artists)) {
 }
 
 // Kiểm tra kết quả
-console.log("artistsArray", artistsArray);
-console.log("track.artists", track.artists);
+// console.log("artistsArray", artistsArray);
+// console.log("track.artists", track.artists);
+useEffect(() => {
 
-  
+  setCover(createURL(track.track_cover));
+}, [track]);
   const defaultCover = "../../default/track_cover.png";
   // console.log(track.id);
   // console.log("Track Artists:", track.artists);
@@ -37,7 +40,7 @@ console.log("track.artists", track.artists);
     console.log("Add to queue:", track.id);
     dispatch(addTrackToQueue({ id: track.id }));
   };
-  console.log("Track:", track); 
+  // console.log("Track:", track); 
 
   return (
     <Box
@@ -65,7 +68,8 @@ console.log("track.artists", track.artists);
             component="img"
 
             src={
-              track.track_cover ? createURL(track.track_cover) : defaultCover
+
+              track.cover && track.cover.startsWith("http") ? track.cover : createURL(track.cover) || defaultCover
             }
             // alt={track.title}
 
@@ -108,10 +112,7 @@ console.log("track.artists", track.artists);
           >
             {track.title}
           </Typography>
-          <Typography
-            variant="subtitle2"
-            sx={{ color: "white", fontSize: "14px" }}
-          >
+         
             {/* {Array.isArray(track.artists) ? track.artists.map((artist, index) => (
               <span key={index}>
                 <a href={`/artist/${artist.id}`} style={{textDecoration: 'none', color: 'white' }}>{artist.display_name}</a>
@@ -119,7 +120,7 @@ console.log("track.artists", track.artists);
               </span>
 
             )) : "Unknown Artist"} */}
-
+            <Box>
             {artistsArray &&
               artistsArray.map((artist, index) => (
                 <React.Fragment key={artist.id}>
@@ -133,7 +134,9 @@ console.log("track.artists", track.artists);
                   {index < artistsArray.length - 1 && ", "}
                 </React.Fragment>
               ))}
-          </Typography>
+            </Box>
+            
+          
         </Box>
       </Box>
 

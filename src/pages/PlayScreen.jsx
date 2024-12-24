@@ -17,7 +17,8 @@ import { useMediaQuery } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
 import { ThemeProvider } from "@mui/material";
 import SongCardMenu from "../components/common/SongCardMenu";
-
+import createUrl from "../hooks/createUrl";
+import { use } from "react";
 
 const lyrics = `
 Intro: Jung Kook
@@ -133,7 +134,7 @@ const PlayScreen = ({
   } = audioPlayerProps;
 
   const defaultTrackCover = "../../default/track_cover.png";
-
+  const [cover, setCover] = useState(defaultTrackCover);
   // Function to extract colors and create gradient
   const extractColors = async () => {
     const imgSrc = imageRef.current.src;
@@ -175,6 +176,10 @@ const PlayScreen = ({
     setShowLyrics((prev) => !prev);
   };
   // console.log("Seek Value in Play Screen:", seekValue);
+  // useEffect(() => {
+  //   console.log("coverur:", queueSong[currentSongIndex].album[0].cover);
+  //   console.log("coverlink:", createUrl(queueSong[currentSongIndex].album[0].cover));
+  // }, [currentSongIndex]);
   return (
     <ThemeProvider theme={theme}>
       <Box
@@ -213,7 +218,7 @@ const PlayScreen = ({
           <Box sx={{ display: "flex", justifyContent: "center", mb: 2, mt: 2 }}>
             <img
               ref={imageRef}
-              src={queueSong[currentSongIndex].cover ? queueSong[currentSongIndex].cover : defaultTrackCover}
+              src={queueSong[currentSongIndex].album[0].cover? createUrl(queueSong[currentSongIndex].album[0].cover) : defaultTrackCover}
               alt="Song cover"
               style={{
                 width: "100%",
@@ -290,7 +295,7 @@ const PlayScreen = ({
             onChange={handleSeekChange}
             width="90%"
             sx={{
-              color: "#a5bfd2",
+              color: "white",
               height: 5,
               "& .MuiSlider-thumb": { display: "none" },
             }}
@@ -301,7 +306,7 @@ const PlayScreen = ({
             sx={{
               display: "flex",
               justifyContent: "space-between",
-              color: "#a5bfd2",
+              color: "white",
               fontSize: "0.85rem",
               mt: -1,
               fontFamily: "Arial",

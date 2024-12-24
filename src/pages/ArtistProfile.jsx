@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { Stack, Typography, useTheme } from "@mui/material";
 import AlbumSlider from "../components/common/Slider";
 import Container from "../components/common/Container";
@@ -11,6 +11,7 @@ import accountApi from "../api/modules/account.api";
 import TopSongs from "../components/Artist/TopSongs";
 import uiConfigs from "../configs/ui.configs";
 import createUrl from "../hooks/createUrl";
+import musicApi from "../api/modules/music.api";
 const artistData = [
   {
     id: null,
@@ -28,145 +29,7 @@ const topSongs01 = [
     "genres": [],
     "artists": []
   },
-  {
-    "id": "ZmNkNDk1NTAtZGM0Yy00ZWM3LTg1NWEtNDE5MDIwMTM1ZTE0",
-    "title": "Stargazing",
-    "release_date": "2024-12-04T17:00:00.000Z",
-    "track_url": "1JrtBa0b9zRmsPRIodaJiIrozYj3piQd9",
-    "cover": null,
-    "genres": [],
-    "artists": []
-  },
-  {
-    "id": "YzgxYTNhMzQtNDBmNy00NTBkLTk2NzYtNjVmODM3ZmNkNjAz",
-    "title": "Summer cruel",
-    "release_date": "2024-11-30T17:00:00.000Z",
-    "track_url": "1SOKem-klZOV5-aTNxnFjF2t5X0-yEXc5",
-    "cover": null,
-    "genres": [],
-    "artists": []
-  },
-  {
-    "id": "YjdkZTAyZWItZDBjMy00YjYwLTk0YjctMTRkZTExMDhlZWJk",
-    "title": "Summer cruel",
-    "release_date": "2024-11-30T17:00:00.000Z",
-    "track_url": "1KvJ5otauKw9lR55Jh5wqul8U4f5dfr9p",
-    "cover": "1uPpcuN038RVhwU-IHLHSsCxG61lpCHay",
-    "genres": [
-      "ballad",
-      "pop"
-    ],
-    "artists": [
-      {
-        "id": "34",
-        "display_name": "Sơn Tùng M-TP",
-        "username": "sontungmtp"
-      },
-      {
-        "id": "34",
-        "display_name": "Sơn Tùng M-TP",
-        "username": "sontungmtp"
-      },
-      {
-        "id": "8",
-        "display_name": "nhat nguyen",
-        "username": "nhat123"
-      },
-      {
-        "id": "8",
-        "display_name": "nhat nguyen",
-        "username": "nhat123"
-      }
-    ]
-  },
-  {
-    "id": "MzU5NTUwMTYtY2Q2Mi00MDcyLThhMGYtNzRmNzMwMzJiMjIx",
-    "title": "The first song",
-    "release_date": "2024-11-28T17:00:00.000Z",
-    "track_url": "1WnfzLsUevKTbHP-DGdf7eq1lOOXxRdjV",
-    "cover": null,
-    "genres": [],
-    "artists": []
-  },
-  {
-    "id": "ZmYwMTQ1YmYtMjU4Ni00ZThmLWFjMzMtZGUyNTc2NzEwY2Q1",
-    "title": "The 2thTrack",
-    "release_date": "2024-11-28T17:00:00.000Z",
-    "track_url": "1Ap3WyfAiLN22wUZSHlNBtTd-QmWwGoqq",
-    "cover": "1uPpcuN038RVhwU-IHLHSsCxG61lpCHay",
-    "genres": [
-      "ballad",
-      "hip hop",
-      "pop"
-    ],
-    "artists": [
-      {
-        "id": "8",
-        "display_name": "nhat nguyen",
-        "username": "nhat123"
-      },
-      {
-        "id": "8",
-        "display_name": "nhat nguyen",
-        "username": "nhat123"
-      },
-      {
-        "id": "8",
-        "display_name": "nhat nguyen",
-        "username": "nhat123"
-      }
-    ]
-  },
-  {
-    "id": "MzU5YWVlNzUtODk1ZS00MzVhLThhMmQtZTAyZTBlNTM4OTU2",
-    "title": "The first song",
-    "release_date": "2024-11-28T17:00:00.000Z",
-    "track_url": "1S_a_tfkRSJQ8D16YQDqO4wN4yhP0C1rZ",
-    "cover": "1uPpcuN038RVhwU-IHLHSsCxG61lpCHay",
-    "genres": [
-      "ballad",
-      "pop"
-    ],
-    "artists": [
-      {
-        "id": "8",
-        "display_name": "nhat nguyen",
-        "username": "nhat123"
-      },
-      {
-        "id": "8",
-        "display_name": "nhat nguyen",
-        "username": "nhat123"
-      },
-      {
-        "id": "34",
-        "display_name": "Sơn Tùng M-TP",
-        "username": "sontungmtp"
-      },
-      {
-        "id": "34",
-        "display_name": "Sơn Tùng M-TP",
-        "username": "sontungmtp"
-      }
-    ]
-  },
-  {
-    "id": "M2Q1YWJjNTctYmVmZC00MGJiLTk1NGMtNWQ5YjBkNTZiMDM3",
-    "title": "Hãy trao cho anh",
-    "release_date": "2024-11-26T17:00:00.000Z",
-    "track_url": "1wCbyOR0E__okyNu0N2EgadixMG876mr1",
-    "cover": "1uPpcuN038RVhwU-IHLHSsCxG61lpCHay",
-    "genres": [
-      "r&b"
-    ],
-    "artists": [
-      {
-        "id": "34",
-        "display_name": "Sơn Tùng M-TP",
-        "username": "sontungmtp"
-      }
-    ]
-  }
+
 ];
 const listAlbumsMock = [
   {
@@ -184,6 +47,7 @@ function ArtistProfile() {
     const [artist, setArtist] = useState(artistData[0]);
     const [listAlbums, setListAlbums] = useState(listAlbumsMock);
     const [topSongs, setTopSongs] = useState(topSongs01);
+    const [topArtists, setTopArtists] = useState([]);
     const [latestSong, setLatestSong] = useState({
         id: null,
         title: "",
@@ -207,7 +71,7 @@ function ArtistProfile() {
 
         try {
             const response = await artistApi.getTopTracks(artist_id);
-            console.log(response);
+            // console.log(response);
             if (response) {
                 setTopSongs(response);
             }
@@ -218,6 +82,7 @@ function ArtistProfile() {
     const fetchLatestSong = async () => {
         try {
             const response = await artistApi.getLatestTracks(artist_id);
+            console.log("latest song: ",response);
             if (response) {
                 setLatestSong(response);
             }
@@ -235,7 +100,21 @@ function ArtistProfile() {
             console.error(err);
         }
     };
+    const fetchTopArtists = async () => {
+
+        try {
+            const response = await musicApi.getTopArtists();
+            if (response) {
+
+                setTopArtists(response);
+            }
+        } catch(err) {
+
+            console.error(err);
+        }
+      }
     useEffect(() => {
+        fetchTopArtists();
         fetchAlbums();
         fetchTopSongs();
         // fetchLatestSong();
@@ -251,14 +130,14 @@ function ArtistProfile() {
 
     useEffect(() => {
       fetchLatestSong();
-      // console.log('latest song: ',latestSong);
+      console.log('latest song: ',latestSong);
       if(latestSong) {
         setLatestUrl(createUrl(latestSong.cover));
       } else {
         console.log("latest song is null");
       }
       // console.log('latest url: ',latestUrl);
-    }, [latestSong]);
+    }, []);
 
   return (
     <Box
@@ -266,6 +145,7 @@ function ArtistProfile() {
         color: "white",
         marginLeft: "30px",
         padding: "10px",
+        width: "calc(100% - 30px)",
       }}
     >
       {/* backdrops */}
@@ -317,9 +197,9 @@ function ArtistProfile() {
                 {artist.display_name}
               </Typography>
             </Box>
-            <Typography variant="h8" sx={{ paddingLeft: "10px" }}>
-              79,123,456 Monthly listeners
-            </Typography>
+            {/* <Typography variant="h8" sx={{ paddingLeft: "10px" }}>
+              10000 Monthly listeners
+            </Typography> */}
           </Box>
         </Box>
       </Box>
@@ -361,15 +241,17 @@ function ArtistProfile() {
               />
             </Box>
             <Box>
+              <Link to={`/track/${latestSong.id}`} style={{ textDecoration: "none", color: "white" }}>
               <Typography variant="h6" sx={{ fontWeight: "bold" }}>
                 {latestSong.title}
               </Typography>
               <Typography variant="h8">{latestSong.release_date.substring(0,4)}</Typography>
-            
+              </Link>
             </Box>
           </Box>
         </Box>
         
+
         {/* Top hit */}
         <Box sx={{
             width: "60%",
@@ -388,13 +270,11 @@ function ArtistProfile() {
         )}
       </Box>
       {/*Artist collab*/}
-      <Box>
-        {listAlbums.length > 0 && (
-          <Container header="Artist reference">
-            <AlbumSlider list={listAlbums} type={"Album"} />
-          </Container>
-        )}
-      </Box>
+      {topArtists.length > 0 && (
+        <Container header="Reference Artists">
+          <AlbumSlider list={topArtists} type={"Artist"} />
+        </Container>
+      )}
       {/* Single & EP*/}
       <Box>
         {listAlbums.length > 0 && (

@@ -62,6 +62,28 @@ const Artist = {
       }
     }
   },
+  async getLatestTracks(id) {
+    try {
+      const response = await Client.get(`/artist/${id}/latest-tracks`);
+      return response;
+    } catch (error) {
+      if (error.response) {
+        return error.response;
+      }
+    }
+  },
+  async getTopTracks(id) {
+    try {
+      const response = await Client.get(`/artist/${id}/top-tracks`);
+      return response;
+    } catch (error) {
+      if (error.response) {
+        return error.response;
+      }
+    }
+  }
+  
+  ,
   async getOrders(accessToken) {
     try {
       const response = await Client.get(`/artist/orders`, {

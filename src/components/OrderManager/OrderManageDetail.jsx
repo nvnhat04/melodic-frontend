@@ -5,10 +5,11 @@ import OrderApi from "../../api/modules/order.api";
 import createUrl from "../../hooks/createUrl";
 import AccountApi from "../../api/modules/account.api";
 import Merchandise from "../../api/modules/merchandise.api";
+import { useNavigate } from "react-router-dom";
 const OrderManageDetail = () => {
   const [orderData, setOrderData] = useState(null);
   const { id } = useParams();
-
+  const navigate = useNavigate();
   const total = orderData
     ? orderData.reduce(
         (acc, product) => acc + product.price * product.quantity,
@@ -74,7 +75,11 @@ const OrderManageDetail = () => {
               }
             }
           }
+          
         }
+        setTimeout(() => {
+          navigate("/order_manage");
+        }, 2000);
       }
     } catch (error) {
       console.error("Error updating order status:", error);
@@ -266,7 +271,7 @@ const OrderManageDetail = () => {
                   },
                 }}
               >
-                Mark as ready ro receive
+                Mark as ready to receive
               </Button>
             )}
 

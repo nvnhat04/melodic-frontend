@@ -35,7 +35,7 @@ const CollectionCard = ({ collection, type }) => {
         <Box sx={{ display: "flex", justifyContent: "center" }}>
           <CardMedia
             component="img"
-            image={coverUrl}
+            image={collection.cover && collection.cover.startsWith("http") ? collection.cover : coverUrl}
             alt={collection.title}
             sx={{
               width: "100%",
@@ -109,7 +109,7 @@ const CollectionCard = ({ collection, type }) => {
         <Box sx={{ display: "flex", justifyContent: "center" }}>
           <CardMedia
             component="img"
-            image={collection.cover}
+            image={collection.cover && collection.cover.startsWith("http") ? collection.cover : coverUrl}
             alt={collection.name}
             sx={{
               width: "100%",

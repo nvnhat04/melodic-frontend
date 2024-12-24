@@ -1,4 +1,3 @@
-
 // CSS
 import "./App.css";
 
@@ -6,7 +5,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { Navigate } from "react-router-dom";
 import { useEffect } from "react";
-
+import NotFound from "./pages/NotFound";
 // Main Layout
 import MainLayout from "./components/layout/MainLayout";
 import HomePage from "./pages/HomePage";
@@ -34,6 +33,11 @@ import OrderHistory from "./pages/OrderHistory";
 import CheckOutPage from "./pages/CheckOutPage";
 import ShopPage from "./pages/ShopPage";
 import MerchandiseDetail from "./pages/MerchandiseDetail";
+import OrderManagerDashboard from "./pages/OrderManagerDashboard";
+import OrderManageDetail from "./components/OrderManager/OrderManageDetail";
+import ArtistShop from "./pages/ArtistShop";
+import OrderDetail from "./pages/OrderDetail";
+
 // Artist Layout
 import ArtistDashboard from "./pages/ArtistDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
@@ -42,6 +46,7 @@ import AddNewAlbum from "./components/ArtistDashboard/AddNewAlbum";
 import ArtistManageMerchandise from "./pages/ArtistManageMerchandise";
 import ArtistAddNewMerchandise from "./pages/ArtistAddNewMerchandise";
 import Inbox from "./components/ArtistDashboard/Inbox";
+import EditTrack from "./components/ArtistDashboard/EditTrack";
 import DashboardCards from "./components/ArtistDashboard/DashboardCard";
 import ArtistOrders from "./pages/ArtistOrders";
 import ArtistManageTracks from "./pages/ArtistManageTracks";
@@ -66,8 +71,14 @@ function App() {
   const role = useSelector((state) => state.auth.role);
   // const queue = useSelector((state) => state.auth.queueSongs);
   // console.log(queue);
-
-  // console.log(role);
+  const ProtectedAdminRoute = ({ children }) => {
+    const role = useSelector((state) => state.auth.role);
+    return role === 'admin' ? children : <Navigate to="/" />;
+  };
+  console.log(role);
+  const handleLogout = () => {
+    dispatch(clearToken());
+  };
   useEffect(() => {
     // console.log(dispatch(getQueue()));
   });
@@ -75,40 +86,50 @@ function App() {
   //   dispatch(clearToken());
   return (
     <ThemeProvider theme={theme}>
-    <BrowserRouter>
-    <ScrollToTop />
-      <Routes className="App">
-        <Route path="/" element={<MainLayout />}>
-          <Route index element={<HomePage />} />
-          <Route path="artists" element={<Libraries type="artists" />} />
-          <Route path="albums" element={<Libraries type="albums" />} />
-          <Route path="playlists" element={<Libraries type="playlists" />} />
-          <Route path="favorite" element={<Favorite />} />
-          <Route path="tracks" element={<RecentTracks />} />
+      <BrowserRouter>
+      <ScrollToTop />
+        <Routes className="App">
+          {/* <Route path="/" element={<MainLayout />}> */}
+          <Route
+            path="/"
+            element={token ? <MainLayout /> : <Navigate to="/login" />}
+          >
+            <Route index element={<HomePage />} />
+            <Route path="artists" element={<Libraries type="artists" />} />
+            <Route path="albums" element={<Libraries type="albums" />} />
+            <Route path="playlists" element={<Libraries type="playlists" />} />
 
-          <Route path='track/:id' element={<TrackDetail />} />
-          <Route path='playlist/:id' element={<Playlist />} />
-          <Route path='artist/:id/profile' element={<ArtistProfile />} />
-          <Route path='album/:id' element={<Album />} />
-          <Route path='genres' element={<AllGenre />} />
-          <Route path="multi-search" element={<MultiSearch />} />
-          <Route path="genre" element={<SearchGenre />} />
+            <Route path="track/:id" element={<TrackDetail />} />
+            <Route path="playlist/:id" element={<Playlist />} />
+            <Route path="artist/:id" element={<ArtistProfile />} />
+            <Route path="album/:id" element={<Album />} />
+            <Route path="genres" element={<AllGenre />} />
+            <Route path="update-password" element={<UpdatePassword />} />
+            <Route path="multi-search" element={<MultiSearch />} />
+
+            <Route path="genre" element={<SearchGenre />} />
+            <Route path="favorite" element={<Favorite />} />
+            <Route path="tracks" element={<RecentTracks />} />
+            <Route path="update-password/:id" element={<UpdatePassword />} />
+            <Route path="profile/:id" element={<Profile />} />
+            <Route path="edit-profile/:id" element={<EditProfile />} />
+          </Route>
          
-          <Route path='update-password/:id' element={<UpdatePassword />} />
-          <Route path='profile/:id' element={<Profile />} />
-          <Route path='edit-profile/:id' element={<EditProfile />} />
+         
+          <Route path="/login" element={ <Login />} />
+          <Route
+            path="/register"
+            element={ <Register /> }
+          />
+          {/* <Route path="/logout" element={<Navigate to="/login" />} /> */}
 
-        </Route>
-        <Route path="/artist" element={<ArtistDashboard />}>
-          {/* <Route index element={<Dashboard/>} />  */}
-          {/* <Route path="dashboard" element={<Dashboard/>} /> */}
-        </Route>
+          <Route
+            path="/artist"
+            element={
+              role === "artist" ? <ArtistDashboard /> : <Navigate to= "/" />
+            }
 
-      
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-
-          <Route path="/artist" element={<ArtistDashboard />}>
+          >
             <Route index element={<DashboardCards />} />
             <Route path="upload-track" element={<UploadTrack />} />
             <Route path="inbox" element={<Inbox />} />
@@ -121,6 +142,7 @@ function App() {
               path="upload-merchandise"
               element={<ArtistAddNewMerchandise />}
             ></Route>
+            <Route path="update-track/:id" element={<EditTrack />} />
             <Route
               path="update-merchandise/:id"
               element={<ArtistUpdateMerchandise />}
@@ -131,7 +153,7 @@ function App() {
           <Route
             path="/admin"
             element={
-              role === "admin" ? <AdminDashboard /> : <Navigate to="/" />
+              role === 'admin' ? <AdminDashboard /> : <Navigate to="/" />
             }
           >
             <Route path="users" element={<ManageUsers />} />
@@ -146,7 +168,25 @@ function App() {
             <Route path="cart" element={<CartPage />} />
             <Route path="order-history" element={<OrderHistory />} />
             <Route path="checkout" element={<CheckOutPage />} />
+            <Route path="order/:id" element={<OrderDetail/>} />
+            <Route path="artist/:id" element={<ArtistShop />} />
           </Route>
+
+          <Route
+            path="/order_manage"
+            element={
+              role === "order_manager" ? (
+                <OrderManagerDashboard />
+              ) : (
+                <Navigate to="/shop" />
+              )
+            }
+          ></Route>
+          <Route
+            path="order_manage/order/:id"
+            element={<OrderManageDetail />}
+          />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>
